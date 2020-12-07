@@ -1,0 +1,116 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+{% endblock %}
+{% block left_area %}
+    <article class="panel is-success">
+        <p class="panel-heading">
+            Most Popular Menus
+        </p>
+        {% for menu in range(1,5) %}
+            <a class="panel-block">
+        <span class="panel-icon">
+            <i class="fas fa-utensils"></i>
+        </span>
+                Menu-{{ menu }}
+            </a>
+        {% endfor %}
+    </article>
+
+{% endblock %}
+{% block middle %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Restaurants-Title
+                </h1>
+                <h2 class="subtitle">
+                    Restaurant-Info
+                </h2>
+            </div>
+        </div>
+    </section>
+    {% for i in range(1,10) %}
+        <div class="card">
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-content">
+                        <p class="title is-4"><a href="restaurant">Menu - {{ i }}</a></p>
+                        <p class="subtitle is-6">Price: 20 TL</p>
+                        <ul>
+                            {% for i in range(1,5) %}
+                                <li>Content - {{ i }}</li>
+                            {% endfor %}
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+
+{% endblock %}
+{% block right_area %}
+    <article class="message is-success">
+        <div class="message-header">
+            <p>Warning</p>
+            <button class="delete" aria-label="delete"></button>
+        </div>
+        <div class="message-body">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis
+            placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et
+            dictum <a>felis venenatis</a> efficitur. Aenean ac <em>eleifend lacus</em>, in mollis lectus. Donec sodales,
+            arcu et sollicitudin porttitor, tortor urna tempor ligula, id porttitor mi magna a neque. Donec dui urna,
+            vehicula et sem eget, facilisis sodales sem.
+        </div>
+    </article>
+    <div class="field">
+        <div class="control"><label class="label">Rate</label>
+            {% for rate in range (1,6) %}
+            <label class="radio">
+                <input type="radio" name="question">
+                {{ rate }}
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Message</label>
+        <div class="control">
+            <textarea class="textarea" placeholder="Textarea"></textarea>
+        </div>
+    </div>
+
+
+    <div class="field is-grouped">
+        <div class="control">
+            <button class="button is-link">Submit</button>
+        </div>
+        <div class="control">
+            <button class="button is-link is-light">Cancel</button>
+        </div>
+    </div>
+
+    <label class="label">Comments and Rates</label>
+    {% for comment in range(5) %}
+    <div class="card">
+        <header class="card-header">
+            <p class="card-header-title">
+                Username-{{ comment }}
+            </p>
+        </header>
+        <div class="card-content">
+            <div class="content">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
+                <br>
+                Rate : 1/5
+            </div>
+        </div>
+
+    </div>
+    {% endfor %}
+{% endblock %}

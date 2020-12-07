@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+{% endblock %}
+{% block left_area %}
+    <article class="panel is-success">
+        <p class="panel-heading">
+            Most Popular Restaurants
+        </p>
+        {% for restaurant in range(1,10) %}
+        <a class="panel-block">
+        <span class="panel-icon">
+            <i class="fas fa-utensils"></i>
+        </span>
+            Restaurant-{{ restaurant }}
+        </a>
+        {% endfor %}
+    </article>
+
+{% endblock %}
+{% block middle %}
+<section class="hero is-primary">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+        Welcome to UNIFOOD!
+      </h1>
+      <h2 class="subtitle">
+        You can order food with your colleagues.
+      </h2>
+    </div>
+  </div>
+</section>
+    {% for i in range(1,10) %}
+        <div class="card">
+            <header class="card-header is-primary">
+                <p class="card-header-title">
+                    Order-{{ i }}
+                </p>
+            </header>
+            <div class="card-content">
+                <div class="content">
+                    Menu : Hambuger <br>
+                    People : 2/5<br>
+                    <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+                </div>
+            </div>
+            <footer class="card-footer">
+                <a href="#" class="card-footer-item">Participate</a>
+            </footer>
+        </div>
+    {% endfor %}
+
+{% endblock %}
+{% block right_area %}
+    <article class="panel is-success" style="margin-top: 10px;">
+        <p class="panel-heading">
+            Search Orders
+        </p>
+        <div class="panel-block">
+            <p class="control has-icons-left">
+                <input class="input is-success" type="text" placeholder="Restaurant Name">
+                <span class="icon is-left">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                </span>
+            </p>
+        </div>
+        <div class="panel-block">
+            <div class="field">
+                <label class="label">Category</label>
+                <div class="control">
+                    <div class="select">
+                        <select>
+                            <option>Categories</option>
+                            <option>Category-1</option>
+                            <option>Category-2</option>
+                            <option>Category-3</option>
+                            <option>Category-4</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-block">
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-primary">Submit</button>
+                </div>
+                <div class="control">
+                    <button class="button is-link is-light">Reset Filter</button>
+                </div>
+            </div>
+        </div>
+        <a class="panel-block is-active">
+    <span class="panel-icon">
+      <i class="fas fa-book" aria-hidden="true"></i>
+    </span>
+            bulma
+        </a>
+        <a class="panel-block">
+    <span class="panel-icon">
+      <i class="fas fa-book" aria-hidden="true"></i>
+    </span>
+            marksheet
+        </a>
+        <a class="panel-block">
+    <span class="panel-icon">
+      <i class="fas fa-book" aria-hidden="true"></i>
+    </span>
+            minireset.css
+        </a>
+        <a class="panel-block">
+    <span class="panel-icon">
+      <i class="fas fa-book" aria-hidden="true"></i>
+    </span>
+            jgthms.github.io
+        </a>
+    </article>
+{% endblock %}
