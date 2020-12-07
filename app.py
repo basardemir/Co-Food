@@ -24,5 +24,9 @@ def restaurants():
 @app.route('/restaurant')
 def restaurant():
     return render_template("restaurant.html")
+
+@app.route('/campaigns')
+def campaigns():
+    return render_template("campaigns.html")
 if __name__ == '__main__':
     app.run()
