@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+{% endblock %}
+{% block left_area %}
+{% endblock %}
+{% block middle %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Order Details
+                </h1>
+                <h2 class="subtitle">
+                    Participation: 5/10
+                </h2>
+            </div>
+        </div>
+    </section>
+    {% for i in range(1,10) %}
+        <div class="card">
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-content">
+                        <p class="title is-4">Menu - {{ i }}</p>
+                        <p class="subtitle is-6">Price: 20 TL</p>
+                        <ul>
+                            {% for i in range(1,5) %}
+                                <li>Content - {{ i }}</li>
+                            {% endfor %}
+                        </ul>
+                        <button class="button is-info is-active">Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+
+{% endblock %}
+{% block right_area %}
+{% endblock %}

@@ -28,5 +28,11 @@ def restaurant():
 @app.route('/campaigns')
 def campaigns():
     return render_template("campaigns.html")
+
+@app.route('/wait-room')
+def wait_room():
+    return render_template("wait_room.html")
+
+
 if __name__ == '__main__':
     app.run()
