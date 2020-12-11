@@ -37,6 +37,10 @@ def wait_room():
 def order():
     return render_template("order.html")
 
+@app.route('/settings')
+def settings():
+    return render_template("settings.html")
+
 
 if __name__ == '__main__':
     app.run()
