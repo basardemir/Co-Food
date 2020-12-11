@@ -12,6 +12,10 @@ footer {
 .hero{
     margin-top: 10px;
 }
+
+article{
+    margin-top: 10px;
+}
 .card-header-title{
     background:#c79f00;
 }

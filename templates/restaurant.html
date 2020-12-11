@@ -34,20 +34,25 @@
     </section>
     {% for i in range(1,10) %}
         <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">
+                    Menu-{{ i }} <br>
+                    Price: {{ i*4 }} TL
+                </p>
+            </header>
             <div class="card-content">
-                <div class="media">
-                    <div class="media-content">
-                        <p class="title is-4">Menu - {{ i }}</p>
-                        <p class="subtitle is-6">Price: 20 TL</p>
-                        <ul>
-                            {% for i in range(1,5) %}
-                                <li>Content - {{ i }}</li>
-                            {% endfor %}
-                        </ul>
-                        <button class="button is-info is-active">Order</button>
-                    </div>
+                <div class="content">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Phasellus nec iaculis mauris.Lorem ipsum dolor sit amet,
+                    consectetur adipiscing elit. Phasellus nec iaculis mauris.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Phasellus nec iaculis mauris.Lorem ipsum dolor sit amet,
+                    consectetur adipiscing elit. Phasellus nec iaculis mauris.
                 </div>
             </div>
+            <footer class="card-footer">
+                <a href="/order" class="card-footer-item">Order</a>
+            </footer>
         </div>
 
     {% endfor %}
@@ -56,61 +61,55 @@
 {% block right_area %}
     <article class="message is-success">
         <div class="message-header">
-            <p>Warning</p>
-            <button class="delete" aria-label="delete"></button>
+            <p>Comment Restaurant</p>
         </div>
         <div class="message-body">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis
-            placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et
-            dictum <a>felis venenatis</a> efficitur. Aenean ac <em>eleifend lacus</em>, in mollis lectus. Donec sodales,
-            arcu et sollicitudin porttitor, tortor urna tempor ligula, id porttitor mi magna a neque. Donec dui urna,
-            vehicula et sem eget, facilisis sodales sem.
+            Leaving comments is important to improve our service quality. Please write your thoughts about this
+            restaurant.
         </div>
     </article>
+        <div class="field">
+        <label class="label">Message</label>
+        <div class="control">
+            <textarea class="textarea" placeholder="Write your comment."></textarea>
+        </div>
+    </div>
     <div class="field">
         <div class="control"><label class="label">Rate</label>
             {% for rate in range (1,6) %}
-            <label class="radio">
-                <input type="radio" name="question">
-                {{ rate }}
-            </label>
+                <label class="radio">
+                    <input type="radio" name="question">
+                    {{ rate }}
+                </label>
             {% endfor %}
         </div>
     </div>
 
-    <div class="field">
-        <label class="label">Message</label>
-        <div class="control">
-            <textarea class="textarea" placeholder="Textarea"></textarea>
-        </div>
-    </div>
+
 
 
     <div class="field is-grouped">
         <div class="control">
             <button class="button is-link">Submit</button>
         </div>
-        <div class="control">
-            <button class="button is-link is-light">Cancel</button>
-        </div>
     </div>
 
     <label class="label">Comments and Rates</label>
     {% for comment in range(5) %}
-    <div class="card">
-        <header class="card-header">
-            <p class="card-header-title">
-                Username-{{ comment }}
-            </p>
-        </header>
-        <div class="card-content">
-            <div class="content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-                <br>
-                Rate : 1/5
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">
+                    Username-{{ comment }}
+                </p>
+            </header>
+            <div class="card-content">
+                <div class="content">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
+                    <br>
+                    Rate : 1/5
+                </div>
             </div>
-        </div>
 
-    </div>
+        </div>
     {% endfor %}
 {% endblock %}
