@@ -4,6 +4,19 @@
 
 {% endblock %}
 {% block left_area %}
+    <article class="panel is-success">
+        <p class="panel-heading">
+            Current Menu - Restaurant Name
+        </p>
+        <p class="panel-block">Lorem ipsum dolor sit amet, consectetur
+            adipiscing elit. Sed ut efficitur urna. Duis vitae iaculis
+            sem. Ut imperdiet, quam non bibendum venenatis, leo nibh
+            tristique mi, sit amet rutrum erat quam id lorem.</p>
+        <p class="panel-block"><span style="font-weight: bold">Address: </span> Lorem ipsum dolor sit amet, consectetur
+            adipiscing elit. Sed ut efficitur urna. Lorem ipsum dolor sit amet, consectetur</p>
+        <p class="panel-block"><span style="font-weight: bold">Price: </span> 40TL</p>
+
+    </article>
 {% endblock %}
 {% block middle %}
     <section class="hero is-primary">
@@ -18,25 +31,28 @@
             </div>
         </div>
     </section>
-    {% for i in range(1,10) %}
+    {% for i in range(1,5) %}
         <div class="card">
             <div class="card-content">
                 <div class="media">
                     <div class="media-content">
-                        <p class="title is-4">Menu - {{ i }}</p>
-                        <p class="subtitle is-6">Price: 20 TL</p>
-                        <ul>
-                            {% for i in range(1,5) %}
-                                <li>Content - {{ i }}</li>
-                            {% endfor %}
-                        </ul>
-                        <button class="button is-info is-active">Order</button>
+                        {% if i == 1 %}
+                            <p class="title is-4">Host-Name{{ i }}-Surname{{ i }}</p>
+                        {% endif %}
+                        {% if i != 1 %}
+                            <p class="title is-4">Name{{ i }}-Surname{{ i }}</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
-
     {% endfor %}
+
+
+<div class="buttons">
+  <button class="button is-success">Send Order</button>
+  <button class="button is-danger">Cancel Order</button>
+</div>
 
 {% endblock %}
 {% block right_area %}
