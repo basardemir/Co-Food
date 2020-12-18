@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+{% endblock %}
+{% block left_area %}
+    <article class="panel is-light">
+        <p class="panel-heading">
+            Your Favorite Menus
+        </p>
+        {% for menu in range(1,6) %}
+            <a class="panel-block">
+        <span class="panel-icon">
+            <i class="fas fa-utensils"></i>
+        </span>
+                Menu-{{ menu }}
+            </a>
+        {% endfor %}
+    </article>
+
+{% endblock %}
+{% block middle %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Order History
+                </h1>
+                <h2 class="subtitle">
+                    You can find past orders and your analysis.
+                </h2>
+            </div>
+        </div>
+    </section>
+    {% for i in range(1,10) %}
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">
+                    <a href="restaurant">Restaurant-{{ i }}</a>  -
+                    Menu-{{ i }}
+                </p>
+            </header>
+            <div class="card-content">
+            <ol style="margin-left: 10px;" type="1">
+                {% for friend in range(1,5) %}
+                    <li>Person-{{ friend }}</li>
+                {% endfor %}
+            </ol>
+            <br>
+                    Individual Price: {{ i*4 }} TL
+            </div>
+        </div>
+
+    {% endfor %}
+
+{% endblock %}
+{% block right_area %}
+    <article class="panel is-light">
+        <p class="panel-heading">
+            Your Favorite Restaurants
+        </p>
+        {% for restaurant in range(1,6) %}
+            <a class="panel-block">
+        <span class="panel-icon">
+            <i class="fas fa-utensils"></i>
+        </span>
+                Restaurant-{{ restaurant }}
+            </a>
+        {% endfor %}
+    </article>
+
+
+{% endblock %}
