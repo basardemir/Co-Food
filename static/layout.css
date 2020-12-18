@@ -2,20 +2,28 @@ footer {
     text-align: center;
 }
 
-.card{
+.card {
     margin-top: 10px;
     margin-bottom: 10px;
 }
-.panel{
+
+.panel {
     margin: 10px;
 }
-.hero{
+
+.hero {
+    margin-top: 10px;
+    background-color:#ab0012 !important;
+}
+
+article {
     margin-top: 10px;
 }
 
-article{
-    margin-top: 10px;
+.card-header-title {
+    background: orange;
 }
-.card-header-title{
-    background:#c79f00;
+
+.navbar {
+    background-color: #cc0000 !important;
 }
