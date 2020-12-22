@@ -21,7 +21,8 @@ article {
 }
 
 .card-header-title {
-    background: orange;
+    background: #ab0012 !important;
+    color:white !important;
 }
 
 .navbar {
