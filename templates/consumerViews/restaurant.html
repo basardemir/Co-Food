@@ -24,30 +24,25 @@
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">
-                    Restaurants-Title
+                    {{ restaurant_info['restaurant'][0][1] }}
                 </h1>
                 <h2 class="subtitle">
-                    Restaurant-Info
+                    {{ restaurant_info['restaurant'][0][2] }}
                 </h2>
             </div>
         </div>
     </section>
-    {% for i in range(1,10) %}
+    {% for i in restaurant_info['menus'] %}
         <div class="card">
             <header class="card-header">
                 <p class="card-header-title">
-                    Menu-{{ i }} <br>
-                    Price: {{ i*4 }} TL
+                    {{ i[2] }} <br>
+                    Price: {{ i[0] }} TL
                 </p>
             </header>
             <div class="card-content">
                 <div class="content">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Phasellus nec iaculis mauris.Lorem ipsum dolor sit amet,
-                    consectetur adipiscing elit. Phasellus nec iaculis mauris.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Phasellus nec iaculis mauris.Lorem ipsum dolor sit amet,
-                    consectetur adipiscing elit. Phasellus nec iaculis mauris.
+                    {{ i[2] }}
                 </div>
             </div>
             <footer class="card-footer">
