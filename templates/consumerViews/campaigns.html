@@ -32,15 +32,15 @@
             </div>
         </div>
     </section>
-    {% for i in range(1,10) %}
+    {% for i in campaigns %}
         <div class="card">
             <div class="card-content">
                 <div class="media">
                     <div class="media-content">
-                        <p class="title is-4"><a href="restaurant">Campaign - {{ i }}</a></p>
-                        Restaurant - {{ i }}<br>
-                        Price: 35<br>
-                        Content: Lorem Ipsum
+                        <p class="title is-4"><a href="{{url_for('restaurant', restaurantId = i['restaurantId'])}}">{{ i['name'] }}</a></p>
+                        {{ i['restaurantName'] }}<br>
+                        Price: {{ i['price'] }} TL<br>
+                        Content: {{ i['content'] }}
                     </div>
                 </div>
             </div>

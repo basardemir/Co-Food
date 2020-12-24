@@ -22,6 +22,22 @@ def getRestaurants():
           restaurants.append(element)
   return restaurants
 
+def getCampaigns():
+  campaigns = []
+  with dbapi2.connect(dsn) as connection:
+    with connection.cursor() as cursor:
+      query = "select * from menu join restaurant on (restaurant.id = menu.restaurantid) where(menu.iscampaign = true)"
+      cursor.execute(query)
+      for i in cursor:
+          element_dic = {
+              "price":i[1],
+              "name": i[2],
+              "content": i[3],
+              "restaurantId": i[5],
+              "restaurantName": i[7],
+          }
+          campaigns.append(element_dic)
+  return campaigns
 
 def getMenu(restaurantId):
   menus = []
@@ -86,7 +102,8 @@ def restaurant():
 
 @app.route('/campaigns')
 def campaigns():
-    return render_template("consumerViews/campaigns.html")
+    campaigns = getCampaigns()
+    return render_template("consumerViews/campaigns.html", campaigns=campaigns)
 
 @app.route('/wait-room')
 def wait_room():
