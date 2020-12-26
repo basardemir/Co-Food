@@ -1,21 +1,20 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>All-Food - Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/registeration.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
     <script src="https://kit.fontawesome.com/d490a62249.js" crossorigin="anonymous"></script>
 
 </head>
 
 <body>
-<nav class="navbar is-success" role="navigation" aria-label="main navigation">
+<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <a class="navbar-item" href="/">
-            <img src="{{ url_for('static', filename='images/logo-unifood.png') }}" width="100" height="600">
+        <a class="navbar-item" href="/homepage">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" style="width:150px; height:75px;">
         </a>
         <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
            data-target="navbarBasicExample">
@@ -26,12 +25,10 @@
     </div>
 
     <div id="navbarBasicExample" class="navbar-menu">
-        <div class="navbar-start">
-        </div>
         <div class="navbar-end">
             <div class="navbar-item">
                 <div class="buttons">
-                    <a class="button is-primary">
+                    <a class="button is-light" href="/register">
                         Register
                     </a>
                 </div>
@@ -45,37 +42,35 @@
 
     </div>
     <div class="column">
+                <form action="" method="post" name="login">
+            {{ form.csrf_token }}
         <div class="field">
             <label class="label">Username</label>
             <div class="control has-icons-left has-icons-right">
-                <input class="input is-success" type="text" placeholder="Username">
+                <input class="input" name="username" type="text" placeholder="Username">
                 <span class="icon is-small is-left">
                     <i class="fas fa-user"></i>
                 </span>
-                <span class="icon is-small is-right">
-                    <i class="fas fa-check"></i>
-    </span>
             </div>
-            <p class="help is-success">This username is available</p>
+
         </div>
 
         <div class="field">
             <label class="label">Password</label>
             <div class="control">
-                <input class="input" type="password" placeholder="Password">
+                <input class="input" name="password" type="password" placeholder="Password">
             </div>
         </div>
         <div class="field is-grouped">
             <div class="control">
                 <button class="button is-link">Login</button>
             </div>
-        </div>
+        </div></form>
     </div>
+
     <div class="column is-one-quarter">
         <div class="container">
-
         </div>
-
     </div>
 </div>
 
