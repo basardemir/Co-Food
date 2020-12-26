@@ -1,125 +1,47 @@
-from flask import Flask, render_template, current_app, request
-import psycopg2 as dbapi2
+from flask import Flask, render_template, request
+
+from application.campaign import *
+from application.menu import *
+from application.registration import *
+from application.restaurant import *
+from application.user import *
+from application.order import *
+from application.home import *
+from application.wait_room import *
 
 app = Flask(__name__)
 
-dsn = """user=postgres password=basar
+app.config['db'] = """user=postgres password=basar
 host=localhost port=5432 dbname=postgres"""
 
 
+#restaurant
+app.add_url_rule('/restaurant/<int:restaurantId>', view_func=restaurant_details, methods=['GET'])
+app.add_url_rule('/restaurants', view_func=getRestaurants, methods=['GET'])
 
-def getRestaurants():
-  restaurants = []
-  with dbapi2.connect(dsn) as connection:
-    with connection.cursor() as cursor:
-      query = "select * from restaurant join category on (restaurant.categoryid = category.id)"
-      cursor.execute(query)
-      for id, name, email, password, catId, categoryId, catname in cursor:
-          element = []
-          element.append(id)
-          element.append(name)
-          element.append(catname)
-          restaurants.append(element)
-  return restaurants
+#campaigns
+app.add_url_rule('/campaigns', view_func=getCampaigns, methods=['GET'])
 
-def getCampaigns():
-  campaigns = []
-  with dbapi2.connect(dsn) as connection:
-    with connection.cursor() as cursor:
-      query = "select * from menu join restaurant on (restaurant.id = menu.restaurantid) where(menu.iscampaign = true)"
-      cursor.execute(query)
-      for i in cursor:
-          element_dic = {
-              "price":i[1],
-              "name": i[2],
-              "content": i[3],
-              "restaurantId": i[5],
-              "restaurantName": i[7],
-          }
-          campaigns.append(element_dic)
-  return campaigns
-
-def getMenu(restaurantId):
-  menus = []
-  with dbapi2.connect(dsn) as connection:
-    with connection.cursor() as cursor:
-      query = "select * from menu where(restaurantid = %s)"
-      cursor.execute(query,(restaurantId,))
-      for el in cursor:
-          element = []
-          element.append(el[1])
-          element.append(el[2])
-          element.append(el[3])
-          menus.append(element)
-  return menus
-
-def getRestaurant(restaurantId):
-    restaurant = []
-    with dbapi2.connect(dsn) as connection:
-        with connection.cursor() as cursor:
-            query = "select * from restaurant join category on (restaurant.categoryid = category.id) where(restaurant.id = %s) "
-            cursor.execute(query,(restaurantId,))
-            for id, name, email, password, catId, categoryId, catname in cursor:
-                element = []
-                element.append(id)
-                element.append(name)
-                element.append(catname)
-                restaurant.append(element)
-    return restaurant
-
-@app.route('/')
-def hello_world():
-    return render_template("consumerViews/main_page.html")
+#history
+app.add_url_rule('/history', view_func=userHistory, methods=['GET'])
+app.add_url_rule('/settings', view_func=userSettings, methods=['GET'])
 
 
-@app.route('/register')
-def register():
-    return render_template("consumerViews/register.html")
+#registration
+app.add_url_rule('/register', view_func=register, methods=['GET'])
+app.add_url_rule('/login', view_func=login, methods=['GET'])
 
-@app.route('/login')
-def login():
-    return render_template("consumerViews/login.html")
 
-@app.route('/restaurants')
-def restaurants():
-    restaurants=getRestaurants()
-    for i in restaurants:
-        print(i)
-    return render_template("consumerViews/restaurants.html", restaurants = restaurants)
+#order
+app.add_url_rule('/order', view_func=order, methods=['GET'])
 
-@app.route('/restaurant')
-def restaurant():
-    restaurantId = request.args.get('restaurantId', type=int)
-    menus = getMenu(restaurantId)
-    restaurant = getRestaurant(restaurantId)
-    information = {
-        'restaurant':restaurant,
-        'menus': menus
-    }
 
-    print(menus)
-    return render_template("consumerViews/restaurant.html", restaurant_info = information)
+#main page
+app.add_url_rule('/homepage', view_func=homepage, methods=['GET'])
 
-@app.route('/campaigns')
-def campaigns():
-    campaigns = getCampaigns()
-    return render_template("consumerViews/campaigns.html", campaigns=campaigns)
 
-@app.route('/wait-room')
-def wait_room():
-    return render_template("consumerViews/wait_room.html")
-
-@app.route('/order')
-def order():
-    return render_template("consumerViews/order.html")
-
-@app.route('/settings')
-def settingsView():
-    return render_template("consumerViews/settings.html")
-
-@app.route('/history')
-def historyView():
-    return render_template("consumerViews/history.html")
+#wait room
+app.add_url_rule('/wait-room', view_func=wait_room, methods=['GET'])
 
 
 if __name__ == '__main__':
