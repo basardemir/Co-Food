@@ -6,3 +6,8 @@ from flask_login.utils import *
 @login_required
 def homepage():
     return render_template("consumerViews/main_page.html")
+
+
+@login_required
+def ownerhomepage():
+    return render_template("ownerViews/owner_home.html")

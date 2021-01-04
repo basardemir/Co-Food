@@ -87,7 +87,7 @@ def loginRestaurant(name, password):
             login_user(user)
             session['role'] = 'owner'
             flash("You have logged in.")
-            next_page = request.args.get("next", url_for("homepage"))
+            next_page = request.args.get("next", url_for("ownerhomepage"))
             return redirect(next_page)
         else:
             flash("Invalid credentials.")

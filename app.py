@@ -54,6 +54,9 @@ app.add_url_rule('/order', view_func=order, methods=['GET'])
 # main page
 app.add_url_rule('/homepage', view_func=homepage, methods=['GET'])
 
+# owner main page
+app.add_url_rule('/ownerhomepage', view_func=ownerhomepage, methods=['GET'])
+
 # wait room
 app.add_url_rule('/wait-room', view_func=wait_room, methods=['GET'])
 
