@@ -32,3 +32,5 @@ class LoginForm(FlaskForm):
         DataRequired(),
         Length(min=1, max=128, message="wrong")
     ])
+    role = SelectField("role", validate_choice=False
+    )

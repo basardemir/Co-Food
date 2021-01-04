@@ -43,9 +43,9 @@ app.add_url_rule('/settings', view_func=userSettings, methods=['GET'])
 
 # registration
 app.add_url_rule('/register', view_func=register, methods=['GET'])
-app.add_url_rule('/register', view_func=add_user, methods=['POST'])
+app.add_url_rule('/register', view_func=addClient, methods=['POST'])
 app.add_url_rule('/', view_func=login, methods=['GET'])
-app.add_url_rule('/', view_func=loginStudent, methods=['POST'])
+app.add_url_rule('/', view_func=loginClient, methods=['POST'])
 app.add_url_rule('/logout', view_func=logout_page, methods=['GET'])
 
 # order
