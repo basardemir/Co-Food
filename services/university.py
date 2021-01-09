@@ -17,3 +17,13 @@ def getAllUniversities():
       for i in cursor:
         universities.append(University(i[0],i[1]))
   return universities
+
+def getAllUniversitiesForm():
+  universities = []
+  with dbapi2.connect(dsn) as connection:
+    with connection.cursor() as cursor:
+      query = "select * from university"
+      cursor.execute(query)
+      for i in cursor:
+        universities.append((i[0],i[1]))
+  return universities

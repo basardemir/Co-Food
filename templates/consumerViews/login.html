@@ -43,33 +43,29 @@
     </div>
     <div class="column">
         <form action="" method="post" name="login">
+            {% from "_formhelper.html" import render_field %}
             {{ form.csrf_token }}
             <div class="field">
                 <label class="label">Username</label>
-                <div class="control has-icons-left has-icons-right">
-                    <input class="input" name="username" type="text" placeholder="Username">
-                    <span class="icon is-small is-left">
-                    <i class="fas fa-user"></i>
-                </span>
+                <div class="control">
+                    {{ render_field(form.username, class='input', placeholder="Username") }}
                 </div>
             </div>
-
             <div class="field">
                 <label class="label">Password</label>
                 <div class="control">
-                    <input class="input" name="password" type="password" placeholder="Password">
+                    {{ render_field(form.password, class='input', placeholder="Password") }}
                 </div>
             </div>
             <div class="field">
                 <label class="label">Role</label>
                 <div class="select">
-                    <select name="role">
-                        <option value="0">Student</option>
-                        <option value="1">Owner</option>
-                        <option value="2">Admin</option>
-                    </select>
+                    {{ render_field(form.role) }}
                 </div>
             </div>
+            {% for message in messages %}
+            <h2 style="color:red">{{ message }}</h2>
+            {% endfor %}
             <div class="field is-grouped">
                 <div class="control">
                     <button class="button is-link">Login</button>
@@ -83,7 +79,6 @@
         </div>
     </div>
 </div>
-
 
 <footer>
     <small>&copy; 2020, Başar Demir</small>

@@ -42,67 +42,47 @@
     </div>
     <div class="column">
         <form action="" method="post" name="register">
+            {% from "_formhelper.html" import render_field %}
             {{ form.csrf_token }}
             <div class="field">
                 <label class="label">Role</label>
-                <div class="control">
-                    <div class="select">
-                        <select name="role"  id="selectRole" onchange = "roleChanged()">
-                            <option disabled selected hidden>Select Role</option>
-                            <option value="0">Student</option>
-                            <option value="1">Owner</option>
-                        </select>
-                    </div>
+                <div class="select">
+                    {{ render_field(form.role) }}
                 </div>
             </div>
             <div class="field">
-                <label class="label" id="userLabel">Username</label>
-                <div class="control has-icons-left has-icons-right">
-                    <input class="input" name="username" type="text" placeholder="Username">
-                    <span class="icon is-small is-left">
-                    <i class="fas fa-user"></i>
-                </span>
+                <label class="label">Username</label>
+                <div class="control">
+                    {{ render_field(form.username, class='input', placeholder="Username") }}
                 </div>
             </div>
-
             <div class="field">
                 <label class="label">Email</label>
-                <div class="control has-icons-left has-icons-right">
-                    <input class="input" type="email" name="email" placeholder="Email input"
-                           placeholder="food@uni.com.tr">
-                    <span class="icon is-small is-left">
-                    <i class="fas fa-envelope"></i>
-                    </span>
+                <div class="control">
+                    {{ render_field(form.email, class='input', placeholder="Email") }}
                 </div>
             </div>
             <div class="field">
                 <label class="label">Password</label>
                 <div class="control">
-                    <input class="input" name="password" type="password" placeholder="Password">
+                    {{ render_field(form.password, class='input', placeholder="Password") }}
                 </div>
             </div>
-            <div class="field" id="univesity">
-                <label class="label">University</label>
-                <div class="control">
-                    <div class="select">
-                        <select name="university">
-                            <option disabled selected hidden>Select university</option>
-                            {% for uni in universities %}
-                                <option value="{{ uni.id }}">{{ uni.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+            <div class="field">
+                <label class="label">Role</label>
+                <div class="select">
+                    {{ render_field(form.university) }}
                 </div>
             </div>
             <div class="field">
                 <div class="control">
-                    <label class="checkbox">
-                        <input type="checkbox" name="agree">
-                        I agree to the <a href="#">terms and conditions</a>
-                    </label>
+                    I agree to the <a href="#">terms and conditions</a>
+                    {{ render_field(form.agree, class='checkbox') }}
                 </div>
             </div>
-
+            {% for message in messages %}
+            <h2 style="color:red">{{ message }}</h2>
+            {% endfor %}
             <div class="field is-grouped">
                 <div class="control">
                     <button class="button is-link">Register</button>
@@ -124,17 +104,16 @@
     <small>&copy; 2020, Başar Demir</small>
 </footer>
 <script>
-function roleChanged() {
-  var x = document.getElementById("selectRole").value;
-  if(x==0){
-    document.getElementById("userLabel").innerHTML = "Username";
-    document.getElementById("univesity").hidden = false;
-  }
-  else{
-    document.getElementById("userLabel").innerHTML = "Restaurant Name";
-    document.getElementById("univesity").hidden = true;
-  }
-}
+    function roleChanged() {
+        var x = document.getElementById("selectRole").value;
+        if (x == 0) {
+            document.getElementById("userLabel").innerHTML = "Username";
+            document.getElementById("univesity").hidden = false;
+        } else {
+            document.getElementById("userLabel").innerHTML = "Restaurant Name";
+            document.getElementById("univesity").hidden = true;
+        }
+    }
 
 </script>
 </body>

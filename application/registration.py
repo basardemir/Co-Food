@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request
+from flask import current_app
+from flask_login import UserMixin
 from passlib.hash import pbkdf2_sha256 as hasher
 from services.university import getAllUniversities
 from services.registration import *
@@ -35,6 +37,8 @@ def get_user(user_id):
             owner = getRestaurantById(user_id)
             if owner:
                 return User(user_id, owner['name'], "owner")
+        if session['role'] == 'admin':
+                return User("admin","admin", "admin")
 
 
 def register():
@@ -49,7 +53,7 @@ def login():
 
 
 def loginClient():
-    form = LoginForm()
+    form = LoginForm(request.form)
     if form.validate_on_submit():
         role = request.form['role']
         username = request.form['username']
@@ -59,13 +63,14 @@ def loginClient():
         elif request.form['role'] == "1":
             return loginRestaurant(username, password)
         else:
-            return login()
-        #if request.form['role'] == "2":
-        #   loginAdmin(username, password)
+            return loginAdmin(username, password)
+    else:
+        return render_template("consumerViews/login.html", form=form)
 
 
 
 def loginStudent(username, password):
+    form = LoginForm()
     student = getStudent(username, password)
     if student:
         user = User(student['id'], student['username'], "student")
@@ -75,24 +80,34 @@ def loginStudent(username, password):
         next_page = request.args.get("next", url_for("homepage"))
         return redirect(next_page)
     else:
-        flash("Invalid credentials.")
+        return render_template("consumerViews/login.html", form=form, messages =["Invalid credentials."])
 
 
 def loginRestaurant(name, password):
     form = LoginForm()
-    if form.validate_on_submit():
-        restaurant = getRestaurant(name, password)
-        if restaurant:
-            user = User(restaurant['id'], restaurant['name'], "owner")
-            login_user(user)
-            session['role'] = 'owner'
-            flash("You have logged in.")
-            next_page = request.args.get("next", url_for("ownerhomepage"))
-            return redirect(next_page)
-        else:
-            flash("Invalid credentials.")
-            return login()
+    restaurant = getRestaurant(name, password)
+    if restaurant:
+        user = User(restaurant['id'], restaurant['name'], "owner")
+        login_user(user)
+        session['role'] = 'owner'
+        flash("You have logged in.")
+        next_page = request.args.get("next", url_for("ownerhomepage"))
+        return redirect(next_page)
+    else:
+        return render_template("consumerViews/login.html", form=form, messages =["Invalid credentials."])
 
+def loginAdmin(name, password):
+    form = LoginForm()
+    admin_password = current_app.config["PASSWORDS"].get("admin")
+    if hasher.verify(password, admin_password) and name =="admin":
+        user = User("admin","admin","admin")
+        login_user(user)
+        session['role'] = 'admin'
+        flash("You have logged in.")
+        next_page = request.args.get("next", url_for("adminhomepage"))
+        return redirect(next_page)
+    else:
+        return render_template("consumerViews/login.html", form=form, messages =["Invalid credentials."])
 
 def addClient():
     form = RegisterForm()
@@ -121,7 +136,7 @@ def addNewStudent(username, password, email, university):
     try:
         addStudent(user)
     except:
-        return render_template("consumerViews/register.html", form=form)
+        return render_template("consumerViews/register.html", form=form, messages=["Check your information."])
     return redirect(url_for("login"))
 
 def addNewRestaurant(name, password, email):
@@ -135,7 +150,7 @@ def addNewRestaurant(name, password, email):
     try:
         addRestaurant(restaurant)
     except:
-        return render_template("consumerViews/register.html", form=form)
+        return render_template("consumerViews/register.html", form=form, messages=["Check your information."])
     return redirect(url_for("login"))
 
 def logout_page():

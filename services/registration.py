@@ -21,7 +21,7 @@ def getStudent(username,password):
       query = "select * from student where (student.username=%s)"
       cursor.execute(query,(username,))
       columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
-      if cursor:
+      if cursor.rowcount > 0:
           student = dict(zip(columns, cursor.fetchone()))
           if hasher.verify(password,student['password']):
             return student
@@ -35,7 +35,7 @@ def getRestaurant(name,password):
       cursor.execute(query,(name,))
       columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
       try:
-        if cursor:
+        if cursor.rowcount > 0:
             restaurant = dict(zip(columns, cursor.fetchone()))
             if hasher.verify(password,restaurant['password']):
               return restaurant
@@ -52,9 +52,9 @@ def getStudentById(Id):
     with connection.cursor() as cursor:
       query = "select * from student where (student.id=%s)"
       cursor.execute(query,(Id,))
-      columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
-      student = dict(zip(columns, cursor.fetchone()))
-      if student:
+      if cursor.rowcount > 0:
+          columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+          student = dict(zip(columns, cursor.fetchone()))
           return student
       else:
           return None

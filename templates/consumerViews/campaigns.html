@@ -54,39 +54,35 @@
         <p class="panel-heading">
             Search Campaign
         </p>
-        <div class="panel-block">
-            <p class="control has-icons-left">
-                <input class="input is-danger" type="text" placeholder="Menu Name">
-                <span class="icon is-left">
-                <i class="fas fa-search" aria-hidden="true"></i>
-                </span>
-            </p>
-        </div>
-        <div class="panel-block">
-            <div class="field">
-                <label class="label">Category</label>
-                <div class="control">
-                    <div class="select">
-                        <select>
-                            <option>Categories</option>
-                            <option>Category-1</option>
-                            <option>Category-2</option>
-                            <option>Category-3</option>
-                            <option>Category-4</option>
-                        </select>
+        <form action="" method="post" name="restaurants">
+            {% from "_formhelper.html" import render_field %}
+            {{ form.csrf_token }}
+            <div class="panel-block">
+                <div class="field">
+                    <label class="label">Menu Name</label>
+                    <div class="control">
+                        {{ render_field(form.menuname, class='input is-danger', placeholder="Menu Name") }}
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="panel-block">
-            <div class="field is-grouped">
-                <div class="control">
-                    <button class="button is-danger">Submit</button>
-                </div>
-                <div class="control">
-                    <button class="button is-link is-light">Reset Filter</button>
+            <div class="panel-block">
+                <div class="field">
+                    <label class="label">Categories</label>
+                    <div class="select">
+                        {{ render_field(form.categories) }}
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="panel-block">
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button class="button is-danger">Submit</button>
+                    </div>
+                    <div class="control">
+                        <a href="/campaigns" class="button is-link is-light">Reset Filter</a>
+                    </div>
+                </div>
+            </div>
+        </form>
     </article>
 {% endblock %}
