@@ -89,9 +89,12 @@ app.add_url_rule('/admin/restaurant/edit/<int:restaurantId>', view_func=editRest
 app.add_url_rule('/admin/restaurant/edit/<int:restaurantId>', view_func=saveRestaurant, methods=['POST'])
 app.add_url_rule('/admin/service/delete/<int:serviceId>', view_func=deleteService, methods=['GET'])
 app.add_url_rule('/admin/menu/delete/<int:menuId>', view_func=deleteMenu, methods=['GET'])
+#app.add_url_rule('/admin/menu/edit/<int:restaurantId>', view_func=editMenu, methods=['GET'])
+app.add_url_rule('/admin/menu/add/<int:restaurantId>', view_func=addMenu, methods=['GET'])
+app.add_url_rule('/admin/menu/add/<int:restaurantId>', view_func=insertMenu, methods=['POST'])
+
 app.add_url_rule('/admin/menu/edit/<int:menuId>', view_func=editMenu, methods=['GET'])
-
-
+app.add_url_rule('/admin/menu/edit/<int:menuId>', view_func=saveMenu, methods=['POST'])
 # wait room
 app.add_url_rule('/wait-room', view_func=wait_room, methods=['GET'])
 

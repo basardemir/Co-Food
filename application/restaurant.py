@@ -73,9 +73,7 @@ def editRestaurant(restaurantId):
             form = RestaurantEditForm()
             menus = getAllMenusByRestaurantId(restaurantId)
             universities = getAllUniversitiesByRestaurantId(restaurantId)
-            print(universities)
             comments = getAllCommentsByRestaurantId(restaurantId)
-            print(comments)
             return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,comments=comments,
                                    universities=universities, menus=menus)
         else:
