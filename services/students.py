@@ -3,20 +3,19 @@ import psycopg2 as dbapi2
 dsn = """user=postgres password=basar
 host=localhost port=5432 dbname=postgres"""
 
-class University:
-    def __init__(self,id,name):
-        self.id=id
-        self.name = name
-
-def getAllUniversities():
-  universities = []
+def getAllStudentsByUniId(uniId):
+  students = []
   with dbapi2.connect(dsn) as connection:
     with connection.cursor() as cursor:
-      query = "select * from university"
-      cursor.execute(query)
-      for i in cursor:
-        universities.append(University(i[0],i[1]))
-  return universities
+      query = "select username, email from student where (universityid = %s)"
+      cursor.execute(query,(uniId,))
+      columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+      if cursor.rowcount > 0:
+          for i in cursor:
+            students.append(dict(zip(columns, i)))
+          return students
+      else:
+          return None
 
 def getAllUniversitiesForm():
   universities = []

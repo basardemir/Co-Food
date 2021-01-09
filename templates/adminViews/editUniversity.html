@@ -1,0 +1,62 @@
+{% extends "adminViews/adminlayout.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+{% endblock %}
+{% block left_area %}
+{% endblock %}
+{% block middle %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    University
+                </h1>
+            </div>
+        </div>
+    </section>
+    <div class="card">
+        <div class="card-content">
+            <div class="media">
+                <div class="media-content">
+                    <form action="" method="post" name="save">
+                        {% from "_formhelper.html" import render_field %}
+                        {{ form.csrf_token }}
+                        <div class="field">
+                            <label class="label">University Name</label>
+                            <div class="control">
+                                {{ render_field(form.name,value=university.name,class='input', placeholder="Username") }}
+                            </div>
+                        </div>
+                        {% if message %}
+                            <h2 style="color:red">{{ message }}</h2>
+                        {% endif %}
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-link">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for student in students %}
+    <div class="card">
+        <div class="card-content">
+            <div class="media">
+                <div class="media-content">
+                        <div class="field">
+                            <b>Name:</b> {{ student.username }}<br>
+                            <b>Email:</b> {{ student.email }}
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+{% endblock %}
+{% block right_area %}
+
+{% endblock %}

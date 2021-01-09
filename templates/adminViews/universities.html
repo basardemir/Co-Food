@@ -1,0 +1,41 @@
+{% extends "adminViews/adminlayout.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+{% endblock %}
+{% block left_area %}
+{% endblock %}
+{% block middle %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Universities
+                </h1>
+            </div>
+        </div>
+    </section>
+    {% if message %}
+        <h2 style="color:red">{{ message }}</h2>
+    {%  endif %}
+    {% for i in universities %}
+        <div class="card">
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-content">
+                        {{ i.name }}<br>
+                    </div>
+                </div>
+            </div>
+            <footer class="card-footer">
+                <a href="/admin/university/delete/{{ i.id}}" class="card-footer-item">Delete</a>
+                <a href="/admin/university/edit/{{ i.id}}" class="card-footer-item">Edit</a>
+            </footer>
+        </div>
+
+    {% endfor %}
+
+{% endblock %}
+{% block right_area %}
+
+{% endblock %}

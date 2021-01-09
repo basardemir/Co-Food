@@ -5,6 +5,7 @@ from application.registration import *
 from application.restaurant import *
 from application.user import *
 from application.wait_room import *
+from application.universities import *
 from flask_login import LoginManager
 from flask import session
 
@@ -63,7 +64,10 @@ app.add_url_rule('/ownerhomepage', view_func=ownerhomepage, methods=['GET'])
 
 # admin main page
 app.add_url_rule('/adminhomepage', view_func=adminhomepage, methods=['GET'])
-
+app.add_url_rule('/admin/universities', view_func=adminUniversities, methods=['GET'])
+app.add_url_rule('/admin/university/delete/<int:uniId>', view_func=deleteUniversity, methods=['GET'])
+app.add_url_rule('/admin/university/edit/<int:uniId>', view_func=editUniversity, methods=['GET'])
+app.add_url_rule('/admin/university/edit/<int:uniId>', view_func=saveUniversity, methods=['POST'])
 # wait room
 app.add_url_rule('/wait-room', view_func=wait_room, methods=['GET'])
 
