@@ -10,7 +10,7 @@
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">
-                    Universities
+                    Categories
                 </h1>
             </div>
         </div>
@@ -18,7 +18,7 @@
     {% if message %}
         <h2 style="color:red">{{ message }}</h2>
     {% endif %}
-    {% for i in universities %}
+    {% for i in categories %}
         <div class="card">
             <div class="card-content">
                 <div class="media">
@@ -28,8 +28,8 @@
                 </div>
             </div>
             <footer class="card-footer">
-                <a href="/admin/university/delete/{{ i.id }}" class="card-footer-item">Delete</a>
-                <a href="/admin/university/edit/{{ i.id }}" class="card-footer-item">Edit</a>
+                <a href="/admin/category/delete/{{ i.id }}" class="card-footer-item">Delete</a>
+                <a href="/admin/category/edit/{{ i.id }}" class="card-footer-item">Edit</a>
             </footer>
         </div>
 
@@ -39,13 +39,13 @@
 {% block right_area %}
     <article class="message is-light">
         <div class="message-header">
-            <p>Add New University</p>
+            <p>Add New Category</p>
         </div>
         <div class="message-body">
             <div class="panel-block">
                 <div class="field is-grouped">
                     <div class="control">
-                        <a href="/admin/university/add" class="button is-link is-danger">Add</a>
+                        <a href="/admin/category/add" class="button is-link is-danger">Add</a>
                     </div>
                 </div>
             </div>

@@ -38,6 +38,17 @@ def deleteUniversityById(uniId):
   except:
     return False
 
+
+def addUniversityByName(name):
+  try:
+    with dbapi2.connect(dsn) as connection:
+      with connection.cursor() as cursor:
+        query = "insert into university (name) VALUES (%s)"
+        cursor.execute(query,(name,))
+        return True
+  except:
+    return False
+
 def getUniversityById(uniId):
     with dbapi2.connect(dsn) as connection:
       with connection.cursor() as cursor:
@@ -59,3 +70,17 @@ def editUniversityById(uniId, name):
         return True
   except:
     return False
+
+def getAllUniversitiesByRestaurantId(restaurantId):
+  universities=[]
+  with dbapi2.connect(dsn) as connection:
+    with connection.cursor() as cursor:
+      query = "select *, university.name as universityname from university right join service s on university.id = s.universityid left join restaurant r on r.id = s.restaurantid where (s.restaurantid=%s)"
+      cursor.execute(query, (restaurantId,))
+      columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+      if cursor.rowcount > 0:
+        for i in cursor:
+          universities.append(dict(zip(columns, i)))
+        return universities
+      else:
+        return None

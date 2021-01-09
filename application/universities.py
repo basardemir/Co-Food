@@ -28,6 +28,30 @@ def deleteUniversity(uniId):
         return render_template("errorViews/403.html")
 
 @login_required
+def addUniversity():
+    if session['role'] == 'admin':
+        form = UniversityEditForm()
+        return render_template("adminViews/addUniversity.html", form=form)
+    else:
+        return render_template("errorViews/403.html")
+
+@login_required
+def insertUniversity():
+    form = UniversityEditForm()
+    if form.validate_on_submit():
+        if session['role'] == 'admin':
+            name = request.form['name']
+            if (addUniversityByName(name) == True):
+                universities = getAllUniversities()
+                return render_template("adminViews/universities.html", universities=universities)
+            else:
+                form = UniversityEditForm()
+                return render_template("adminViews/addUniversity.html", form=form, message="This name is already exist")
+        else:
+            return render_template("errorViews/403.html")
+
+
+@login_required
 def editUniversity(uniId):
     if session['role'] == 'admin':
         university = getUniversityById(uniId)

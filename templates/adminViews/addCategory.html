@@ -10,7 +10,7 @@
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">
-                    University
+                    Add New Category
                 </h1>
             </div>
         </div>
@@ -23,9 +23,9 @@
                         {% from "_formhelper.html" import render_field %}
                         {{ form.csrf_token }}
                         <div class="field">
-                            <label class="label">University Name</label>
+                            <label class="label">Category Name</label>
                             <div class="control">
-                                {{ render_field(form.name,value=university.name,class='input', placeholder="Username") }}
+                                {{ render_field(form.name, class='input', placeholder="Category Name") }}
                             </div>
                         </div>
                         {% if message %}
@@ -33,7 +33,7 @@
                         {% endif %}
                         <div class="field is-grouped">
                             <div class="control">
-                                <button class="button is-link">Save</button>
+                                <button class="button is-link">Add</button>
                             </div>
                         </div>
                     </form>
@@ -41,23 +41,6 @@
             </div>
         </div>
     </div>
-    {% if students %}
-        {% for student in students %}
-            <div class="card">
-                <div class="card-content">
-                    <div class="media">
-                        <div class="media-content">
-                            <div class="field">
-                                <b>Name:</b> {{ student.username }}<br>
-                                <b>Email:</b> {{ student.email }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    {% endif %}
-
 {% endblock %}
 {% block right_area %}
 

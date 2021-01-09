@@ -18,3 +18,16 @@ def getMenu(restaurantId):
           menus.append(element)
   return menus
 
+def getAllMenusByRestaurantId(restaurantId):
+  menus = []
+  with dbapi2.connect(dsn) as connection:
+    with connection.cursor() as cursor:
+      query = "select * from menu where (restaurantid = %s)"
+      cursor.execute(query,(restaurantId,))
+      columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+      if cursor.rowcount > 0:
+          for i in cursor:
+              menus.append(dict(zip(columns, i)))
+          return menus
+      else:
+          return None

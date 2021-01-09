@@ -6,8 +6,8 @@ from application.restaurant import *
 from application.user import *
 from application.wait_room import *
 from application.universities import *
+from application.categories import *
 from flask_login import LoginManager
-from flask import session
 
 app = Flask(__name__)
 app.config.from_object("settings")
@@ -64,10 +64,31 @@ app.add_url_rule('/ownerhomepage', view_func=ownerhomepage, methods=['GET'])
 
 # admin main page
 app.add_url_rule('/adminhomepage', view_func=adminhomepage, methods=['GET'])
+
+#university management
 app.add_url_rule('/admin/universities', view_func=adminUniversities, methods=['GET'])
+app.add_url_rule('/admin/university/add', view_func=addUniversity, methods=['GET'])
+app.add_url_rule('/admin/university/add', view_func=insertUniversity, methods=['POST'])
 app.add_url_rule('/admin/university/delete/<int:uniId>', view_func=deleteUniversity, methods=['GET'])
 app.add_url_rule('/admin/university/edit/<int:uniId>', view_func=editUniversity, methods=['GET'])
 app.add_url_rule('/admin/university/edit/<int:uniId>', view_func=saveUniversity, methods=['POST'])
+
+#category management
+app.add_url_rule('/admin/categories', view_func=adminCategories, methods=['GET'])
+app.add_url_rule('/admin/category/add', view_func=addCategory, methods=['GET'])
+app.add_url_rule('/admin/category/add', view_func=insertCategory, methods=['POST'])
+app.add_url_rule('/admin/category/delete/<int:catId>', view_func=deleteCategory, methods=['GET'])
+app.add_url_rule('/admin/category/edit/<int:catId>', view_func=editCategory, methods=['GET'])
+app.add_url_rule('/admin/category/edit/<int:catId>', view_func=saveCategory, methods=['POST'])
+
+#restaurant management
+app.add_url_rule('/admin/restaurants', view_func=adminRestaurants, methods=['GET'])
+app.add_url_rule('/admin/restaurant/delete/<int:restaurantId>', view_func=deleteRestaurant, methods=['GET'])
+app.add_url_rule('/admin/restaurant/edit/<int:restaurantId>', view_func=editRestaurant, methods=['GET'])
+app.add_url_rule('/admin/restaurant/edit/<int:restaurantId>', view_func=saveRestaurant, methods=['POST'])
+
+
+
 # wait room
 app.add_url_rule('/wait-room', view_func=wait_room, methods=['GET'])
 

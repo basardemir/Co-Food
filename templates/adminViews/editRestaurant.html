@@ -4,13 +4,20 @@
 
 {% endblock %}
 {% block left_area %}
+    {% if restaurant.categoryid %}
+        <script>
+            document.addEventListener("DOMContentLoaded", function (event) {
+                document.getElementById("category").value = {{restaurant.categoryid}};
+            });
+        </script>
+    {% endif %}
 {% endblock %}
 {% block middle %}
     <section class="hero is-primary">
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">
-                    University
+                    Restaurant
                 </h1>
             </div>
         </div>
@@ -23,9 +30,15 @@
                         {% from "_formhelper.html" import render_field %}
                         {{ form.csrf_token }}
                         <div class="field">
-                            <label class="label">University Name</label>
+                            <label class="label">Restaurant Name</label>
                             <div class="control">
-                                {{ render_field(form.name,value=university.name,class='input', placeholder="Username") }}
+                                {{ render_field(form.name,value=restaurant.restaurantname,class='input', placeholder="Username") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Restaurant Category</label>
+                            <div class="select">
+                                {{ render_field(form.category, value=restaurant.categoryid) }}
                             </div>
                         </div>
                         {% if message %}
@@ -62,3 +75,5 @@
 {% block right_area %}
 
 {% endblock %}
+
+
