@@ -28,6 +28,17 @@ def getAllUniversitiesForm():
         universities.append((i[0],i[1]))
   return universities
 
+def getAllUniversitiesAdminForm():
+  universities = []
+  universities.append((0,"None"))
+  with dbapi2.connect(dsn) as connection:
+    with connection.cursor() as cursor:
+      query = "select * from university"
+      cursor.execute(query)
+      for i in cursor:
+        universities.append((i[0],i[1]))
+  return universities
+
 def deleteUniversityById(uniId):
   try:
     with dbapi2.connect(dsn) as connection:
@@ -75,12 +86,14 @@ def getAllUniversitiesByRestaurantId(restaurantId):
   universities=[]
   with dbapi2.connect(dsn) as connection:
     with connection.cursor() as cursor:
-      query = "select *, university.name as universityname from university right join service s on university.id = s.universityid left join restaurant r on r.id = s.restaurantid where (s.restaurantid=%s)"
+      query = "select *, service.id as serviceId from service join restaurant r on r.id = service.restaurantid " \
+              "left join university u on u.id = service.universityid where (service.restaurantid=%s)"
       cursor.execute(query, (restaurantId,))
       columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
       if cursor.rowcount > 0:
         for i in cursor:
           universities.append(dict(zip(columns, i)))
+        print(universities)
         return universities
       else:
         return None

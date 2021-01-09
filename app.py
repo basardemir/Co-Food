@@ -7,6 +7,7 @@ from application.user import *
 from application.wait_room import *
 from application.universities import *
 from application.categories import *
+from application.menu import *
 from flask_login import LoginManager
 
 app = Flask(__name__)
@@ -86,7 +87,9 @@ app.add_url_rule('/admin/restaurants', view_func=adminRestaurants, methods=['GET
 app.add_url_rule('/admin/restaurant/delete/<int:restaurantId>', view_func=deleteRestaurant, methods=['GET'])
 app.add_url_rule('/admin/restaurant/edit/<int:restaurantId>', view_func=editRestaurant, methods=['GET'])
 app.add_url_rule('/admin/restaurant/edit/<int:restaurantId>', view_func=saveRestaurant, methods=['POST'])
-
+app.add_url_rule('/admin/service/delete/<int:serviceId>', view_func=deleteService, methods=['GET'])
+app.add_url_rule('/admin/menu/delete/<int:menuId>', view_func=deleteMenu, methods=['GET'])
+app.add_url_rule('/admin/menu/edit/<int:menuId>', view_func=editMenu, methods=['GET'])
 
 
 # wait room

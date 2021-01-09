@@ -1,15 +1,40 @@
 {% extends "adminViews/adminlayout.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-
-{% endblock %}
-{% block left_area %}
     {% if restaurant.categoryid %}
         <script>
             document.addEventListener("DOMContentLoaded", function (event) {
                 document.getElementById("category").value = {{restaurant.categoryid}};
             });
         </script>
+    {% endif %}
+{% endblock %}
+{% block left_area %}
+    <section class="hero is-primary" style="margin-left: 5px;">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Universities
+                </h1>
+            </div>
+        </div>
+    </section>
+    {% if universities %}
+        {% for university in universities %}
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                            {{ university.name }}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="/admin/service/delete/{{ university.serviceid }}"
+                       class="card-footer-item">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
     {% endif %}
 {% endblock %}
 {% block middle %}
@@ -38,7 +63,13 @@
                         <div class="field">
                             <label class="label">Restaurant Category</label>
                             <div class="select">
-                                {{ render_field(form.category, value=restaurant.categoryid) }}
+                                {{ render_field(form.category) }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Add New Service</label>
+                            <div class="select">
+                                {{ render_field(form.university) }}
                             </div>
                         </div>
                         {% if message %}
@@ -54,15 +85,24 @@
             </div>
         </div>
     </div>
-    {% if students %}
-        {% for student in students %}
+    {% if comments %}
+        <section class="hero is-primary" style="margin-left: 5px;">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title">
+                        Comments
+                    </h1>
+                </div>
+            </div>
+        </section>
+        {% for comment in comments %}
             <div class="card">
                 <div class="card-content">
                     <div class="media">
                         <div class="media-content">
                             <div class="field">
-                                <b>Name:</b> {{ student.username }}<br>
-                                <b>Email:</b> {{ student.email }}
+                                <b>Rate:</b> {{ comment.rate }}/5<br>
+                                <b>Description:</b> {{ comment.description }}
                             </div>
                         </div>
                     </div>
@@ -73,7 +113,42 @@
 
 {% endblock %}
 {% block right_area %}
-
+    <section class="hero is-primary" style="margin-left: 5px;">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Menus
+                </h1>
+            </div>
+        </div>
+    </section>
+    <article class="message is-light">
+        <div class="message-body">
+            <div class="panel-block">
+                <div class="control has-text-centered">
+                    <a href="/admin/menu/add/{{ restaurant.id }}"
+                       class="button is-link is-medium is-fullwidth is-danger">Add</a>
+                </div>
+            </div>
+        </div>
+    </article>
+    {% if menus %}
+        {% for menu in menus %}
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                            {{ menu.name }}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="/admin/menu/edit/{{ menu.id }}" class="card-footer-item">Edit</a>
+                    <a href="/admin/menu/delete/{{ menu.id }}" class="card-footer-item">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endblock %}
 
 

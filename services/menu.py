@@ -31,3 +31,25 @@ def getAllMenusByRestaurantId(restaurantId):
           return menus
       else:
           return None
+
+def getMenuById(menuId):
+    with dbapi2.connect(dsn) as connection:
+      with connection.cursor() as cursor:
+        query = "select * from menu where (id=%s)"
+        cursor.execute(query,(menuId,))
+        columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+        if cursor.rowcount > 0:
+          menu = dict(zip(columns, cursor.fetchone()))
+          return menu
+        else:
+          return None
+
+def deleteMenuById(menuId):
+  try:
+    with dbapi2.connect(dsn) as connection:
+      with connection.cursor() as cursor:
+        query = "delete from menu where (id=%s)"
+        cursor.execute(query,(menuId,))
+        return True
+  except:
+    return False

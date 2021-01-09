@@ -92,7 +92,6 @@ def getRestaurantById(restaurantId):
             cursor.execute(query,(restaurantId,))
             columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
             restaurant = dict(zip(columns, cursor.fetchone()))
-            print(restaurant)
             if restaurant:
                 return restaurant
             else:
