@@ -1,18 +1,23 @@
 {% extends "consumerViews/layout.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
+<script>
+document.getElementById("friendnumber").addEventListener("change", price);
 
+function price() {
+  var x = document.getElementById("friendnumber").value;
+  var newprice =  parseFloat({{ menu['price'] }}) / parseInt(x+1);
+  document.getElementById("individual").innerHTML = "<b> Individual Price:</b> " +newprice+"TL";
+}
+</script>
 {% endblock %}
 {% block left_area %}
     <article class="panel is-light">
         <p class="panel-heading">
-            Current Menu
+            {{ menu['name'] }}
         </p>
-        <p class="panel-block">Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit. Sed ut efficitur urna. Duis vitae iaculis
-            sem. Ut imperdiet, quam non bibendum venenatis, leo nibh
-            tristique mi, sit amet rutrum erat quam id lorem.</p>
-        <p class="panel-block">Price: 40TL</p>
+        <p class="panel-block"><b>Description: </b>{{ menu['description'] }}</p>
+        <p class="panel-block"><b>Price: </b> {{ menu['price'] }}TL</p>
     </article>
 
 {% endblock %}
@@ -24,41 +29,39 @@
                     Order-Details
                 </h1>
                 <h2 class="subtitle">
-                    Restaurant-Info
+                    {{ restaurant['restaurantname'] }}
                 </h2>
             </div>
         </div>
     </section>
     <div class="column">
-        <div class="field">
-            <label class="label">Address</label>
-            <div class="control">
-                <textarea class="textarea" placeholder="Write your address" rows="5"></textarea>
-            </div>
-        </div>
-
-        <div class="field">
-            <label class="label">Mutual Friend Number</label>
-            <div class="control">
-                <div class="select">
-                    <select>
-                        <option>0</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                    </select>
+        <form action="" method="post" name="save">
+            {% from "_formhelper.html" import render_field %}
+            {{ form.csrf_token }}
+            <div class="field">
+                <label class="label">Address</label>
+                <div class="control">
+                    {{ render_field(form.address, class='textarea', rows="3", placeholder="Descriptiom") }}
                 </div>
             </div>
-        </div>
-        <div class="field">
-            <label>Individual Price: 50</label>
-        </div>
-        <div class="field is-grouped">
-            <div class="control">
-                <button class="button is-link">Order</button>
+            <div class="field">
+                <label class="label">Mutual Friend Number</label>
+                <div class="select">
+                    {{ render_field(form.friendnumber) }}
+                </div>
             </div>
-        </div>
+            {% if message %}
+                <h2 style="color:red">{{ message }}</h2>
+            {% endif %}
+            <div class="field">
+                <label id="individual"><b>Individual Price:</b> {{ menu['price'] }}TL</label>
+            </div>
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link">Order</button>
+                </div>
+            </div>
+        </form>
     </div>
 {% endblock %}
 

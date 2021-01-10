@@ -10,13 +10,13 @@ def getMenu(restaurantId):
     with connection.cursor() as cursor:
       query = "select * from menu where(restaurantid = %s)"
       cursor.execute(query,(restaurantId,))
-      for el in cursor:
-          element = []
-          element.append(el[1])
-          element.append(el[2])
-          element.append(el[3])
-          menus.append(element)
-  return menus
+      columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+      if cursor.rowcount > 0:
+          for i in cursor:
+              menus.append(dict(zip(columns, i)))
+          return menus
+      else:
+          return None
 
 def getAllMenusByRestaurantId(restaurantId):
   menus = []

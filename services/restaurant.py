@@ -22,7 +22,7 @@ def getRestaurant(restaurantId):
     restaurant = []
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
-            query = "select * from restaurant join category on (restaurant.categoryid = category.id) where(restaurant.id = %s) "
+            query = "select * from restaurant left join category on (restaurant.categoryid = category.id) where(restaurant.id = %s) "
             cursor.execute(query,(restaurantId,))
             for id, name, email, password, catId, categoryId, catname in cursor:
                 element = []

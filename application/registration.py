@@ -76,7 +76,7 @@ def loginStudent(username, password):
         user = User(student['id'], student['username'], "student")
         login_user(user)
         session['role'] = 'student'
-        flash("You have logged in.")
+        session['id'] = student['id']
         next_page = request.args.get("next", url_for("homepage"))
         return redirect(next_page)
     else:

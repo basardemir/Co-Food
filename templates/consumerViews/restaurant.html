@@ -1,7 +1,21 @@
 {% extends "consumerViews/layout.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            document.getElementById("rate-5").checked = true;
+        });
+    </script>
+    <style>
+        .side-by-side {
+            width: 100%;
+        }
 
+        .side-by-side li {
+            display: inline;
+            margin-right: 5%;
+        }
+    </style>
 {% endblock %}
 {% block left_area %}
     <article class="panel is-light">
@@ -36,17 +50,17 @@
         <div class="card">
             <header class="card-header">
                 <p class="card-header-title">
-                    {{ i[1] }} <br>
-                    Price: {{ i[0] }} TL
+                    {{ i['name'] }} <br>
+                    Price: {{  i['price'] }} TL
                 </p>
             </header>
             <div class="card-content">
                 <div class="content">
-                    {{ i[2] }}
+                    {{ i['description']}}
                 </div>
             </div>
             <footer class="card-footer">
-                <a href="/order" class="card-footer-item">Order</a>
+                <a href="/order/{{ i['id'] }}" class="card-footer-item">Order</a>
             </footer>
         </div>
 
@@ -63,48 +77,56 @@
             restaurant.
         </div>
     </article>
+    <form action="" method="post" name="save">
+        {% from "_formhelper.html" import render_field %}
+        {{ commentform.csrf_token }}
         <div class="field">
-        <label class="label">Message</label>
-        <div class="control">
-            <textarea class="textarea" placeholder="Write your comment."></textarea>
-        </div>
-    </div>
-    <div class="field">
-        <div class="control"><label class="label">Rate</label>
-            {% for rate in range (1,6) %}
-                <label class="radio">
-                    <input type="radio" name="question">
-                    {{ rate }}
-                </label>
-            {% endfor %}
-        </div>
-    </div>
-
-
-
-
-    <div class="field is-grouped">
-        <div class="control">
-            <button class="button is-link">Submit</button>
-        </div>
-    </div>
-
-    <label class="label">Comments and Rates</label>
-    {% for comment in range(5) %}
-        <div class="card">
-            <header class="card-header">
-                <p class="card-header-title">
-                    Username-{{ comment }}
-                </p>
-            </header>
-            <div class="card-content">
-                <div class="content">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-                    <br>
-                    Rate : 1/5
-                </div>
+            <label class="label">Menu Name</label>
+            <div class="control">
+                {{ render_field(commentform.rate,style="display: inline",class='radio side-by-side', placeholder="Menu Name") }}
             </div>
-
         </div>
-    {% endfor %}
+        <div class="field">
+            <label class="label">Menu Description</label>
+            <div class="control">
+                {{ render_field(commentform.comment, class='textarea', rows="3", placeholder="Descriptiom") }}
+            </div>
+        </div>
+        {% if message %}
+            <h2 style="color:red">{{ message }}</h2>
+        {% endif %}
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-link">Add</button>
+            </div>
+        </div>
+    </form>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Comments and Rates
+                </h1>
+            </div>
+        </div>
+    </section>
+    {% if comments %}
+        {% for comment in comments %}
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        Username-{{ comment['username'] }}
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        {{ comment['description'] }}
+                        <br>
+                        <b>Rate:</b> {{ comment['rate'] }}/5
+                    </div>
+                </div>
+
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

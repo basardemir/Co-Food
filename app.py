@@ -35,6 +35,7 @@ def page_no_authorization(e):
 
 # restaurant
 app.add_url_rule('/restaurant/<int:restaurantId>', view_func=restaurant_details, methods=['GET'])
+app.add_url_rule('/restaurant/<int:restaurantId>', view_func=add_comment, methods=['POST'])
 app.add_url_rule('/restaurants', view_func=getRestaurants, methods=['GET'])
 app.add_url_rule('/restaurants', view_func=filterRestaurants, methods=['POST'])
 
@@ -54,7 +55,8 @@ app.add_url_rule('/', view_func=loginClient, methods=['POST'])
 app.add_url_rule('/logout', view_func=logout_page, methods=['GET'])
 
 # order
-app.add_url_rule('/order', view_func=order, methods=['GET'])
+app.add_url_rule('/order/<int:menuId>', view_func=orderPage, methods=['GET'])
+app.add_url_rule('/order/<int:menuId>', view_func=insertOrder, methods=['POST'])
 
 # main page
 app.add_url_rule('/homepage', view_func=homepage, methods=['GET'])
@@ -89,10 +91,8 @@ app.add_url_rule('/admin/restaurant/edit/<int:restaurantId>', view_func=editRest
 app.add_url_rule('/admin/restaurant/edit/<int:restaurantId>', view_func=saveRestaurant, methods=['POST'])
 app.add_url_rule('/admin/service/delete/<int:serviceId>', view_func=deleteService, methods=['GET'])
 app.add_url_rule('/admin/menu/delete/<int:menuId>', view_func=deleteMenu, methods=['GET'])
-#app.add_url_rule('/admin/menu/edit/<int:restaurantId>', view_func=editMenu, methods=['GET'])
 app.add_url_rule('/admin/menu/add/<int:restaurantId>', view_func=addMenu, methods=['GET'])
 app.add_url_rule('/admin/menu/add/<int:restaurantId>', view_func=insertMenu, methods=['POST'])
-
 app.add_url_rule('/admin/menu/edit/<int:menuId>', view_func=editMenu, methods=['GET'])
 app.add_url_rule('/admin/menu/edit/<int:menuId>', view_func=saveMenu, methods=['POST'])
 # wait room
