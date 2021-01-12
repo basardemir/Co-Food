@@ -43,10 +43,11 @@
         </div>
     {% endfor %}
 
-
     <div class="buttons">
-        <button class="button is-danger">Send Order</button>
-        <button class="button is-light">Cancel Order</button>
+        {% if friendsize == order['numberofstudents'] %}
+            <a href="/participate/send/{{ order['id'] }}" class="button is-danger">Send Order</a>
+        {% endif %}
+        <a href="/participate/delete/{{ order['id'] }}" class="button is-light">Cancel Order</a>
     </div>
 
 {% endblock %}

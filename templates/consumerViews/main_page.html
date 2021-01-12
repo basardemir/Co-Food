@@ -1,7 +1,16 @@
 {% extends "consumerViews/layout.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-
+    <script>
+        {% if ordered or noactiveorder or error %}
+            document.addEventListener("DOMContentLoaded", function (event) {
+                document.getElementById("modal").classList.add("is-active");
+            });
+            function closeModal() {
+                document.getElementById("modal").classList.remove("is-active");
+            }
+        {% endif %}
+    </script>
 {% endblock %}
 {% block left_area %}
 
@@ -21,6 +30,37 @@
 
 {% endblock %}
 {% block middle %}
+    <div id="modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                {% if ordered %}
+                    <p class="modal-card-title">Order is sent!</p>
+                {% endif %}
+                {% if noactiveorder %}
+                    <p class="modal-card-title">No Active Order</p>
+                {% endif %}
+                {% if error %}
+                    <p class="modal-card-title">Error</p>
+                {% endif %}
+
+            </header>
+            <section class="modal-card-body">
+                {% if ordered %}
+                    You have successfully ordered your menu!
+                {% endif %}
+                {% if noactiveorder %}
+                    There is not any active orders. You can participate new one.
+                {% endif %}
+                {% if error %}
+                    You cannot participate!
+                {% endif %}
+            </section>
+            <footer class="modal-card-foot">
+                <button id="close" onclick="closeModal()" class="button">Close</button>
+            </footer>
+        </div>
+    </div>
     <section class="hero">
         <div class="hero-body">
             <div class="container">
@@ -33,25 +73,30 @@
             </div>
         </div>
     </section>
-    {% for i in range(1,10) %}
-        <div class="card">
-            <header class="card-header is-primary">
-                <p class="card-header-title">
-                    Order-{{ i }}
-                </p>
-            </header>
-            <div class="card-content">
-                <div class="content">
-                    Menu : Hamburger <br>
-                    People : 2/5<br>
-                    <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+    {% if orders %}
+        {% for order in orders %}
+            <div class="card">
+                <header class="card-header is-primary">
+                    <p class="card-header-title">
+                        Menu Name: {{ order['menuname'] }} <br>
+                        Restaurant Name: {{ order['restaurantname'] }} <br>
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <b>Menu Description: </b> {{ order['description'] }} <br>
+                        <b>People: </b> {{ order['friendnumber'] }}/{{ order['numberofstudents'] }}<br>
+                        <b>Price: </b> {{ order['price']* order['menucount'] }} TL<br>
+                        <b>Order Time: </b>
+                        <time datetime="2016-1-1">{{ order['ordertime'] }}</time>
+                    </div>
                 </div>
+                <footer class="card-footer">
+                    <a href="/participate/{{ order['id'] }}" class="card-footer-item">Participate</a>
+                </footer>
             </div>
-            <footer class="card-footer">
-                <a href="/wait-room" class="card-footer-item">Participate</a>
-            </footer>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    {% endif %}
 
 {% endblock %}
 {% block right_area %}
@@ -64,9 +109,9 @@
             {{ form.csrf_token }}
             <div class="panel-block">
                 <div class="field">
-                    <label class="label">Restraurant Name</label>
+                    <label class="label">Restaurant Name</label>
                     <div class="control">
-                        {{ render_field(form.restaurantname, class='input is-danger', placeholder="Username") }}
+                        {{ render_field(form.restaurantname, class='input is-danger', placeholder="Restaurant Name") }}
                     </div>
                 </div>
             </div>
