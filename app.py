@@ -56,7 +56,8 @@ app.add_url_rule('/logout', view_func=logout_page, methods=['GET'])
 
 # order
 app.add_url_rule('/order/<int:menuId>', view_func=orderPage, methods=['GET'])
-app.add_url_rule('/order/<int:menuId>', view_func=insertOrder, methods=['POST'])
+app.add_url_rule('/order/<int:menuId>', view_func=insertNewOrder, methods=['POST'])
+app.add_url_rule('/activeorder', view_func=activeOrder, methods=['GET'])
 
 # main page
 app.add_url_rule('/homepage', view_func=homepage, methods=['GET'])

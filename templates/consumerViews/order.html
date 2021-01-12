@@ -1,15 +1,17 @@
 {% extends "consumerViews/layout.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-<script>
-document.getElementById("friendnumber").addEventListener("change", price);
+    <script>
+        document.getElementById("friendnumber").addEventListener("change", price);
+        document.getElementById("ordercount").addEventListener("change", price);
 
-function price() {
-  var x = document.getElementById("friendnumber").value;
-  var newprice =  parseFloat({{ menu['price'] }}) / parseInt(x+1);
-  document.getElementById("individual").innerHTML = "<b> Individual Price:</b> " +newprice+"TL";
-}
-</script>
+        function price() {
+            var friend = document.getElementById("friendnumber").value;
+            var count = document.getElementById("ordercount").value;
+            var newprice = parseFloat({{ menu['price'] }}) * count / parseInt(friend + 1);
+            document.getElementById("individual").innerHTML = "<b> Individual Price:</b> " + newprice.toFixed(2) + "TL";
+        }
+    </script>
 {% endblock %}
 {% block left_area %}
     <article class="panel is-light">
@@ -41,7 +43,7 @@ function price() {
             <div class="field">
                 <label class="label">Address</label>
                 <div class="control">
-                    {{ render_field(form.address, class='textarea', rows="3", placeholder="Descriptiom") }}
+                    {{ render_field(form.address, class='textarea', rows="3", placeholder="Please write your address") }}
                 </div>
             </div>
             <div class="field">
@@ -50,12 +52,18 @@ function price() {
                     {{ render_field(form.friendnumber) }}
                 </div>
             </div>
-            {% if message %}
-                <h2 style="color:red">{{ message }}</h2>
-            {% endif %}
+            <div class="field">
+                <label class="label">Number of Orders</label>
+                <div class="select">
+                    {{ render_field(form.ordercount) }}
+                </div>
+            </div>
             <div class="field">
                 <label id="individual"><b>Individual Price:</b> {{ menu['price'] }}TL</label>
             </div>
+            {% if message %}
+                <h2 style="color:red; margin-bottom:10px;">{{ message }}</h2>
+            {% endif %}
             <div class="field is-grouped">
                 <div class="control">
                     <button class="button is-link">Order</button>
@@ -64,9 +72,5 @@ function price() {
         </form>
     </div>
 {% endblock %}
-
-
-
 {% block right_area %}
-
 {% endblock %}

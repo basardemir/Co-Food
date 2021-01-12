@@ -6,15 +6,12 @@
 {% block left_area %}
     <article class="panel is-light">
         <p class="panel-heading">
-            Current Menu - Restaurant Name
+            {{ order['menuname'] }} - {{ order['restaurantname'] }}
         </p>
-        <p class="panel-block">Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit. Sed ut efficitur urna. Duis vitae iaculis
-            sem. Ut imperdiet, quam non bibendum venenatis, leo nibh
-            tristique mi, sit amet rutrum erat quam id lorem.</p>
-        <p class="panel-block"><span style="font-weight: bold">Address: </span> Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit. Sed ut efficitur urna. Lorem ipsum dolor sit amet, consectetur</p>
-        <p class="panel-block"><span style="font-weight: bold">Price: </span> 40TL</p>
+        <p class="panel-block">{{ order['description'] }}</p>
+        <p class="panel-block"><span style="font-weight: bold">Address: </span> {{ order['address'] }}</p>
+        <p class="panel-block"><span style="font-weight: bold">Price: </span> {{ order['price'] * order['menucount'] }}
+        </p>
 
     </article>
 {% endblock %}
@@ -26,22 +23,20 @@
                     Order Details
                 </h1>
                 <h2 class="subtitle">
-                    Participation: 5/10
+                    Participation: {{ friendsize }}/{{ order['numberofstudents'] }}
                 </h2>
+                <!--<h2 class="subtitle">
+                    Create Time: {{ order['ordertime']}}
+                </h2>-->
             </div>
         </div>
     </section>
-    {% for i in range(1,5) %}
+    {% for person in friends %}
         <div class="card">
             <div class="card-content">
                 <div class="media">
                     <div class="media-content">
-                        {% if i == 1 %}
-                            <p class="title is-4">Host-Name{{ i }}-Surname{{ i }}</p>
-                        {% endif %}
-                        {% if i != 1 %}
-                            <p class="title is-4">Name{{ i }}-Surname{{ i }}</p>
-                        {% endif %}
+                        <p class="title is-4">{{ person['username'] }}</p>
                     </div>
                 </div>
             </div>
@@ -49,10 +44,10 @@
     {% endfor %}
 
 
-<div class="buttons">
-  <button class="button is-danger">Send Order</button>
-  <button class="button is-light">Cancel Order</button>
-</div>
+    <div class="buttons">
+        <button class="button is-danger">Send Order</button>
+        <button class="button is-light">Cancel Order</button>
+    </div>
 
 {% endblock %}
 {% block right_area %}

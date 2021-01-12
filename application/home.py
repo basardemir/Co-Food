@@ -2,13 +2,15 @@ from flask import Flask, render_template
 from passlib.hash import pbkdf2_sha256 as hasher
 from flask_login.utils import *
 from forms.filter import RestaurantSearchForm
+from services.order import *
 
 
 @login_required
 def homepage():
     if session['role'] == 'student':
         form = RestaurantSearchForm()
-        return render_template("consumerViews/main_page.html", form=form)
+        orders = getAllOrders()
+        return render_template("consumerViews/main_page.html", form=form, orders=orders)
     else:
         return render_template("errorViews/403.html")
 
