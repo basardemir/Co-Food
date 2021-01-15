@@ -46,25 +46,49 @@
             </div>
         </div>
     </section>
-    {% for i in restaurant_info['menus'] %}
-        <div class="card">
-            <header class="card-header">
-                <p class="card-header-title">
-                    {{ i['name'] }} <br>
-                    Price: {{  i['price'] }} TL
-                </p>
-            </header>
-            <div class="card-content">
-                <div class="content">
-                    {{ i['description']}}
+    {% if restaurant_info['campaigns'] %}
+        {% for i in restaurant_info['campaigns'] %}
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title ">
+                        <span style="margin-right:10px;"><i class="fas fa-fire"></i></span>{{ i['name'] }}
+                        <br>
+                        Price: {{ i['price'] }} TL
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        {{ i['description'] }}
+                    </div>
                 </div>
+                <footer class="card-footer">
+                    <a href="/order/{{ i['id'] }}" class="card-footer-item">Order</a>
+                </footer>
             </div>
-            <footer class="card-footer">
-                <a href="/order/{{ i['id'] }}" class="card-footer-item">Order</a>
-            </footer>
-        </div>
 
-    {% endfor %}
+        {% endfor %}
+    {% endif %}
+    {% if restaurant_info['menus'] %}
+        {% for i in restaurant_info['menus'] %}
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        {{ i['name'] }} <br>
+                        Price: {{ i['price'] }} TL
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        {{ i['description'] }}
+                    </div>
+                </div>
+                <footer class="card-footer">
+                    <a href="/order/{{ i['id'] }}" class="card-footer-item">Order</a>
+                </footer>
+            </div>
+
+        {% endfor %}
+    {% endif %}
 
 {% endblock %}
 {% block right_area %}
@@ -89,7 +113,7 @@
         <div class="field">
             <label class="label">Menu Description</label>
             <div class="control">
-                {{ render_field(commentform.comment, class='textarea', rows="3", placeholder="Descriptiom") }}
+                {{ render_field(commentform.comment, class='textarea', rows="3", placeholder="Write your comment here") }}
             </div>
         </div>
         {% if message %}
@@ -120,9 +144,9 @@
                 </header>
                 <div class="card-content">
                     <div class="content">
-                        {{ comment['description'] }}
-                        <br>
                         <b>Rate:</b> {{ comment['rate'] }}/5
+                        <br>
+                        <b>Description:</b> {{ comment['description'] }}
                     </div>
                 </div>
 

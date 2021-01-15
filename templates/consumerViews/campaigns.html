@@ -37,10 +37,12 @@
             <div class="card-content">
                 <div class="media">
                     <div class="media-content">
-                        <p class="title is-4"><a href="{{url_for('restaurant_details', restaurantId = i['restaurantId'])}}">{{ i['name'] }}</a></p>
-                        {{ i['restaurantName'] }}<br>
-                        Price: {{ i['price'] }} TL<br>
-                        Menu Description: {{ i['content'] }}
+                        <p class="title is-4"><a
+                                href="{{ url_for('restaurant_details', restaurantId = i['restaurantId']) }}">
+                            {{ i['name'] }}</a></p>
+                        <b>Restaurant Name:</b> {{ i['restaurantName'] }}<br>
+                        <b>Price:</b> {{ i['price'] }} TL<br>
+                        <b>Menu Description:</b> {{ i['content'] }}
                     </div>
                 </div>
             </div>

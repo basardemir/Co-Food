@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SelectField, BooleanField, FloatField, TextAreaField, DecimalField
-from wtforms.validators import DataRequired, NumberRange, Optional, Length
+from wtforms import StringField, BooleanField, FloatField, TextAreaField
+from wtforms.validators import DataRequired, NumberRange, Length
+
 
 class MenuEditForm(FlaskForm):
     price = FloatField(

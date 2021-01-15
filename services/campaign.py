@@ -1,5 +1,4 @@
 import psycopg2 as dbapi2
-from flask import current_app
 
 dsn = """user=postgres password=basar
 host=localhost port=5432 dbname=postgres"""

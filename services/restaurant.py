@@ -1,29 +1,30 @@
 import psycopg2 as dbapi2
-from flask import current_app
 
 dsn = """user=postgres password=basar
 host=localhost port=5432 dbname=postgres"""
 
+
 def getAllRestaurants():
-  restaurants = []
-  with dbapi2.connect(dsn) as connection:
-    with connection.cursor() as cursor:
-      query = "select * from restaurant left join category on (restaurant.categoryid = category.id)"
-      cursor.execute(query)
-      for id, name, email, password, catId, categoryId, catname in cursor:
-          element = []
-          element.append(id)
-          element.append(name)
-          element.append(catname)
-          restaurants.append(element)
-  return restaurants
+    restaurants = []
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select * from restaurant left join category on (restaurant.categoryid = category.id) order by restaurant.id asc"
+            cursor.execute(query)
+            for id, name, email, password, catId, categoryId, catname in cursor:
+                element = []
+                element.append(id)
+                element.append(name)
+                element.append(catname)
+                restaurants.append(element)
+    return restaurants
+
 
 def getRestaurant(restaurantId):
     restaurant = []
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
             query = "select * from restaurant left join category on (restaurant.categoryid = category.id) where(restaurant.id = %s) "
-            cursor.execute(query,(restaurantId,))
+            cursor.execute(query, (restaurantId,))
             for id, name, email, password, catId, categoryId, catname in cursor:
                 element = []
                 element.append(id)
@@ -32,12 +33,13 @@ def getRestaurant(restaurantId):
                 restaurant.append(element)
     return restaurant
 
+
 def filterRestaurant(name, categoryId):
     restaurant = []
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
-            if name != "" and categoryId !='0':
-                name ='%'+name+'%'
+            if name != "" and categoryId != '0':
+                name = '%' + name + '%'
                 query = "select * from restaurant join category on (restaurant.categoryid = category.id) where " \
                         "(restaurant.categoryid = %s AND LOWER(restaurant.name ) like LOWER(%s))  "
                 cursor.execute(query, (categoryId, name))
@@ -46,7 +48,7 @@ def filterRestaurant(name, categoryId):
                 query = "select * from restaurant join category on (restaurant.categoryid = category.id) where " \
                         " (LOWER(restaurant.name ) like LOWER(%s))  "
                 cursor.execute(query, (name,))
-            elif categoryId !='0':
+            elif categoryId != '0':
                 query = "select * from restaurant join category on (restaurant.categoryid = category.id) where " \
                         "(restaurant.categoryid = %s)  "
                 cursor.execute(query, (categoryId,))
@@ -61,15 +63,17 @@ def filterRestaurant(name, categoryId):
                 restaurant.append(element)
     return restaurant
 
+
 def deleteRestaurantById(restaurantId):
-  try:
-    with dbapi2.connect(dsn) as connection:
-      with connection.cursor() as cursor:
-        query = "delete from restaurant where (id=%s)"
-        cursor.execute(query,(restaurantId,))
-        return True
-  except:
-    return False
+    try:
+        with dbapi2.connect(dsn) as connection:
+            with connection.cursor() as cursor:
+                query = "delete from restaurant where (id=%s)"
+                cursor.execute(query, (restaurantId,))
+                return True
+    except:
+        return False
+
 
 def getAllRestaurantsByCategoryId(catId):
     restaurants = []
@@ -85,11 +89,12 @@ def getAllRestaurantsByCategoryId(catId):
             else:
                 return None
 
+
 def getRestaurantById(restaurantId):
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
             query = "select *, restaurant.name as restaurantname, restaurant.id as restaurantId from restaurant left join category on (restaurant.categoryid = category.id) where (restaurant.id = %s) "
-            cursor.execute(query,(restaurantId,))
+            cursor.execute(query, (restaurantId,))
             columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
             restaurant = dict(zip(columns, cursor.fetchone()))
             if restaurant:
@@ -97,16 +102,17 @@ def getRestaurantById(restaurantId):
             else:
                 return None
 
+
 def editRestaurantById(restaurantId, name, categoryid):
-  try:
-    with dbapi2.connect(dsn) as connection:
-      with connection.cursor() as cursor:
-        if categoryid != '0':
-            query = "update restaurant set name=%s, categoryid=%s where (id=%s)"
-            cursor.execute(query, (name, categoryid, restaurantId))
-        else:
-            query = "update restaurant set name=%s, categoryid=NULL where (id=%s)"
-            cursor.execute(query, (name, restaurantId))
-        return True
-  except:
-    return False
+    try:
+        with dbapi2.connect(dsn) as connection:
+            with connection.cursor() as cursor:
+                if categoryid != '0':
+                    query = "update restaurant set name=%s, categoryid=%s where (id=%s)"
+                    cursor.execute(query, (name, categoryid, restaurantId))
+                else:
+                    query = "update restaurant set name=%s, categoryid=NULL where (id=%s)"
+                    cursor.execute(query, (name, restaurantId))
+                return True
+    except:
+        return False

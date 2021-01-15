@@ -8,7 +8,7 @@
         function price() {
             var friend = document.getElementById("friendnumber").value;
             var count = document.getElementById("ordercount").value;
-            var newprice = parseFloat({{ menu['price'] }}) * count / parseInt(friend + 1);
+            var newprice = parseFloat({{ menu['price'] }}) * count / (parseInt(friend) + 1);
             document.getElementById("individual").innerHTML = "<b> Individual Price:</b> " + newprice.toFixed(2) + "TL";
         }
     </script>

@@ -1,13 +1,10 @@
-from flask import Flask, render_template
-from services.restaurant import *
-from services.menu import *
-from services.university import *
-from services.menu import *
-from services.service import *
+from flask import redirect
+from flask import render_template
 from flask_login.utils import *
-from forms.menu import *
-from flask import redirect, url_for
 
+from forms.menu import *
+from services.menu import *
+from services.restaurant import *
 
 
 @login_required
@@ -16,9 +13,10 @@ def deleteMenu(menuId):
         menu = getMenuById(menuId)
         if menu:
             deleteMenuById(menuId)
-            return redirect("/admin/restaurant/edit/"+str(menu["restaurantid"]))
+            return redirect("/admin/restaurant/edit/" + str(menu["restaurantid"]))
     else:
         return render_template("errorViews/403.html")
+
 
 @login_required
 def addMenu(restaurantId):
@@ -26,12 +24,13 @@ def addMenu(restaurantId):
         restaurant = getRestaurantById(restaurantId)
         if restaurant:
             form = MenuEditForm()
-            return render_template("adminViews/addMenu.html", form = form, restaurant=restaurant)
+            return render_template("adminViews/addMenu.html", form=form, restaurant=restaurant)
         else:
-            #to be completed
+            # to be completed
             return render_template("adminViews/universities.html", message="This university does not exists")
     else:
         return render_template("errorViews/403.html")
+
 
 @login_required
 def editMenu(menuId):
@@ -40,9 +39,9 @@ def editMenu(menuId):
         restaurant = getRestaurantById(menu['restaurantid'])
         if menu and restaurant:
             form = MenuEditForm()
-            return render_template("adminViews/editMenu.html", form = form, restaurant=restaurant, menu=menu)
+            return render_template("adminViews/editMenu.html", form=form, restaurant=restaurant, menu=menu)
         else:
-            #to be completed
+            # to be completed
             return render_template("adminViews/universities.html", message="This university does not exists")
     else:
         return render_template("errorViews/403.html")
@@ -57,10 +56,11 @@ def insertMenu(restaurantId):
             price = request.form['price']
             description = request.form['description']
             campaign = form.campaign.data
-            if (addMenuByRestaurantId(restaurantId, name,description,price,campaign) == True):
+            if (addMenuByRestaurantId(restaurantId, name, description, price, campaign) == True):
                 return redirect("/admin/restaurant/edit/" + str(restaurantId))
         else:
             return render_template("errorViews/403.html")
+
 
 @login_required
 def saveMenu(menuId):
@@ -74,7 +74,7 @@ def saveMenu(menuId):
                 price = request.form['price']
                 description = request.form['description']
                 campaign = form.campaign.data
-                if (updateMenuById(menuId,name, description, price, campaign) == True):
+                if (updateMenuById(menuId, name, description, price, campaign) == True):
                     return redirect("/admin/restaurant/edit/" + str(menu['restaurantid']))
         else:
             return render_template("errorViews/403.html")

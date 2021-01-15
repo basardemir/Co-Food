@@ -1,20 +1,16 @@
-from flask import Flask, render_template
 from services.restaurant import *
-from services.menu import *
-from services.university import *
-from services.comment import *
-from services.service import *
+from flask import redirect, session
+from flask import render_template, request
 from flask_login.utils import *
+
+from forms.comment import *
 from forms.filter import RestaurantSearchForm
 from forms.restaurant import RestaurantEditForm
-from forms.comment import *
-from flask import redirect, url_for
-from flask import Flask, render_template, request
-from flask import current_app
-from flask_login import UserMixin
-from passlib.hash import pbkdf2_sha256 as hasher
-from services.university import getAllUniversities
-from flask import current_app, flash, redirect, url_for, session
+from services.comment import *
+from services.menu import *
+from services.restaurant import *
+from services.service import *
+from services.university import *
 
 
 @login_required
@@ -44,9 +40,15 @@ def restaurant_details(restaurantId):
         comments = getAllCommentsByRestaurantIdwithStudents(restaurantId)
         restaurant = getRestaurant(restaurantId)
         commentForm = CommentAddForm()
+        campaigns = []
+        for menu in menus:
+            if menu['iscampaign']:
+                campaigns.append(menu)
+                menus.remove(menu)
         information = {
             'restaurant': restaurant,
-            'menus': menus
+            'menus': menus,
+            'campaigns': campaigns
         }
         return render_template("consumerViews/restaurant.html", comments=comments, restaurant_info=information,
                                commentform=commentForm)
@@ -178,5 +180,16 @@ def addService(restaurantId, universityId):
             addServiceByRestaurantUniversity(restaurantId, universityId)
             return True
         return False
+    else:
+        return render_template("errorViews/403.html")
+
+
+@login_required
+def deleteComment(commentId):
+    if session['role'] == 'admin':
+        comment = getCommentById(commentId)
+        if comment:
+            deleteCommentById(commentId)
+            return redirect("/admin/restaurant/edit/" + str(comment["restaurantid"]))
     else:
         return render_template("errorViews/403.html")

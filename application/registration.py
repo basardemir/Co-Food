@@ -1,12 +1,10 @@
-from flask import Flask, render_template, request
-from flask import current_app
-from flask_login import UserMixin
-from passlib.hash import pbkdf2_sha256 as hasher
-from services.university import getAllUniversities
-from services.registration import *
-from forms.registration import *
 from flask import current_app, flash, redirect, url_for, session
+from flask import render_template, request
 from flask_login import UserMixin, login_user, logout_user
+
+from forms.registration import *
+from services.registration import *
+from services.university import getAllUniversities
 
 
 class User(UserMixin):
@@ -38,7 +36,7 @@ def get_user(user_id):
             if owner:
                 return User(user_id, owner['name'], "owner")
         if session['role'] == 'admin':
-                return User("admin","admin", "admin")
+            return User("admin", "admin", "admin")
 
 
 def register():
@@ -68,7 +66,6 @@ def loginClient():
         return render_template("consumerViews/login.html", form=form)
 
 
-
 def loginStudent(username, password):
     form = LoginForm()
     student = getStudent(username, password)
@@ -80,7 +77,7 @@ def loginStudent(username, password):
         next_page = request.args.get("next", url_for("homepage"))
         return redirect(next_page)
     else:
-        return render_template("consumerViews/login.html", form=form, messages =["Invalid credentials."])
+        return render_template("consumerViews/login.html", form=form, messages=["Invalid credentials."])
 
 
 def loginRestaurant(name, password):
@@ -94,20 +91,22 @@ def loginRestaurant(name, password):
         next_page = request.args.get("next", url_for("ownerhomepage"))
         return redirect(next_page)
     else:
-        return render_template("consumerViews/login.html", form=form, messages =["Invalid credentials."])
+        return render_template("consumerViews/login.html", form=form, messages=["Invalid credentials."])
+
 
 def loginAdmin(name, password):
     form = LoginForm()
     admin_password = current_app.config["PASSWORDS"].get("admin")
-    if hasher.verify(password, admin_password) and name =="admin":
-        user = User("admin","admin","admin")
+    if hasher.verify(password, admin_password) and name == "admin":
+        user = User("admin", "admin", "admin")
         login_user(user)
         session['role'] = 'admin'
         flash("You have logged in.")
         next_page = request.args.get("next", url_for("adminhomepage"))
         return redirect(next_page)
     else:
-        return render_template("consumerViews/login.html", form=form, messages =["Invalid credentials."])
+        return render_template("consumerViews/login.html", form=form, messages=["Invalid credentials."])
+
 
 def addClient():
     form = RegisterForm()
@@ -124,6 +123,7 @@ def addClient():
         else:
             return render_template("consumerViews/register.html", form=form)
 
+
 def addNewStudent(username, password, email, university):
     form = RegisterForm()
     formLogin = LoginForm()
@@ -139,6 +139,7 @@ def addNewStudent(username, password, email, university):
         return render_template("consumerViews/register.html", form=form, messages=["Check your information."])
     return redirect(url_for("login"))
 
+
 def addNewRestaurant(name, password, email):
     form = RegisterForm()
     formLogin = LoginForm()
@@ -152,6 +153,7 @@ def addNewRestaurant(name, password, email):
     except:
         return render_template("consumerViews/register.html", form=form, messages=["Check your information."])
     return redirect(url_for("login"))
+
 
 def logout_page():
     logout_user()

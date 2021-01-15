@@ -88,7 +88,7 @@
                         <b>People: </b> {{ order['friendnumber'] }}/{{ order['numberofstudents'] }}<br>
                         <b>Price: </b> {{ order['price']* order['menucount'] }} TL<br>
                         <b>Order Time: </b>
-                        <time datetime="2016-1-1">{{ order['ordertime'] }}</time>
+                        <time datetime="2016-1-1">{{ order['ordertime'].strftime("%d/%m/%Y, %H:%M:%S") }}</time>
                     </div>
                 </div>
                 <footer class="card-footer">

@@ -1,14 +1,15 @@
+from flask_login import LoginManager
+
 from application.campaign import *
+from application.categories import *
 from application.home import *
+from application.menu import *
 from application.order import *
 from application.registration import *
 from application.restaurant import *
+from application.universities import *
 from application.user import *
 from application.wait_room import *
-from application.universities import *
-from application.categories import *
-from application.menu import *
-from flask_login import LoginManager
 
 app = Flask(__name__)
 app.config.from_object("settings")
@@ -22,12 +23,15 @@ lm = LoginManager()
 lm.init_app(app)
 lm.login_view = "/"
 
+
 @lm.user_loader
 def load_user(user_id):
     return get_user(user_id)
 
+
 def page_not_found(e):
     return render_template('errorViews/404.html')
+
 
 def page_no_authorization(e):
     return render_template('errorViews/403.html')
@@ -36,6 +40,7 @@ def page_no_authorization(e):
 # restaurant
 app.add_url_rule('/restaurant/<int:restaurantId>', view_func=restaurant_details, methods=['GET'])
 app.add_url_rule('/restaurant/<int:restaurantId>', view_func=add_comment, methods=['POST'])
+app.add_url_rule('/admin/comment/delete/<int:commentId>', view_func=deleteComment, methods=['GET'])
 app.add_url_rule('/restaurants', view_func=getRestaurants, methods=['GET'])
 app.add_url_rule('/restaurants', view_func=filterRestaurants, methods=['POST'])
 
@@ -72,7 +77,7 @@ app.add_url_rule('/ownerhomepage', view_func=ownerhomepage, methods=['GET'])
 # admin main page
 app.add_url_rule('/adminhomepage', view_func=adminhomepage, methods=['GET'])
 
-#university management
+# university management
 app.add_url_rule('/admin/universities', view_func=adminUniversities, methods=['GET'])
 app.add_url_rule('/admin/university/add', view_func=addUniversity, methods=['GET'])
 app.add_url_rule('/admin/university/add', view_func=insertUniversity, methods=['POST'])
@@ -80,7 +85,7 @@ app.add_url_rule('/admin/university/delete/<int:uniId>', view_func=deleteUnivers
 app.add_url_rule('/admin/university/edit/<int:uniId>', view_func=editUniversity, methods=['GET'])
 app.add_url_rule('/admin/university/edit/<int:uniId>', view_func=saveUniversity, methods=['POST'])
 
-#category management
+# category management
 app.add_url_rule('/admin/categories', view_func=adminCategories, methods=['GET'])
 app.add_url_rule('/admin/category/add', view_func=addCategory, methods=['GET'])
 app.add_url_rule('/admin/category/add', view_func=insertCategory, methods=['POST'])
@@ -88,7 +93,7 @@ app.add_url_rule('/admin/category/delete/<int:catId>', view_func=deleteCategory,
 app.add_url_rule('/admin/category/edit/<int:catId>', view_func=editCategory, methods=['GET'])
 app.add_url_rule('/admin/category/edit/<int:catId>', view_func=saveCategory, methods=['POST'])
 
-#restaurant management
+# restaurant management
 app.add_url_rule('/admin/restaurants', view_func=adminRestaurants, methods=['GET'])
 app.add_url_rule('/admin/restaurant/delete/<int:restaurantId>', view_func=deleteRestaurant, methods=['GET'])
 app.add_url_rule('/admin/restaurant/edit/<int:restaurantId>', view_func=editRestaurant, methods=['GET'])
@@ -102,11 +107,9 @@ app.add_url_rule('/admin/menu/edit/<int:menuId>', view_func=saveMenu, methods=['
 # wait room
 app.add_url_rule('/wait-room', view_func=wait_room, methods=['GET'])
 
-#errors
+# errors
 app.register_error_handler(404, page_not_found)
 app.register_error_handler(403, page_no_authorization)
-
-
 
 if __name__ == '__main__':
     app.run()

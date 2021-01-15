@@ -1,14 +1,11 @@
-from flask import Flask, render_template
 from services.restaurant import *
+from flask import redirect, url_for, session
+from flask import render_template, request
+
+from forms.order import *
 from services.menu import *
 from services.order import *
-from forms.order import *
-from flask import redirect, url_for
-from flask import Flask, render_template, request
-from flask import current_app
-from flask_login import UserMixin
-from services.university import getAllUniversities
-from flask import current_app, flash, redirect, url_for, session
+from services.restaurant import *
 
 
 def orderPage(menuId):
@@ -56,8 +53,9 @@ def insertNewOrder(menuId):
             else:
 
                 if (
-                insertOrderSQL(menuId, session['id'], int(request.form['friendnumber']) + 1, request.form['ordercount'],
-                               request.form['address'])):
+                        insertOrderSQL(menuId, session['id'], int(request.form['friendnumber']) + 1,
+                                       request.form['ordercount'],
+                                       request.form['address'])):
                     return redirect("/activeorder")
                 else:
                     form = orderForm()
@@ -75,7 +73,7 @@ def participate(orderId):
         studentId = session['id']
         order = getActiveOrder(orderId)
         if order and order[0]['numberofstudents'] > len(order) and not (
-        hasActiveOrder(session['id'])) and insertParticipant(studentId, orderId):
+                hasActiveOrder(session['id'])) and insertParticipant(studentId, orderId):
             return redirect("/activeorder")
         else:
             return redirect(url_for('homepage', error='true', **request.args))

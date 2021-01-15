@@ -17,7 +17,7 @@
     </section>
     {% if message %}
         <h2 style="color:red">{{ message }}</h2>
-    {%  endif %}
+    {% endif %}
     {% for i in restaurants %}
         <div class="card">
             <div class="card-content">
@@ -29,8 +29,8 @@
                 </div>
             </div>
             <footer class="card-footer">
-                <a href="/admin/restaurant/delete/{{i[0]}}" class="card-footer-item">Delete</a>
-                <a href="/admin/restaurant/edit/{{i[0]}}" class="card-footer-item">Edit</a>
+                <a href="/admin/restaurant/delete/{{ i[0] }}" class="card-footer-item">Delete</a>
+                <a href="/admin/restaurant/edit/{{ i[0] }}" class="card-footer-item">Edit</a>
             </footer>
         </div>
 

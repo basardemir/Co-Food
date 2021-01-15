@@ -1,5 +1,4 @@
 import psycopg2 as dbapi2
-from flask import current_app
 
 dsn = """user=postgres password=basar
 host=localhost port=5432 dbname=postgres"""
@@ -41,6 +40,27 @@ def getOrderDetails(studentId):
                         " from orderstudentmatching left join ordercontent o on " \
                         "o.id = orderstudentmatching.ordercontentid left join menu m on m.id = o.menuid " \
                         "left join restaurant r on r.id = m.restaurantid where (studentid=%s AND o.isDelivered = FALSE)"
+                cursor.execute(query, (studentId,))
+                columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+                if cursor.rowcount > 0:
+                    order = dict(zip(columns, cursor.fetchone()))
+                    return order
+                else:
+                    return None
+    except:
+        return False
+
+
+def getPastOrders(studentId):
+    try:
+        with dbapi2.connect(dsn) as connection:
+            with connection.cursor() as cursor:
+                query = "select ordercontentid as id,ordertime, o.isdelivered, m.name as menuname,r.name as restaurantname," \
+                        " m.description as description, menucount, address,price,numberofstudents" \
+                        " from orderstudentmatching left join student s on orderstudentmatching.studentid = s.id left join ordercontent o on " \
+                        "o.id = orderstudentmatching.ordercontentid left join menu m on m.id = o.menuid " \
+                        "left join restaurant r on r.id = m.restaurantid where (studentid=%s AND o.isDelivered = TRUE)" \
+                        " GROUP BY ordercontentid"
                 cursor.execute(query, (studentId,))
                 columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
                 if cursor.rowcount > 0:
@@ -172,6 +192,7 @@ def insertParticipant(studentId, orderId):
     except:
         return False
 
+
 def deleteParticipant(studentId, orderId):
     try:
         with dbapi2.connect(dsn) as connection:
@@ -186,6 +207,7 @@ def deleteParticipant(studentId, orderId):
                 return True
     except:
         return False
+
 
 def sendOrderContent(orderId):
     try:
