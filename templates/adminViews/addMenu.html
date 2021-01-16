@@ -1,7 +1,13 @@
 {% extends "adminViews/adminlayout.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-
+    {% if restaurant %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            document.getElementById("restaurant").value = '{{restaurant.id}}';
+        });
+    </script>
+    {% endif %}
 {% endblock %}
 {% block left_area %}
 {% endblock %}
@@ -12,9 +18,11 @@
                 <h1 class="title">
                     Add New Menu
                 </h1>
-                <h3 class="title">
-                    {{ restaurant.restaurantname }}
-                </h3>
+                {% if restaurant %}
+                    <h3 class="title">
+                        {{ restaurant.restaurantname }}
+                    </h3>
+                {% endif %}
             </div>
         </div>
     </section>
@@ -44,9 +52,14 @@
                             </div>
                         </div>
                         <div class="field">
-                            <label class="label">Has Campaign?</label>
+                            <label class="label">Restaurant</label>
+                            <div class="select">
+                                {{ render_field(form.restaurant) }}
+                            </div>
+                        </div>
+                        <div class="field">
                             <div class="control">
-                                {{ render_field(form.campaign, class="is-large checkbox", placeholder="Descriptiom") }}
+                                {{ render_field(form.campaign, class="is-large checkbox", placeholder="Descriptiom") }} Has Campaign?
                             </div>
                         </div>
                         {% if message %}

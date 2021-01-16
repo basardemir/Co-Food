@@ -4,6 +4,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function (event) {
             document.getElementById("description").innerHTML = '{{menu.description}}';
+            document.getElementById("restaurant").value = '{{menu.restaurantid}}';
             if ('{{menu.iscampaign}}' === 'True') {
                 document.getElementById("campaign").checked = true;
             }
@@ -19,9 +20,6 @@
                 <h1 class="title">
                     Edit Menu
                 </h1>
-                <h3 class="title">
-                    {{ restaurant.restaurantname }}
-                </h3>
             </div>
         </div>
     </section>
@@ -51,9 +49,14 @@
                             </div>
                         </div>
                         <div class="field">
-                            <label class="label">Has Campaign?</label>
+                            <label class="label">Restaurant</label>
+                            <div class="select">
+                                {{ render_field(form.restaurant) }}
+                            </div>
+                        </div>
+                        <div class="field">
                             <div class="control">
-                                {{ render_field(form.campaign, class="is-large checkbox") }}
+                                {{ render_field(form.campaign, class="is-large checkbox") }} Has Campaign?
                             </div>
                         </div>
                         {% if message %}
@@ -61,7 +64,7 @@
                         {% endif %}
                         <div class="field is-grouped">
                             <div class="control">
-                                <button class="button is-link">Add</button>
+                                <button class="button is-link">Save</button>
                             </div>
                         </div>
                     </form>

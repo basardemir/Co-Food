@@ -1,13 +1,50 @@
+from services.registration import *
 from flask import render_template
 from flask import render_template
 from flask import session
-
+from flask_login import login_required
+from flask import current_app, flash, redirect, url_for, session
+from flask import render_template, request
+from flask_login import UserMixin, login_user, logout_user
+from forms.settings import *
 from services.order import *
 from services.students import *
 
 
+@login_required
 def userSettings():
-    return render_template("consumerViews/settings.html")
+    if session['role'] == 'student':
+        userId = session['id']
+        user = getStudentDetail(userId)
+        form = SettingsForm()
+        return render_template("consumerViews/settings.html", user=user, form=form)
+    else:
+        return render_template("errorViews/403.html")
+
+
+@login_required
+def updateUser():
+    if session['role'] == 'student':
+        userId = session['id']
+        form = SettingsForm()
+        if form.validate_on_submit():
+            username = request.form['username']
+            password = request.form['password']
+            university = request.form['university']
+            email = request.form['email']
+            if form['passwordchange'].data == 'True':
+                if updateUserWithPassword(userId,username, hasher.hash(password), email, university):
+                    user = getStudentDetail(userId)
+                    form = SettingsForm()
+                    return render_template("consumerViews/settings.html", user=user, form=form)
+            else:
+                if updateUserWithoutPassword(userId,username, email, university):
+                    user = getStudentDetail(userId)
+                    form = SettingsForm()
+                    return render_template("consumerViews/settings.html", user=user, form=form)
+    else:
+        return render_template("errorViews/403.html")
+    return render_template("errorViews/404.html")
 
 
 def userHistory():

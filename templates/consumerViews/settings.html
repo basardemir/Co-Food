@@ -1,77 +1,80 @@
 {% extends "consumerViews/layout.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            document.getElementById("university").value = {{user['universityid']}};
+            document.getElementById("passchange").checked = false;
+        });
 
+        function passwordChange() {
+            if (document.getElementById("passchange").checked) {
+                document.getElementById("passwordfield").classList.remove("is-hidden");
+            } else {
+                document.getElementById("passwordfield").classList.add("is-hidden");
+            }
+
+        }
+    </script>
 {% endblock %}
 {% block left_area %}
 
 {% endblock %}
 {% block middle %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Settings
+                </h1>
+                <h2 class="subtitle">
+                    You can change your account information.
+                </h2>
+            </div>
+        </div>
+    </section>
     <div class="column">
-        <div class="field">
-            <label class="label">Name</label>
-            <div class="control">
-                <input class="input" type="text" placeholder="Name">
-            </div>
-        </div>
-        <div class="field">
-            <label class="label">Surname</label>
-            <div class="control">
-                <input class="input" type="text" placeholder="Surname">
-            </div>
-        </div>
-        <div class="field">
-            <label class="label">Username</label>
-            <div class="control has-icons-left has-icons-right">
-                <input class="input is-success" type="text" placeholder="Username">
-                <span class="icon is-small is-left">
-                    <i class="fas fa-user"></i>
-                </span>
-                <span class="icon is-small is-right">
-                    <i class="fas fa-check"></i>
-    </span>
-            </div>
-            <p class="help is-success">This username is available</p>
-        </div>
-
-        <div class="field">
-            <label class="label">Email</label>
-            <div class="control has-icons-left has-icons-right">
-                <input class="input is-danger" type="email" placeholder="Email input" placeholder="food@uni.com.tr">
-                <span class="icon is-small is-left">
-      <i class="fas fa-envelope"></i>
-    </span>
-                <span class="icon is-small is-right">
-      <i class="fas fa-exclamation-triangle"></i>
-    </span>
-            </div>
-            <p class="help is-danger">This email is invalid</p>
-        </div>
-        <div class="field">
-            <label class="label">Password</label>
-            <div class="control">
-                <input class="input" type="password" placeholder="Password">
-            </div>
-        </div>
-        <div class="field">
-            <label class="label">University</label>
-            <div class="control">
-                <div class="select">
-                    <select>
-                        <option>Select university</option>
-                        <option>ITU</option>
-                        <option>ODTU</option>
-                        <option>BOUN</option>
-                        <option>Koc</option>
-                    </select>
+        <form action="" method="post" name="register">
+            {% from "_formhelper.html" import render_field %}
+            {{ form.csrf_token }}
+            <div class="field">
+                <label class="label">Username</label>
+                <div class="control">
+                    {{ render_field(form.username, value=user.username , class='input', placeholder="Username") }}
                 </div>
             </div>
-        </div>
-        <div class="field is-grouped">
-            <div class="control">
-                <button class="button is-link">Save</button>
+            <div class="field">
+                <label class="label">Email</label>
+                <div class="control">
+                    {{ render_field(form.email, value=user.email , class='input', placeholder="Email") }}
+                </div>
             </div>
-        </div>
+
+            <label class="checkbox">
+                {{ render_field(form.passwordchange,id="passchange", class='checkbox', onclick="passwordChange()") }}
+                Change Password?
+            </label>
+            <div id="passwordfield" class="field is-hidden">
+                <label class="label" hidden>Password</label>
+                <div class="control">
+                    {{ render_field(form.password, class='input', placeholder="Password") }}
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">University</label>
+                <div class="select">
+                    {{ render_field(form.university) }}
+                </div>
+            </div>
+            {% for message in messages %}
+                <h2 style="color:red">{{ message }}</h2>
+            {% endfor %}
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link">Save</button>
+                </div>
+            </div>
+        </form>
     </div>
 {% endblock %}
 {% block right_area %}

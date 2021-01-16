@@ -69,12 +69,27 @@ def addMenuByRestaurantId(restaurantId, name, description, price, campaign):
         return False
 
 
-def updateMenuById(menuId, name, description, price, campaign):
+def updateMenuById(menuId, name, description, price, campaign, restaurant):
     try:
         with dbapi2.connect(dsn) as connection:
             with connection.cursor() as cursor:
-                query = "update menu set name=%s, description=%s,price=%s,iscampaign=%s where(id=%s)"
-                cursor.execute(query, (name, description, price, campaign, menuId))
+                query = "update menu set name=%s, description=%s,price=%s,iscampaign=%s, restaurantid=%s where(id=%s)"
+                cursor.execute(query, (name, description, price, campaign, restaurant, menuId))
                 return True
     except:
         return False
+
+
+def getAllMenus():
+    menus = []
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select menu.name as name, restaurant.name as restaurantname, menu.id as id from menu left join restaurant on (restaurant.id = menu.restaurantid) order by menu.name asc"
+            cursor.execute(query)
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            if cursor.rowcount > 0:
+                for i in cursor:
+                    menus.append(dict(zip(columns, i)))
+                return menus
+            else:
+                return None

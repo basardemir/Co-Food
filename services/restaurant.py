@@ -116,3 +116,13 @@ def editRestaurantById(restaurantId, name, categoryid):
                 return True
     except:
         return False
+
+def getAllRestaurantsForm():
+    restaurants = []
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select * from restaurant"
+            cursor.execute(query)
+            for i in cursor:
+                restaurants.append((i[0], i[1]))
+    return restaurants

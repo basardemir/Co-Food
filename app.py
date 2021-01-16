@@ -1,5 +1,5 @@
+from flask import Flask
 from flask_login import LoginManager
-
 from application.campaign import *
 from application.categories import *
 from application.home import *
@@ -51,6 +51,7 @@ app.add_url_rule('/campaigns', view_func=filterCampaigns, methods=['POST'])
 # history
 app.add_url_rule('/history', view_func=userHistory, methods=['GET'])
 app.add_url_rule('/settings', view_func=userSettings, methods=['GET'])
+app.add_url_rule('/settings', view_func=updateUser, methods=['POST'])
 
 # registration
 app.add_url_rule('/register', view_func=register, methods=['GET'])
@@ -93,6 +94,9 @@ app.add_url_rule('/admin/category/delete/<int:catId>', view_func=deleteCategory,
 app.add_url_rule('/admin/category/edit/<int:catId>', view_func=editCategory, methods=['GET'])
 app.add_url_rule('/admin/category/edit/<int:catId>', view_func=saveCategory, methods=['POST'])
 
+# menu management
+app.add_url_rule('/admin/menus', view_func=adminMenus, methods=['GET'])
+
 # restaurant management
 app.add_url_rule('/admin/restaurants', view_func=adminRestaurants, methods=['GET'])
 app.add_url_rule('/admin/restaurant/delete/<int:restaurantId>', view_func=deleteRestaurant, methods=['GET'])
@@ -100,7 +104,8 @@ app.add_url_rule('/admin/restaurant/edit/<int:restaurantId>', view_func=editRest
 app.add_url_rule('/admin/restaurant/edit/<int:restaurantId>', view_func=saveRestaurant, methods=['POST'])
 app.add_url_rule('/admin/service/delete/<int:serviceId>', view_func=deleteService, methods=['GET'])
 app.add_url_rule('/admin/menu/delete/<int:menuId>', view_func=deleteMenu, methods=['GET'])
-app.add_url_rule('/admin/menu/add/<int:restaurantId>', view_func=addMenu, methods=['GET'])
+app.add_url_rule('/admin/menu/add/<int:restaurantId>', view_func=addMenuToRestaurant, methods=['GET'])
+app.add_url_rule('/admin/menu/add', view_func=addMenu, methods=['GET'])
 app.add_url_rule('/admin/menu/add/<int:restaurantId>', view_func=insertMenu, methods=['POST'])
 app.add_url_rule('/admin/menu/edit/<int:menuId>', view_func=editMenu, methods=['GET'])
 app.add_url_rule('/admin/menu/edit/<int:menuId>', view_func=saveMenu, methods=['POST'])

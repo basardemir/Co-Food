@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, FloatField, TextAreaField
+from wtforms import StringField, BooleanField, FloatField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, NumberRange, Length
+from services.restaurant import *
 
 
 class MenuEditForm(FlaskForm):
@@ -22,3 +23,6 @@ class MenuEditForm(FlaskForm):
                                     Length(min=1, max=256, message="wrong"),
                                 ])
     campaign = BooleanField("campaign")
+    res_choice = getAllRestaurantsForm()
+    restaurant = SelectField("restaurant", validate_choice=False, choices=res_choice
+                             )

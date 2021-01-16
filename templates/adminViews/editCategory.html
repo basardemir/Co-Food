@@ -10,7 +10,7 @@
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">
-                    University
+                    Category
                 </h1>
             </div>
         </div>
@@ -23,7 +23,7 @@
                         {% from "_formhelper.html" import render_field %}
                         {{ form.csrf_token }}
                         <div class="field">
-                            <label class="label">University Name</label>
+                            <label class="label">Category Name</label>
                             <div class="control">
                                 {{ render_field(form.name,value=category.name,class='input', placeholder="Username") }}
                             </div>
@@ -41,6 +41,15 @@
             </div>
         </div>
     </div>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Related Restaurants
+                </h1>
+            </div>
+        </div>
+    </section>
     {% if restaurants %}
         {% for restaurant in restaurants %}
             <div class="card">
