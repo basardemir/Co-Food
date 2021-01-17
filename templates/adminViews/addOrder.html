@@ -1,0 +1,90 @@
+{% extends "adminViews/adminlayout.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            menuchanged();
+        });
+
+        document.getElementById("menu").addEventListener("change", menuchanged);
+
+        function menuchanged() {
+            let id = document.getElementById("menu").value;
+            var array = {{ menus|tojson }}
+                document.getElementById("menuname").innerHTML = array[id]['name'];
+            document.getElementById("menudescription").innerHTML = '<b>Description: </b>' +
+                array[id]['description'];
+            document.getElementById("menuprice").innerHTML = '<b>Price: </b>' + array[id]['price'];
+            document.getElementById("restaurantname").innerHTML = array[id]['restaurantname'];
+        }
+
+    </script>
+{% endblock %}
+{% block left_area %}
+    <article class="panel is-light">
+        <p id="menuname" class="panel-heading">
+        </p>
+        <p id="menudescription" class="panel-block"><b>Description: </b> </p>
+        <p id="menuprice" class="panel-block"><b>Price: </b> </p>
+    </article>
+
+{% endblock %}
+{% block middle %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Order-Details
+                </h1>
+                <h2 id="restaurantname" class="subtitle">
+                </h2>
+            </div>
+        </div>
+    </section>
+    <div class="column">
+        <form action="" method="post" name="save">
+            {% from "_formhelper.html" import render_field %}
+            {{ form.csrf_token }}
+            <div class="field">
+                <label class="label">Menu</label>
+                <div class="select">
+                    {{ render_field(form.menu) }}
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Address</label>
+                <div class="control">
+                    {{ render_field(form.address, class='textarea', rows="3", placeholder="Please write your address") }}
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Mutual Friend Number</label>
+                <div class="select">
+                    {{ render_field(form.friendnumber) }}
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Number of Orders</label>
+                <div class="select">
+                    {{ render_field(form.ordercount) }}
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Add Students</label>
+                <div class="select">
+                    {{ render_field(form.student) }}
+                </div>
+            </div>
+            {% if message %}
+                <h2 style="color:red; margin-bottom:10px;">{{ message }}</h2>
+            {% endif %}
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block right_area %}
+{% endblock %}

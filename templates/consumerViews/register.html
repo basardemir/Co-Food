@@ -47,11 +47,11 @@
             <div class="field">
                 <label class="label">Role</label>
                 <div class="select">
-                    {{ render_field(form.role) }}
+                    {{ render_field(form.role, id="selectRole", onchange="roleChanged()") }}
                 </div>
             </div>
             <div class="field">
-                <label class="label">Username</label>
+                <label id="userLabel" class="label">Username</label>
                 <div class="control">
                     {{ render_field(form.username, class='input', placeholder="Username") }}
                 </div>
@@ -68,8 +68,8 @@
                     {{ render_field(form.password, class='input', placeholder="Password") }}
                 </div>
             </div>
-            <div class="field">
-                <label class="label">Role</label>
+            <div class="field" id="universityArea">
+                <label class="label">University</label>
                 <div class="select">
                     {{ render_field(form.university) }}
                 </div>
@@ -106,12 +106,14 @@
 <script>
     function roleChanged() {
         var x = document.getElementById("selectRole").value;
-        if (x == 0) {
+        if (x === '0') {
             document.getElementById("userLabel").innerHTML = "Username";
-            document.getElementById("univesity").hidden = false;
+            document.getElementById("universityArea").hidden = false;
+            console.log("e");
         } else {
             document.getElementById("userLabel").innerHTML = "Restaurant Name";
-            document.getElementById("univesity").hidden = true;
+            document.getElementById("universityArea").hidden = true;
+            console.log("b");
         }
     }
 

@@ -1,15 +1,6 @@
-{% extends "adminViews/adminlayout.html" %}
+{% extends "ownerViews/ownerlayout.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-    <script>
-        document.addEventListener("DOMContentLoaded", function (event) {
-            document.getElementById("description").innerHTML = '{{menu.description}}';
-            document.getElementById("restaurant").value = {{restaurant.restaurant}};
-            if ('{{menu.iscampaign}}' === 'True') {
-                document.getElementById("campaign").checked = true;
-            }
-        });
-    </script>
 {% endblock %}
 {% block left_area %}
 {% endblock %}
@@ -18,8 +9,13 @@
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">
-                    Edit Menu
+                    Add New Menu
                 </h1>
+                {% if restaurant %}
+                    <h3 class="title">
+                        {{ restaurant.restaurantname }}
+                    </h3>
+                {% endif %}
             </div>
         </div>
     </section>
@@ -33,30 +29,24 @@
                         <div class="field">
                             <label class="label">Menu Name</label>
                             <div class="control">
-                                {{ render_field(form.name, value=menu.name ,class='input', placeholder="Menu Name") }}
+                                {{ render_field(form.name, class='input', placeholder="Menu Name") }}
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Menu Price</label>
                             <div class="control">
-                                {{ render_field(form.price,value=menu.price, min="0",type="number",step="0.01", class='number') }}
+                                {{ render_field(form.price, value="0", min="0",type="number",step="0.01", class='number') }}
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Menu Description</label>
                             <div class="control">
-                                {{ render_field(form.description, class='textarea', rows="3", placeholder="Description") }}
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Restaurant</label>
-                            <div class="select">
-                                {{ render_field(form.restaurant) }}
+                                {{ render_field(form.description, class='textarea', rows="3", placeholder="Descriptiom") }}
                             </div>
                         </div>
                         <div class="field">
                             <div class="control">
-                                {{ render_field(form.campaign, class="is-large checkbox") }} Has Campaign?
+                                {{ render_field(form.campaign, class="is-large checkbox", placeholder="Descriptiom") }} Has Campaign?
                             </div>
                         </div>
                         {% if message %}
@@ -64,7 +54,7 @@
                         {% endif %}
                         <div class="field is-grouped">
                             <div class="control">
-                                <button class="button is-link">Save</button>
+                                <button class="button is-link">Add</button>
                             </div>
                         </div>
                     </form>

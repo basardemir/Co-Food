@@ -87,6 +87,7 @@ def loginRestaurant(name, password):
         user = User(restaurant['id'], restaurant['name'], "owner")
         login_user(user)
         session['role'] = 'owner'
+        session['id'] = restaurant['id']
         flash("You have logged in.")
         next_page = request.args.get("next", url_for("ownerhomepage"))
         return redirect(next_page)

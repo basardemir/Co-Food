@@ -1,0 +1,49 @@
+{% extends "ownerViews/ownerlayout.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+{% endblock %}
+{% block left_area %}
+    <article class="panel is-light">
+        <p class="panel-heading">
+            {{ order['menuname'] }} - {{ order['restaurantname'] }}
+        </p>
+        <p class="panel-block">{{ order['description'] }}</p>
+        <p class="panel-block"><span style="font-weight: bold">Address: </span> {{ order['address'] }}</p>
+        <p class="panel-block"><span style="font-weight: bold">Price: </span> {{ order['price'] * order['menucount'] }}TL
+        <p class="panel-block"><span style="font-weight: bold">Menu Count: </span> {{ order['menucount'] }}
+        </p>
+
+    </article>
+{% endblock %}
+{% block middle %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Order Details
+                </h1>
+                <h2 class="subtitle">
+                    Participation: {{ friendsize }}/{{ order['numberofstudents'] }}
+                </h2>
+                <!--<h2 class="subtitle">
+                    Create Time: {{ order['ordertime']}}
+                </h2>-->
+            </div>
+        </div>
+    </section>
+    {% for person in friends %}
+        <div class="card">
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-content">
+                        <p class="title is-4">{{ person['username'] }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}
+{% block right_area %}
+{% endblock %}

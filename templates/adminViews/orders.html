@@ -1,0 +1,59 @@
+{% extends "adminViews/adminlayout.html" %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+
+{% endblock %}
+{% block left_area %}
+{% endblock %}
+{% block middle %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Orders
+                </h1>
+            </div>
+        </div>
+    </section>
+    {% if message %}
+        <h2 style="color:red">{{ message }}</h2>
+    {% endif %}
+    {% if orders %}
+    {% for order in  orders %}
+        <div class="card">
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-content">
+                        <b>Menu Name: </b>{{ order['menuname'] }}<br>
+                        <b>Participant Number: </b>{{ order['numberofstudents'] }}<br>
+                        <b>Order Time: </b>
+                        <time>{{ order['ordertime'].strftime("%d/%m/%Y, %H:%M:%S") }}</time>
+                    </div>
+                </div>
+            </div>
+            <footer class="card-footer">
+                <a href="/admin/order/delete/{{ order['id'] }}" class="card-footer-item">Delete</a>
+                <a href="/admin/order/edit/{{ order['id'] }}" class="card-footer-item">Edit</a>
+            </footer>
+        </div>
+
+    {% endfor %}
+    {% endif %}
+
+{% endblock %}
+{% block right_area %}
+    <article class="message is-light">
+        <div class="message-header">
+            <p>Add New Order</p>
+        </div>
+        <div class="message-body">
+            <div class="panel-block">
+                <div class="field is-grouped">
+                    <div class="control">
+                        <a href="/admin/order/add" class="button is-link is-danger">Add</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+{% endblock %}

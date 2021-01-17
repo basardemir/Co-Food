@@ -93,3 +93,28 @@ def getAllMenus():
                 return menus
             else:
                 return None
+
+def getAllMenusDictionary():
+    menus = {}
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select menu.name as name, price,description,restaurant.name as restaurantname, menu.id as id from menu left join restaurant on (restaurant.id = menu.restaurantid) order by menu.name asc"
+            cursor.execute(query)
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            if cursor.rowcount > 0:
+                for i in cursor:
+                    menu = dict(zip(columns, i))
+                    menus[menu['id']] = menu
+                return menus
+            else:
+                return None
+
+def getAllMenusForm():
+    menus = []
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select id,name from menu order by name asc"
+            cursor.execute(query)
+            for i in cursor:
+                menus.append((i[0], i[1]))
+    return menus

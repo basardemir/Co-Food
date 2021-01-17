@@ -98,8 +98,23 @@ def deleteRestaurant(restaurantId):
 
 
 @login_required
-def editRestaurant(restaurantId):
+def editRestaurant(restaurantId=0):
     if session['role'] == 'admin':
+        restaurant = getRestaurantById(restaurantId)
+        if restaurant:
+            form = RestaurantEditForm()
+            menus = getAllMenusByRestaurantId(restaurantId)
+            universities = getAllUniversitiesByRestaurantId(restaurantId)
+            comments = getAllCommentsByRestaurantId(restaurantId)
+            return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
+                                   comments=comments,
+                                   universities=universities, menus=menus)
+        else:
+            restaurants = getAllRestaurants()
+            return render_template("adminViews/restaurants.html", restaurants=restaurants,
+                                   message="This restaurant does not exists.")
+    if session['role'] == 'owner':
+        restaurantId = session['id']
         restaurant = getRestaurantById(restaurantId)
         if restaurant:
             form = RestaurantEditForm()
@@ -116,6 +131,22 @@ def editRestaurant(restaurantId):
     else:
         return render_template("errorViews/403.html")
 
+@login_required
+def editOwnerRestaurant():
+    if session['role'] == 'owner':
+        restaurantId = session['id']
+        restaurant = getRestaurantById(restaurantId)
+        if restaurant:
+            form = RestaurantEditForm()
+            menus = getAllMenusByRestaurantId(restaurantId)
+            universities = getAllUniversitiesByRestaurantId(restaurantId)
+            comments = getAllCommentsByRestaurantId(restaurantId)
+            return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
+                                   comments=comments,
+                                   universities=universities, menus=menus)
+        return render_template("errorViews/404.html")
+    else:
+        return render_template("errorViews/403.html")
 
 @login_required
 def saveRestaurant(restaurantId):
@@ -158,6 +189,43 @@ def saveRestaurant(restaurantId):
         else:
             return render_template("errorViews/403.html")
 
+@login_required
+def saveOwnerRestaurant():
+    form = RestaurantEditForm()
+    restaurantId = session['id']
+    if form.validate_on_submit():
+        if session['role'] == 'owner':
+            name = request.form['name']
+            category = request.form['category']
+            university = request.form['university']
+            if (editRestaurantById(restaurantId, name, category) == True and (
+                    addService(restaurantId, university) == True)):
+                restaurant = getRestaurantById(restaurantId)
+                if restaurant:
+                    form = RestaurantEditForm()
+                    menus = getAllMenusByRestaurantId(restaurantId)
+                    comments = getAllCommentsByRestaurantId(restaurantId)
+                    universities = getAllUniversitiesByRestaurantId(restaurantId)
+                    return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
+                                           comments=comments,
+                                           universities=universities, menus=menus)
+                else:
+                    return render_template("errorViews/404.html")
+            else:
+                university = getUniversityById(restaurantId)
+                restaurant = getRestaurantById(restaurantId)
+                if university:
+                    form = RestaurantEditForm()
+                    menus = getAllMenusByRestaurantId(restaurantId)
+                    universities = getAllUniversitiesByRestaurantId(restaurantId)
+                    comments = getAllCommentsByRestaurantId(restaurantId)
+                    return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
+                                           comments=comments,
+                                           universities=universities, menus=menus, message="This name already exists")
+                else:
+                    return render_template("errorViews/404.html")
+        else:
+            return render_template("errorViews/403.html")
 
 @login_required
 def deleteService(serviceId):
@@ -169,10 +237,19 @@ def deleteService(serviceId):
     else:
         return render_template("errorViews/403.html")
 
+@login_required
+def deleteOwnerService(serviceId):
+    if session['role'] == 'owner':
+        service = getServiceById(serviceId)
+        if service and service['restaurantid'] == session['id']:
+            deleteServiceById(serviceId)
+            return redirect("/owner/restaurant/")
+    else:
+        return render_template("errorViews/403.html")
 
 @login_required
 def addService(restaurantId, universityId):
-    if session['role'] == 'admin':
+    if session['role'] == 'admin' or (session['role'] == 'owner' and session['id']==restaurantId):
         service = getServiceByRestaurantUniversity(restaurantId, universityId)
         if service:
             return True
@@ -193,3 +270,4 @@ def deleteComment(commentId):
             return redirect("/admin/restaurant/edit/" + str(comment["restaurantid"]))
     else:
         return render_template("errorViews/403.html")
+

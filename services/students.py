@@ -18,6 +18,34 @@ def getAllStudentsByUniId(uniId):
             else:
                 return None
 
+def getAllStudentsForm():
+    students = []
+    students.append((0, "Select"))
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select id,username from student order by username"
+            cursor.execute(query)
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            if cursor.rowcount > 0:
+                for i in cursor:
+                    students.append((i[0], i[1]))
+                return students
+            else:
+                return None
+
+def getAllStudentsAddForm():
+    students = []
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select id,username from student order by username"
+            cursor.execute(query)
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            if cursor.rowcount > 0:
+                for i in cursor:
+                    students.append((i[0], i[1]))
+                return students
+            else:
+                return None
 
 def getStudentDetail(studentId):
     with dbapi2.connect(dsn) as connection:

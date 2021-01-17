@@ -1,10 +1,9 @@
-{% extends "adminViews/adminlayout.html" %}
+{% extends "ownerViews/ownerlayout.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
     <script>
         document.addEventListener("DOMContentLoaded", function (event) {
             document.getElementById("description").innerHTML = '{{menu.description}}';
-            document.getElementById("restaurant").value = {{restaurant.restaurant}};
             if ('{{menu.iscampaign}}' === 'True') {
                 document.getElementById("campaign").checked = true;
             }
@@ -46,12 +45,6 @@
                             <label class="label">Menu Description</label>
                             <div class="control">
                                 {{ render_field(form.description, class='textarea', rows="3", placeholder="Description") }}
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Restaurant</label>
-                            <div class="select">
-                                {{ render_field(form.restaurant) }}
                             </div>
                         </div>
                         <div class="field">

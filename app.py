@@ -74,6 +74,16 @@ app.add_url_rule('/homepage', view_func=filter_homepage, methods=['POST'])
 
 # owner main page
 app.add_url_rule('/ownerhomepage', view_func=ownerhomepage, methods=['GET'])
+app.add_url_rule('/owner/restaurant/', view_func=editOwnerRestaurant, methods=['GET'])
+app.add_url_rule('/owner/restaurant/', view_func=saveOwnerRestaurant, methods=['POST'])
+app.add_url_rule('/owner/service/delete/<int:serviceId>', view_func=deleteOwnerService, methods=['GET'])
+app.add_url_rule('/owner/menu/add/', view_func=addOwnerMenu, methods=['GET'])
+app.add_url_rule('/owner/menu/add/', view_func=insertOwnerMenu, methods=['POST'])
+app.add_url_rule('/owner/menu/edit/<int:menuId>', view_func=editOwnerMenu, methods=['GET'])
+app.add_url_rule('/owner/menu/edit/<int:menuId>', view_func=saveOwnerMenu, methods=['POST'])
+app.add_url_rule('/owner/menu/delete/<int:menuId>', view_func=deleteOwnerMenu, methods=['GET'])
+app.add_url_rule('/owner/orders', view_func=ownerOrders, methods=['GET'])
+app.add_url_rule('/owner/order/details/<int:orderId>', view_func=ownerOrderDetails, methods=['GET'])
 
 # admin main page
 app.add_url_rule('/adminhomepage', view_func=adminhomepage, methods=['GET'])
@@ -86,13 +96,23 @@ app.add_url_rule('/admin/university/delete/<int:uniId>', view_func=deleteUnivers
 app.add_url_rule('/admin/university/edit/<int:uniId>', view_func=editUniversity, methods=['GET'])
 app.add_url_rule('/admin/university/edit/<int:uniId>', view_func=saveUniversity, methods=['POST'])
 
+#order management
+app.add_url_rule('/admin/orders', view_func=adminOrders, methods=['GET'])
+app.add_url_rule('/admin/order/delete/<int:orderId>', view_func=deleteOrder, methods=['GET'])
+app.add_url_rule('/admin/order/edit/<int:orderId>', view_func=editOrder, methods=['GET'])
+app.add_url_rule('/admin/order/edit/<int:orderId>', view_func=saveOrder, methods=['POST'])
+app.add_url_rule('/admin/order/edit/<int:orderId>', view_func=saveOrder, methods=['GET'])
+app.add_url_rule('/admin/order/add/', view_func=addOrder, methods=['GET'])
+app.add_url_rule('/admin/order/add/', view_func=insertOrder, methods=['POST'])
+
+
 # category management
 app.add_url_rule('/admin/categories', view_func=adminCategories, methods=['GET'])
 app.add_url_rule('/admin/category/add', view_func=addCategory, methods=['GET'])
 app.add_url_rule('/admin/category/add', view_func=insertCategory, methods=['POST'])
 app.add_url_rule('/admin/category/delete/<int:catId>', view_func=deleteCategory, methods=['GET'])
 app.add_url_rule('/admin/category/edit/<int:catId>', view_func=editCategory, methods=['GET'])
-app.add_url_rule('/admin/category/edit/<int:catId>', view_func=saveCategory, methods=['POST'])
+app.add_url_rule('/admin/orderstudentmatching/delete/<int:matchId>', view_func=deleteMatching, methods=['GET'])
 
 # menu management
 app.add_url_rule('/admin/menus', view_func=adminMenus, methods=['GET'])

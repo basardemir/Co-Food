@@ -1,0 +1,155 @@
+{% extends "ownerViews/ownerlayout.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+    {% if restaurant.categoryid %}
+        <script>
+            document.addEventListener("DOMContentLoaded", function (event) {
+                document.getElementById("category").value = {{restaurant.categoryid}};
+            });
+        </script>
+    {% endif %}
+{% endblock %}
+{% block left_area %}
+    <section class="hero is-primary" style="margin-left: 5px;">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Universities
+                </h1>
+            </div>
+        </div>
+    </section>
+    {% if universities %}
+        {% for university in universities %}
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                            {{ university.name }}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="/owner/service/delete/{{ university.serviceid }}"
+                       class="card-footer-item">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+{% block middle %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Restaurant
+                </h1>
+            </div>
+        </div>
+    </section>
+    <div class="card">
+        <div class="card-content">
+            <div class="media">
+                <div class="media-content">
+                    <form action="" method="post" name="save">
+                        {% from "_formhelper.html" import render_field %}
+                        {{ form.csrf_token }}
+                        <div class="field">
+                            <label class="label">Restaurant Name</label>
+                            <div class="control">
+                                {{ render_field(form.name,value=restaurant.restaurantname,class='input', placeholder="Username") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Restaurant Category</label>
+                            <div class="select">
+                                {{ render_field(form.category) }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Add New Service</label>
+                            <div class="select">
+                                {{ render_field(form.university) }}
+                            </div>
+                        </div>
+                        {% if message %}
+                            <h2 style="color:red">{{ message }}</h2>
+                        {% endif %}
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-link">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if comments %}
+        <section class="hero is-primary" style="margin-left: 5px;">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title">
+                        Comments
+                    </h1>
+                </div>
+            </div>
+        </section>
+        {% for comment in comments %}
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                            <div class="field">
+                                <b>Rate:</b> {{ comment.rate }}/5<br>
+                                <b>Description:</b> {{ comment.description }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}
+{% block right_area %}
+    <section class="hero is-primary" style="margin-left: 5px;">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Menus
+                </h1>
+            </div>
+        </div>
+    </section>
+    <article class="message is-light">
+        <div class="message-body">
+            <div class="panel-block">
+                <div class="control has-text-centered">
+                    <a href="/owner/menu/add/"
+                       class="button is-link is-medium is-fullwidth is-danger">Add</a>
+                </div>
+            </div>
+        </div>
+    </article>
+    {% if menus %}
+        {% for menu in menus %}
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                            <b>Menu Name: </b> {{ menu.name }} <br>
+                            <b>Menu Price: </b> {{ menu.price }}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="/owner/menu/edit/{{ menu.id }}" class="card-footer-item">Edit</a>
+                    <a href="/owner/menu/delete/{{ menu.id }}" class="card-footer-item">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+
