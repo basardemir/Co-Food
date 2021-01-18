@@ -2,15 +2,16 @@ import psycopg2 as dbapi2
 
 dsn = """user=postgres password=basar
 host=localhost port=5432 dbname=postgres"""
+dsn="postgres://ypktmwhlgmijvt:e9d6168a00144a774b298b917a30f946d706365a0379c54da413f6f469b99674@ec2-34-248-148-63.eu-west-1.compute.amazonaws.com:5432/d27qbfil3ivm83"
 
 
 def getAllRestaurants():
     restaurants = []
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
-            query = "select * from restaurant left join category on (restaurant.categoryid = category.id) order by restaurant.id asc"
+            query = "select * from restaurant left join category on (restaurant.categoryid = category.id) order by restaurant.name"
             cursor.execute(query)
-            for id, name, email, password, catId,menupdf, categoryId, catname in cursor:
+            for id, name, email, password, catId, menupdf, categoryId, catname in cursor:
                 element = []
                 element.append(id)
                 element.append(name)
@@ -26,7 +27,7 @@ def getRestaurant(restaurantId):
         with connection.cursor() as cursor:
             query = "select * from restaurant left join category on (restaurant.categoryid = category.id) where(restaurant.id = %s) "
             cursor.execute(query, (restaurantId,))
-            for id, name, email, password, catId,menupdf, categoryId, catname  in cursor:
+            for id, name, email, password, catId, menupdf, categoryId, catname in cursor:
                 element = []
                 element.append(id)
                 element.append(name)
@@ -36,6 +37,127 @@ def getRestaurant(restaurantId):
     return restaurant
 
 
+def getMostPopularRestaurants():
+    restaurants = []
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select m.restaurantid, Count(m.restaurantid),r.name from ordercontent left join menu m on" \
+                    " ordercontent.menuid = m.id left outer join restaurant r on r.id = m.restaurantid group by " \
+                    "m.restaurantid, r.name order by count desc limit 5"
+            cursor.execute(query)
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            if cursor.rowcount > 0:
+                for i in cursor:
+                    restaurants.append(dict(zip(columns, i)))
+                return restaurants
+    return restaurants
+
+
+def getMostPopularMenusByRestaurantId(restaurantId):
+    restaurants = []
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select m.name as menuname, Count(m.name),r.name from ordercontent left join menu m on" \
+                    " ordercontent.menuid = m.id left outer join restaurant r on r.id = m.restaurantid " \
+                    "where (m.restaurantid=%s) group by " \
+                    "m.name, r.name order by count desc limit 5"
+            cursor.execute(query, (restaurantId,))
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            if cursor.rowcount > 0:
+                for i in cursor:
+                    restaurants.append(dict(zip(columns, i)))
+                return restaurants
+    return restaurants
+
+
+def getMostPopularMenusByStudentId(studentId):
+    menus = []
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select m.name as menuname, Count(m.name),r.name from ordercontent left join menu m on" \
+                    " ordercontent.menuid = m.id left outer join restaurant r on r.id = m.restaurantid " \
+                    "left join orderstudentmatching o on ordercontent.id = o.ordercontentid where(o.studentid=%s) " \
+                    "group by " \
+                    "m.name, r.name order by count desc limit 5"
+            cursor.execute(query, (studentId,))
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            if cursor.rowcount > 0:
+                for i in cursor:
+                    menus.append(dict(zip(columns, i)))
+                return menus
+    return menus
+
+
+def getMostPopularRestaurantsByStudentId(studentId):
+    restaurants = []
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select m.restaurantid, Count(m.restaurantid),r.name as restaurantname from ordercontent left join menu m on" \
+                    " ordercontent.menuid = m.id left outer join restaurant r on r.id = m.restaurantid " \
+                    "left join orderstudentmatching o on ordercontent.id = o.ordercontentid " \
+                    "where(o.studentid=%s) group by " \
+                    "m.restaurantid, r.name order by count desc limit 5"
+            cursor.execute(query, (studentId,))
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            if cursor.rowcount > 0:
+                for i in cursor:
+                    restaurants.append(dict(zip(columns, i)))
+                return restaurants
+    return restaurants
+
+
+def getMostPopularCampaigns():
+    campaigns = []
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select m.name as menuname, Count(m.id),r.name as restaurantname from ordercontent left join " \
+                    "menu m on ordercontent.menuid = m.id " \
+                    "left outer join restaurant r on r.id = m.restaurantid where(m.iscampaign=TRUE )group by " \
+                    "m.name, r.name order by count desc limit 10"
+            cursor.execute(query)
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            if cursor.rowcount > 0:
+                for i in cursor:
+                    campaigns.append(dict(zip(columns, i)))
+                return campaigns
+    return campaigns
+
+
+def getMostOrderingStudents():
+    students = []
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select student.username, count(student.id) from student left join orderstudentmatching o on " \
+                    "o.studentid=student.id group by student.username" \
+                    " order by count desc limit 10"
+            cursor.execute(query)
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            if cursor.rowcount > 0:
+                for i in cursor:
+                    students.append(dict(zip(columns, i)))
+                return students
+    return students
+
+def getNumberofDeliveredOrders():
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select count(ordercontent) as ordercount " \
+                    "from ordercontent where (isdelivered=TRUE)"
+            cursor.execute(query)
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            ordercount = dict(zip(columns, cursor.fetchone()))
+            return ordercount
+
+def getAverageDeliverTime():
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select AVG(ordercontent.deliverytime - ordercontent.ordertime) as averagetime " \
+                    "from ordercontent where (isdelivered=TRUE)"
+            cursor.execute(query)
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            time = dict(zip(columns, cursor.fetchone()))
+            return time
+
 def filterRestaurant(name, categoryId):
     restaurant = []
     with dbapi2.connect(dsn) as connection:
@@ -43,21 +165,21 @@ def filterRestaurant(name, categoryId):
             if name != "" and categoryId != '0':
                 name = '%' + name + '%'
                 query = "select * from restaurant join category on (restaurant.categoryid = category.id) where " \
-                        "(restaurant.categoryid = %s AND LOWER(restaurant.name ) like LOWER(%s))  "
+                        "(restaurant.categoryid = %s AND LOWER(restaurant.name ) like LOWER(%s)) order by restaurant.name "
                 cursor.execute(query, (categoryId, name))
             elif name != "":
                 name = '%' + name + '%'
                 query = "select * from restaurant join category on (restaurant.categoryid = category.id) where " \
-                        " (LOWER(restaurant.name ) like LOWER(%s))  "
+                        " (LOWER(restaurant.name ) like LOWER(%s)) order by restaurant.name "
                 cursor.execute(query, (name,))
             elif categoryId != '0':
                 query = "select * from restaurant join category on (restaurant.categoryid = category.id) where " \
-                        "(restaurant.categoryid = %s)  "
+                        "(restaurant.categoryid = %s) order by restaurant.name "
                 cursor.execute(query, (categoryId,))
             else:
-                query = "select * from restaurant join category on (restaurant.categoryid = category.id)"
+                query = "select * from restaurant join category on (restaurant.categoryid = category.id) order by restaurant.name"
                 cursor.execute(query)
-            for id, name, email, password, catId, categoryId, catname in cursor:
+            for id, name, email, password, catId, menupdf, categoryId, catname in cursor:
                 element = []
                 element.append(id)
                 element.append(name)
@@ -119,6 +241,7 @@ def editRestaurantById(restaurantId, name, categoryid):
     except:
         return False
 
+
 def getAllRestaurantsForm():
     restaurants = []
     with dbapi2.connect(dsn) as connection:
@@ -130,16 +253,17 @@ def getAllRestaurantsForm():
     return restaurants
 
 
-def insertPdfToRestaurant(restaurantId,menupdf):
+def insertPdfToRestaurant(restaurantId, menupdf):
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
             query = "update restaurant set menupdf=%s where (id=%s)"
-            cursor.execute(query,(menupdf,restaurantId))
+            cursor.execute(query, (menupdf, restaurantId))
             return True
+
 
 def deletePdfFromRestaurant(restaurantId):
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
             query = "update restaurant set menupdf=%s where (id=%s)"
-            cursor.execute(query,('',restaurantId))
+            cursor.execute(query, ('', restaurantId))
             return True

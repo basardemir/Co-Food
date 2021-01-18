@@ -9,6 +9,7 @@ from flask_login import UserMixin, login_user, logout_user
 from forms.settings import *
 from services.order import *
 from services.students import *
+from services.restaurant import *
 
 
 @login_required
@@ -33,12 +34,12 @@ def updateUser():
             university = request.form['university']
             email = request.form['email']
             if form['passwordchange'].data == 'True':
-                if updateUserWithPassword(userId,username, hasher.hash(password), email, university):
+                if updateUserWithPassword(userId, username, hasher.hash(password), email, university):
                     user = getStudentDetail(userId)
                     form = SettingsForm()
                     return render_template("consumerViews/settings.html", user=user, form=form)
             else:
-                if updateUserWithoutPassword(userId,username, email, university):
+                if updateUserWithoutPassword(userId, username, email, university):
                     user = getStudentDetail(userId)
                     form = SettingsForm()
                     return render_template("consumerViews/settings.html", user=user, form=form)
@@ -51,9 +52,14 @@ def userHistory():
     if session['role'] == 'student':
         userId = session['id']
         history = getUserHistory(userId)
+        favoriteMenus = getMostPopularMenusByStudentId(userId)
+        favoriteRestaurants = getMostPopularRestaurantsByStudentId(userId)
         orderfriends = {}
-        for i in range(len(history)):
-            orderfriends[str(history[i]['ordercontentid'])] = getOrderFriends(history[i]['ordercontentid'])
-        return render_template("consumerViews/history.html", history=history, friends=orderfriends)
+        if history:
+            for i in range(len(history)):
+                orderfriends[str(history[i]['ordercontentid'])] = getOrderFriends(history[i]['ordercontentid'])
+            return render_template("consumerViews/history.html", restaurants=favoriteRestaurants, menus=favoriteMenus,
+                                   history=history, friends=orderfriends)
+        return render_template("consumerViews/history.html")
     else:
         return render_template("errorViews/403.html")

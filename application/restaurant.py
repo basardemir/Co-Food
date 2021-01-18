@@ -17,8 +17,10 @@ from services.university import *
 def getRestaurants():
     if session['role'] == 'student':
         restaurants = getAllRestaurants()
+        popularRestaurant = getMostPopularRestaurants()
         form = RestaurantSearchForm()
-        return render_template("consumerViews/restaurants.html", form=form, restaurants=restaurants)
+        return render_template("consumerViews/restaurants.html", popularRestaurants=popularRestaurant, form=form,
+                               restaurants=restaurants)
     else:
         return render_template("errorViews/403.html")
 
@@ -27,8 +29,10 @@ def getRestaurants():
 def filterRestaurants():
     if session['role'] == 'student':
         form = RestaurantSearchForm()
+        popularRestaurant = getMostPopularRestaurants()
         restaurants = filterRestaurant(request.form['restaurantname'], request.form['categories'])
-        return render_template("consumerViews/restaurants.html", form=form, restaurants=restaurants)
+        return render_template("consumerViews/restaurants.html", popularRestaurants=popularRestaurant, form=form,
+                               restaurants=restaurants)
     else:
         return render_template("errorViews/403.html")
 
@@ -40,6 +44,7 @@ def restaurant_details(restaurantId):
         comments = getAllCommentsByRestaurantIdwithStudents(restaurantId)
         restaurant = getRestaurant(restaurantId)
         commentForm = CommentAddForm()
+        popularMenus = getMostPopularMenusByRestaurantId(restaurantId)
         campaigns = []
         for menu in menus:
             if menu['iscampaign']:
@@ -50,7 +55,8 @@ def restaurant_details(restaurantId):
             'menus': menus,
             'campaigns': campaigns
         }
-        return render_template("consumerViews/restaurant.html", comments=comments, restaurant_info=information,
+        return render_template("consumerViews/restaurant.html", popularmenus=popularMenus, comments=comments,
+                               restaurant_info=information,
                                commentform=commentForm)
 
 
@@ -66,13 +72,14 @@ def add_comment(restaurantId):
                 restaurant = getRestaurant(restaurantId)
                 commentForm = CommentAddForm()
                 comments = getAllCommentsByRestaurantIdwithStudents(restaurantId)
+                popularMenus = getMostPopularMenusByRestaurantId(restaurantId)
                 information = {
                     'restaurant': restaurant,
                     'menus': menus
                 }
-                return render_template("consumerViews/restaurant.html", comments=comments, restaurant_info=information,
+                return render_template("consumerViews/restaurant.html", popularmenus=popularMenus, comments=comments,
+                                       restaurant_info=information,
                                        commentform=commentForm)
-
 
 @login_required
 def adminRestaurants():

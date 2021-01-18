@@ -6,16 +6,18 @@
 {% block left_area %}
     <article class="panel is-light">
         <p class="panel-heading">
-            Most Popular Campaigns
+            Most Popular Campaigns - Order Count
         </p>
-        {% for restaurant in range(1,10) %}
-            <a class="panel-block">
+        {% if popularcampaigns %}
+            {% for campaign in popularcampaigns %}
+                <a class="panel-block">
         <span class="panel-icon">
             <i class="fas fa-utensils"></i>
         </span>
-                Campaign-{{ restaurant }}
-            </a>
-        {% endfor %}
+                    {{ campaign['menuname'] }} - {{ campaign['count'] }}
+                </a>
+            {% endfor %}
+        {% endif %}
     </article>
 
 {% endblock %}

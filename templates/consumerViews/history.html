@@ -8,14 +8,16 @@
         <p class="panel-heading">
             Your Favorite Menus
         </p>
-        {% for menu in range(1,6) %}
-            <a class="panel-block">
+        {% if menus %}
+            {% for menu in menus %}
+                <a class="panel-block">
         <span class="panel-icon">
             <i class="fas fa-utensils"></i>
         </span>
-                Menu - {{ menu }}
-            </a>
-        {% endfor %}
+                    {{ menu['menuname'] }} - {{ menu['count'] }}
+                </a>
+            {% endfor %}
+        {% endif %}
     </article>
 
 {% endblock %}
@@ -69,14 +71,16 @@
         <p class="panel-heading">
             Your Favorite Restaurants
         </p>
-        {% for restaurant in range(1,6) %}
-            <a class="panel-block">
+        {% if restaurants %}
+            {% for restaurant in restaurants %}
+                <a class="panel-block">
         <span class="panel-icon">
             <i class="fas fa-utensils"></i>
         </span>
-                Restaurant-{{ restaurant }}
-            </a>
-        {% endfor %}
+                    {{ restaurant['restaurantname'] }} - {{ restaurant['count'] }}
+                </a>
+            {% endfor %}
+        {% endif %}
     </article>
 
 
