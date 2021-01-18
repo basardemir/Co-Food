@@ -6,6 +6,13 @@
             document.addEventListener("DOMContentLoaded", function (event) {
                 document.getElementById("category").value = {{restaurant.categoryid}};
             });
+            const fileInput = document.querySelector('#file-js-example input[type=file]');
+            fileInput.onchange = () => {
+                if (fileInput.files.length > 0) {
+                    const fileName = document.querySelector('#file-js-example .file-name');
+                    fileName.textContent = fileInput.files[0].name;
+                }
+            }
         </script>
     {% endif %}
 {% endblock %}
@@ -51,7 +58,7 @@
         <div class="card-content">
             <div class="media">
                 <div class="media-content">
-                    <form action="" method="post" name="save">
+                    <form action="" method="post" name="save" enctype="multipart/form-data">
                         {% from "_formhelper.html" import render_field %}
                         {{ form.csrf_token }}
                         <div class="field">
@@ -71,6 +78,19 @@
                             <div class="select">
                                 {{ render_field(form.university) }}
                             </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Add Menu Pdf</label>
+                        </div>
+                        <div style="margin-bottom:10px;" id="file-js-example" class="file has-name">
+                            <label class="file-label">
+                                {{ render_field(form.menupdf, class="file-input",accept="application/pdf") }}
+                                <span class="file-cta">
+                                <span class="file-icon">
+                                <i class="fas fa-upload"></i>
+                                </span><span class="file-label">Choose a menu file…</span></span>
+                                <span class="file-name">No menu file uploaded</span>
+                            </label>
                         </div>
                         {% if message %}
                             <h2 style="color:red">{{ message }}</h2>
@@ -122,6 +142,21 @@
             </div>
         </div>
     </section>
+    {% if restaurant.menupdf %}
+        <article class="message is-light">
+            <div class="message-body">
+                <div class="panel-block">
+                    <div class="control has-text-centered">
+                        <a target="_blank" href="/owner/menu/pdf/download/{{ restaurant.restaurantid }}"
+                           class="button is-link is-medium is-fullwidth is-danger">Download Menu PDF</a>
+                        <a style="margin-top: 10px"
+                           href="/owner/menu/pdf/delete/{{ restaurant.restaurantid }}"
+                           class="button is-link is-medium is-fullwidth is-danger">Delete Menu PDF</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+    {% endif %}
     <article class="message is-light">
         <div class="message-body">
             <div class="panel-block">

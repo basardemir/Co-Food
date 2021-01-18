@@ -1,4 +1,6 @@
-from flask import redirect
+from io import BytesIO
+
+from flask import redirect, send_file
 from flask import render_template
 from flask_login.utils import *
 
@@ -167,3 +169,64 @@ def saveOwnerMenu(menuId):
                     return redirect("/owner/restaurant/" )
         else:
             return render_template("errorViews/403.html")
+
+
+@login_required
+def downloadMenuPdf(restaurantId):
+    if session['role'] == 'admin':
+        restaurant = getRestaurantById(restaurantId)
+        if restaurant['menupdf']:
+            data = restaurant['menupdf']
+            return send_file(BytesIO(data),attachment_filename=restaurant['name']+'menu.pdf',as_attachment=True)
+        else:
+            return render_template("errorViews/404.html")
+    else:
+        return render_template("errorViews/403.html")
+
+@login_required
+def deleteMenuPdf(restaurantId):
+    if session['role'] == 'admin':
+        restaurant = getRestaurantById(restaurantId)
+        if restaurant and restaurant['menupdf']:
+            deletePdfFromRestaurant(restaurantId)
+            return redirect("/admin/restaurant/edit/" + str(restaurantId))
+        else:
+            return render_template("errorViews/403.html")
+    else:
+        return render_template("errorViews/403.html")
+
+login_required
+def downloadOwnerMenuPdf(restaurantId):
+    restaurant = getRestaurantById(restaurantId)
+    if session['role'] == 'owner' and restaurant and restaurant['restaurantid'] == session['id']:
+        if restaurant['menupdf']:
+            data = restaurant['menupdf']
+            return send_file(BytesIO(data),attachment_filename=restaurant['name']+'menu.pdf',as_attachment=True)
+        else:
+            return render_template("errorViews/404.html")
+    else:
+        return render_template("errorViews/403.html")
+
+login_required
+def downloadStudentMenuPdf(restaurantId):
+    restaurant = getRestaurantById(restaurantId)
+    if session['role'] == 'student' and restaurant:
+        if restaurant['menupdf']:
+            data = restaurant['menupdf']
+            return send_file(BytesIO(data),attachment_filename=restaurant['name']+'menu.pdf',as_attachment=True)
+        else:
+            return render_template("errorViews/404.html")
+    else:
+        return render_template("errorViews/403.html")
+
+@login_required
+def deleteOwnerMenuPdf(restaurantId):
+    restaurant = getRestaurantById(restaurantId)
+    if session['role'] == 'owner' and restaurant and restaurant['restaurantid'] == session['id']:
+        if restaurant and restaurant['menupdf']:
+            deletePdfFromRestaurant(restaurantId)
+            return redirect("/owner/restaurant/")
+        else:
+            return render_template("errorViews/403.html")
+    else:
+        return render_template("errorViews/403.html")

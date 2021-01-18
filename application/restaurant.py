@@ -131,6 +131,7 @@ def editRestaurant(restaurantId=0):
     else:
         return render_template("errorViews/403.html")
 
+
 @login_required
 def editOwnerRestaurant():
     if session['role'] == 'owner':
@@ -148,6 +149,7 @@ def editOwnerRestaurant():
     else:
         return render_template("errorViews/403.html")
 
+
 @login_required
 def saveRestaurant(restaurantId):
     form = RestaurantEditForm()
@@ -156,8 +158,24 @@ def saveRestaurant(restaurantId):
             name = request.form['name']
             category = request.form['category']
             university = request.form['university']
+            pdf = ''
+            if form.menupdf.data:
+                pdf = request.files[form.menupdf.name]
+                if pdf.mimetype == 'application/pdf':
+                    pdf = pdf.read()
+                else:
+                    restaurant = getRestaurantById(restaurantId)
+                    menus = getAllMenusByRestaurantId(restaurantId)
+                    universities = getAllUniversitiesByRestaurantId(restaurantId)
+                    comments = getAllCommentsByRestaurantId(restaurantId)
+                    return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
+                                           comments=comments,
+                                           universities=universities, menus=menus, message="Input format only can "
+                                                                                           "be only pdf.")
             if (editRestaurantById(restaurantId, name, category) == True and (
                     addService(restaurantId, university) == True)):
+                if pdf:
+                    insertPdfToRestaurant(restaurantId, pdf)
                 restaurant = getRestaurantById(restaurantId)
                 if restaurant:
                     form = RestaurantEditForm()
@@ -188,6 +206,14 @@ def saveRestaurant(restaurantId):
                                            , message="This restaurant does not exists")
         else:
             return render_template("errorViews/403.html")
+    restaurant = getRestaurantById(restaurantId)
+    menus = getAllMenusByRestaurantId(restaurantId)
+    universities = getAllUniversitiesByRestaurantId(restaurantId)
+    comments = getAllCommentsByRestaurantId(restaurantId)
+    return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
+                           comments=comments,
+                           universities=universities, menus=menus)
+
 
 @login_required
 def saveOwnerRestaurant():
@@ -196,10 +222,27 @@ def saveOwnerRestaurant():
     if form.validate_on_submit():
         if session['role'] == 'owner':
             name = request.form['name']
+            pdf = ''
             category = request.form['category']
             university = request.form['university']
+            if form.menupdf.data:
+                pdf = request.files[form.menupdf.name]
+                if pdf.mimetype == 'application/pdf':
+                    pdf = pdf.read()
+                else:
+                    form = RestaurantEditForm()
+                    restaurant = getRestaurantById(restaurantId)
+                    menus = getAllMenusByRestaurantId(restaurantId)
+                    comments = getAllCommentsByRestaurantId(restaurantId)
+                    universities = getAllUniversitiesByRestaurantId(restaurantId)
+                    return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
+                                           comments=comments,
+                                           universities=universities, menus=menus, message="Input format only can "
+                                                                                           "be only pdf.")
             if (editRestaurantById(restaurantId, name, category) == True and (
                     addService(restaurantId, university) == True)):
+                if pdf:
+                    insertPdfToRestaurant(restaurantId, pdf)
                 restaurant = getRestaurantById(restaurantId)
                 if restaurant:
                     form = RestaurantEditForm()
@@ -227,6 +270,7 @@ def saveOwnerRestaurant():
         else:
             return render_template("errorViews/403.html")
 
+
 @login_required
 def deleteService(serviceId):
     if session['role'] == 'admin':
@@ -236,6 +280,7 @@ def deleteService(serviceId):
             return redirect("/admin/restaurant/edit/" + str(service["restaurantid"]))
     else:
         return render_template("errorViews/403.html")
+
 
 @login_required
 def deleteOwnerService(serviceId):
@@ -247,9 +292,10 @@ def deleteOwnerService(serviceId):
     else:
         return render_template("errorViews/403.html")
 
+
 @login_required
 def addService(restaurantId, universityId):
-    if session['role'] == 'admin' or (session['role'] == 'owner' and session['id']==restaurantId):
+    if session['role'] == 'admin' or (session['role'] == 'owner' and session['id'] == restaurantId):
         service = getServiceByRestaurantUniversity(restaurantId, universityId)
         if service:
             return True
@@ -270,4 +316,3 @@ def deleteComment(commentId):
             return redirect("/admin/restaurant/edit/" + str(comment["restaurantid"]))
     else:
         return render_template("errorViews/403.html")
-

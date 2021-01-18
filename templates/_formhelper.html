@@ -1,9 +1,9 @@
 {% macro render_field(field) %}
-    {{ field(**kwargs)|safe }}
+    {{ field(**kwargs)|safe }} <br>
         {% if field.errors %}
             <ul class=errors>
                 {% for error in field.errors %}
-                    <li>{{ error }}</li>
+                    <li style="color:red;">{{ error }}</li>
                 {% endfor %}
             </ul>
         {% endif %}

@@ -92,6 +92,18 @@
 
 {% endblock %}
 {% block right_area %}
+    {% if restaurant_info['restaurant'][0][3] %}
+        <article class="message is-light">
+            <div class="message-body">
+                <div class="panel-block">
+                    <div class="control has-text-centered">
+                        <a target="_blank" href="/student/menu/pdf/download/{{ restaurant_info['restaurant'][0][0] }}"
+                           class="button is-link is-medium is-fullwidth is-danger">Download Menu PDF</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+    {% endif %}
     <article class="message is-light">
         <div class="message-header">
             <p>Comment Restaurant</p>

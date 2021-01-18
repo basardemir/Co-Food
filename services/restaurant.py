@@ -10,11 +10,12 @@ def getAllRestaurants():
         with connection.cursor() as cursor:
             query = "select * from restaurant left join category on (restaurant.categoryid = category.id) order by restaurant.id asc"
             cursor.execute(query)
-            for id, name, email, password, catId, categoryId, catname in cursor:
+            for id, name, email, password, catId,menupdf, categoryId, catname in cursor:
                 element = []
                 element.append(id)
                 element.append(name)
                 element.append(catname)
+                element.append(menupdf)
                 restaurants.append(element)
     return restaurants
 
@@ -25,11 +26,12 @@ def getRestaurant(restaurantId):
         with connection.cursor() as cursor:
             query = "select * from restaurant left join category on (restaurant.categoryid = category.id) where(restaurant.id = %s) "
             cursor.execute(query, (restaurantId,))
-            for id, name, email, password, catId, categoryId, catname in cursor:
+            for id, name, email, password, catId,menupdf, categoryId, catname  in cursor:
                 element = []
                 element.append(id)
                 element.append(name)
                 element.append(catname)
+                element.append(menupdf)
                 restaurant.append(element)
     return restaurant
 
@@ -126,3 +128,18 @@ def getAllRestaurantsForm():
             for i in cursor:
                 restaurants.append((i[0], i[1]))
     return restaurants
+
+
+def insertPdfToRestaurant(restaurantId,menupdf):
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "update restaurant set menupdf=%s where (id=%s)"
+            cursor.execute(query,(menupdf,restaurantId))
+            return True
+
+def deletePdfFromRestaurant(restaurantId):
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "update restaurant set menupdf=%s where (id=%s)"
+            cursor.execute(query,('',restaurantId))
+            return True
