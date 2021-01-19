@@ -242,6 +242,7 @@ def saveOwnerRestaurant():
             pdf = ''
             category = request.form['category']
             university = request.form['university']
+            phone = request.form['phone']
             if form.menupdf.data:
                 pdf = request.files[form.menupdf.name]
                 if pdf.mimetype == 'application/pdf':
@@ -256,7 +257,7 @@ def saveOwnerRestaurant():
                                            comments=comments,
                                            universities=universities, menus=menus, message="Input format only can "
                                                                                            "be only pdf.")
-            if (editRestaurantById(restaurantId, name, category) == True and (
+            if (editRestaurantById(restaurantId, name, category,phone) == True and (
                     addService(restaurantId, university) == True)):
                 if pdf:
                     insertPdfToRestaurant(restaurantId, pdf)
