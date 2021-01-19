@@ -14,7 +14,7 @@ def orderPage(menuId):
     if session['role'] == 'student':
         menu = getMenuById(menuId)
         restaurant = getRestaurantById(menu['restaurantid'])
-        if menu and restaurant and isServesToStudent(session['id'], restaurant['id']):
+        if menu and restaurant and (isServesToStudent(session['id'], restaurant['restaurantid'])):
             form = orderForm()
             return render_template("consumerViews/order.html", menu=menu, restaurant=restaurant,
                                    form=form)

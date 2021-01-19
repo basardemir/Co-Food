@@ -286,11 +286,9 @@ def deletePdfFromRestaurant(restaurantId):
 def isServesToStudent(studentId,restaurantId):
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
-            query = "select u.id as id from student left join university " \
-                    "u on u.id = student.universityid where (student.id=%s) " \
-                    "INTERSECT " \
-                    "select  universityid as id from service left join restaurant r on r.id = restaurantid " \
-                    "where (r.id=%s)"
+            query = "select universityid as id from student where (student.id=%s)" \
+                    " INTERSECT " \
+                    "select  universityid as id from service where (service.restaurantid=%s)"
             cursor.execute(query, (studentId,restaurantId))
             if cursor.rowcount>0:
                 return True
