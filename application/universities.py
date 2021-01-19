@@ -102,3 +102,13 @@ def saveUniversity(uniId):
                                            message="This university does not exists")
         else:
             return render_template("errorViews/403.html")
+
+    else:
+        university = getUniversityById(uniId)
+        if university:
+            students = getAllStudentsByUniId(uniId)
+            return render_template("adminViews/editUniversity.html", form=form, university=university,students=students)
+        else:
+            universities = getAllUniversities()
+            return render_template("adminViews/universities.html", universities=universities,
+                                   message="This university does not exists")

@@ -96,15 +96,13 @@ app.add_url_rule('/admin/university/delete/<int:uniId>', view_func=deleteUnivers
 app.add_url_rule('/admin/university/edit/<int:uniId>', view_func=editUniversity, methods=['GET'])
 app.add_url_rule('/admin/university/edit/<int:uniId>', view_func=saveUniversity, methods=['POST'])
 
-#order management
+# order management
 app.add_url_rule('/admin/orders', view_func=adminOrders, methods=['GET'])
 app.add_url_rule('/admin/order/delete/<int:orderId>', view_func=deleteOrder, methods=['GET'])
 app.add_url_rule('/admin/order/edit/<int:orderId>', view_func=editOrder, methods=['GET'])
 app.add_url_rule('/admin/order/edit/<int:orderId>', view_func=saveOrder, methods=['POST'])
-#app.add_url_rule('/admin/order/edit/<int:orderId>', view_func=saveOrder, methods=['GET'])
 app.add_url_rule('/admin/order/add/', view_func=addOrder, methods=['GET'])
 app.add_url_rule('/admin/order/add/', view_func=insertOrder, methods=['POST'])
-
 
 # category management
 app.add_url_rule('/admin/categories', view_func=adminCategories, methods=['GET'])
