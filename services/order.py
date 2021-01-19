@@ -2,7 +2,7 @@ import psycopg2 as dbapi2
 
 dsn = """user=postgres password=basar
 host=localhost port=5432 dbname=postgres"""
-dsn="postgres://ypktmwhlgmijvt:e9d6168a00144a774b298b917a30f946d706365a0379c54da413f6f469b99674@ec2-34-248-148-63.eu-west-1.compute.amazonaws.com:5432/d27qbfil3ivm83"
+dsn = "postgres://ypktmwhlgmijvt:e9d6168a00144a774b298b917a30f946d706365a0379c54da413f6f469b99674@ec2-34-248-148-63.eu-west-1.compute.amazonaws.com:5432/d27qbfil3ivm83"
 
 
 def hasActiveOrder(studentId):
@@ -50,6 +50,7 @@ def getOrderDetails(studentId):
                     return None
     except:
         return False
+
 
 def getOrderDetailsByOrderId(orderId):
     try:
@@ -113,6 +114,7 @@ def getAllPastOrders():
     except:
         return False
 
+
 def getAllPastOrdersWithRestaurantId(restaurantId):
     orders = []
     try:
@@ -122,7 +124,7 @@ def getAllPastOrdersWithRestaurantId(restaurantId):
                         "m.name as menuname,  r.name as restaurantname, r.id as restaurantid, m.description as description," \
                         " menucount, address,price,numberofstudents FROM ordercontent left join menu" \
                         " m on m.id = ordercontent.menuid left join restaurant r on r.id = m.restaurantid" \
-                        " where (restaurantid =%s) order by ordercontent.ordertime desc "
+                        " where (restaurantid =%s AND ordercontent.isdelivered = TRUE) order by ordercontent.ordertime desc "
                 cursor.execute(query, (restaurantId,))
                 columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
                 if cursor.rowcount > 0:
@@ -133,6 +135,7 @@ def getAllPastOrdersWithRestaurantId(restaurantId):
                     return None
     except:
         return False
+
 
 def getOrdersByOrderId(orderId):
     try:
@@ -194,6 +197,7 @@ def getAllOrders():
     except:
         return False
 
+
 def getAllOrdersWithUniversityId(universityId):
     try:
         with dbapi2.connect(dsn) as connection:
@@ -205,7 +209,7 @@ def getAllOrdersWithUniversityId(universityId):
                         " left join restaurant r on r.id = m.restaurantid " \
                         " left join service s on r.id = s.restaurantid " \
                         " where ( s.universityid=%s AND ordercontent.isDelivered = FALSE)"
-                cursor.execute(query,(universityId,))
+                cursor.execute(query, (universityId,))
                 columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
                 if cursor.rowcount > 0:
                     orders = []
@@ -218,7 +222,7 @@ def getAllOrdersWithUniversityId(universityId):
         return False
 
 
-def getAllOrdersWithFilter(restaurantName, categoryId,universityId):
+def getAllOrdersWithFilter(restaurantName, categoryId, universityId):
     try:
         with dbapi2.connect(dsn) as connection:
             with connection.cursor() as cursor:
@@ -230,7 +234,7 @@ def getAllOrdersWithFilter(restaurantName, categoryId,universityId):
                             "left join restaurant r on r.id = m.restaurantid " \
                             "left join service s on r.id = s.restaurantid where (s.universityid=%s AND o.isDelivered = FALSE AND r.categoryid = %s " \
                             "AND LOWER(r.name ) like LOWER(%s))"
-                    cursor.execute(query, (universityId, categoryId,restaurantName))
+                    cursor.execute(query, (universityId, categoryId, restaurantName))
                 elif restaurantName != "":
                     name = '%' + restaurantName + '%'
                     query = "select ordercontentid as id, ordertime, m.name as menuname,r.name as restaurantname," \
@@ -239,7 +243,7 @@ def getAllOrdersWithFilter(restaurantName, categoryId,universityId):
                             "o.id = orderstudentmatching.ordercontentid left join menu m on m.id = o.menuid " \
                             "left join restaurant r on r.id = m.restaurantid left join service s on r.id = s.restaurantid where (s.universityid=%s AND o.isDelivered = FALSE " \
                             "AND LOWER(r.name ) like LOWER(%s))"
-                    cursor.execute(query, (universityId,name))
+                    cursor.execute(query, (universityId, name))
                 elif categoryId != '0':
                     query = "select ordercontentid as id, ordertime, m.name as menuname,r.name as restaurantname," \
                             " m.description as description, menucount,price,numberofstudents" \
@@ -247,14 +251,14 @@ def getAllOrdersWithFilter(restaurantName, categoryId,universityId):
                             "o.id = orderstudentmatching.ordercontentid left join menu m on m.id = o.menuid " \
                             "left join restaurant r on r.id = m.restaurantid left join service s on r.id = s.restaurantid where (s.universityid=%s AND o.isDelivered = FALSE AND r.categoryid = %s " \
                             ")"
-                    cursor.execute(query, (universityId,categoryId))
+                    cursor.execute(query, (universityId, categoryId))
                 else:
                     query = "select ordercontentid as id, ordertime, m.name as menuname,r.name as restaurantname," \
                             " m.description as description, menucount,price,numberofstudents" \
                             " from orderstudentmatching left join ordercontent o on " \
                             "o.id = orderstudentmatching.ordercontentid left join menu m on m.id = o.menuid " \
                             "left join restaurant r on r.id = m.restaurantid left join service s on r.id = s.restaurantid where (s.universityid=%s AND o.isDelivered = FALSE)"
-                    cursor.execute(query,(universityId,))
+                    cursor.execute(query, (universityId,))
                 columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
                 if cursor.rowcount > 0:
                     orders = []
@@ -345,11 +349,12 @@ def editOrderById(orderId, address, menucount, numberofstudents, menuid):
         with dbapi2.connect(dsn) as connection:
             with connection.cursor() as cursor:
                 query = "update ordercontent set address=%s, menucount=%s, numberofstudents=%s, " \
-                        "menuid=%s where (id=%s)"
+                        " menuid=%s where (id=%s)"
                 cursor.execute(query, (address, menucount, numberofstudents, menuid, orderId))
                 return True
     except:
         return False
+
 
 def addOrderById(address, menucount, numberofstudents, menuid):
     try:
@@ -361,6 +366,7 @@ def addOrderById(address, menucount, numberofstudents, menuid):
                 return id
     except:
         return False
+
 
 def addMatchingByStudentOrder(studentId, orderId):
     try:

@@ -257,8 +257,8 @@ def editRestaurantById(restaurantId, name, categoryid,phone):
                     query = "update restaurant set name=%s, phonenumber=%s, categoryid=NULL where (id=%s)"
                     cursor.execute(query, (name,phone, restaurantId))
                 return True
-    except:
-        return False
+    except dbapi2.IntegrityError as error:
+        return error.diag.message_detail
 
 
 def getAllRestaurantsForm():

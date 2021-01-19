@@ -12,6 +12,9 @@
                 <h1 class="title">
                     Orders
                 </h1>
+                <h1 class="subtitle">
+                    You can list your orders that are ready for delivery.
+                </h1>
             </div>
         </div>
     </section>
@@ -33,13 +36,10 @@
                 </div>
                 <footer class="card-footer">
                     <a href="/owner/order/details/{{ order['id'] }}" class="card-footer-item">Details</a>
-                    <a href="/owner/order/send/{{ order['id'] }}" class="card-footer-item">Send</a>
                 </footer>
             </div>
-
         {% endfor %}
     {% endif %}
-
 {% endblock %}
 {% block right_area %}
 {% endblock %}

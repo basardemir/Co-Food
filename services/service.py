@@ -28,7 +28,6 @@ def getServiceById(serviceId):
             else:
                 return None
 
-
 def getServiceByRestaurantUniversity(restaurantId, universityId):
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:

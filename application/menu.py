@@ -4,6 +4,7 @@ from flask import redirect, send_file
 from flask import render_template
 from flask_login.utils import *
 
+from application.restaurant import editOwnerRestaurant
 from forms.menu import *
 from services.menu import *
 from services.restaurant import *
@@ -23,8 +24,13 @@ def deleteMenu(menuId):
     if session['role'] == 'admin':
         menu = getMenuById(menuId)
         if menu:
-            deleteMenuById(menuId)
+            try:
+                deleteMenuById(menuId)
+            except:
+                return redirect(url_for("editOwnerRestaurant", error="true"))
             return redirect("/admin/restaurant/edit/" + str(menu["restaurantid"]))
+        else:
+            return redirect(url_for("editOwnerRestaurant", error="true"))
     else:
         return render_template("errorViews/403.html")
 
@@ -34,8 +40,13 @@ def deleteOwnerMenu(menuId):
     if session['role'] == 'owner':
         menu = getMenuById(menuId)
         if menu and menu['restaurantid'] == session['id']:
-            deleteMenuById(menuId)
-            return redirect("/owner/restaurant/")
+            try:
+                deleteMenuById(menuId)
+            except:
+                return redirect(url_for("editOwnerRestaurant", error="true"))
+            return redirect(url_for("editOwnerRestaurant", success="true"))
+        else:
+            return redirect(url_for("editOwnerRestaurant", error="true"))
     else:
         return render_template("errorViews/403.html")
 
@@ -150,12 +161,21 @@ def insertOwnerMenu():
             description = request.form['description']
             ingredients = request.form['ingredients']
             campaign = form.campaign.data
-            if (addMenuByRestaurantId(restaurantId, name, description, price, campaign, ingredients) == True):
-                return redirect("/owner/restaurant/")
+            addMenu = addMenuByRestaurantId(restaurantId, name, description, price, campaign, ingredients)
+            if (addMenu == True):
+                return redirect(url_for("editOwnerRestaurant", success="true"))
             else:
-                return render_template("errorViews/404.html")
+                return redirect(url_for("editOwnerRestaurant", error="true"))
         else:
             return render_template("errorViews/403.html")
+    else:
+        restaurantId = session['id']
+        restaurant = getRestaurantById(restaurantId)
+        if restaurant:
+            return render_template("ownerViews/addMenu.html", form=form, restaurant=restaurant)
+        else:
+            return render_template("errorViews/404.html")
+
 
 @login_required
 def saveMenu(menuId):
@@ -190,9 +210,22 @@ def saveOwnerMenu(menuId):
                 description = request.form['description']
                 ingredients = request.form['ingredients']
                 campaign = form.campaign.data
-                if (updateMenuById(menuId, name, description, price, campaign, menu['restaurantid'],
-                                   ingredients) == True):
-                    return redirect("/owner/restaurant/")
+                updateMenu = updateMenuById(menuId, name, description, price, campaign, menu['restaurantid'],
+                                            ingredients)
+                if (updateMenu == True):
+                    return redirect(url_for("editOwnerRestaurant", success="true"))
+                else:
+                    return redirect(url_for("editOwnerRestaurant", error="true"))
+            else:
+                return render_template("errorViews/403.html")
+        else:
+            return render_template("errorViews/403.html")
+
+    else:
+        menu = getMenuById(menuId)
+        restaurant = getRestaurantById(menu['restaurantid'])
+        if menu and restaurant and session['role'] == 'owner' and menu['restaurantid'] == session['id']:
+            return render_template("ownerViews/editMenu.html", form=form, restaurant=restaurant, menu=menu)
         else:
             return render_template("errorViews/403.html")
 

@@ -66,8 +66,8 @@ def addMenuByRestaurantId(restaurantId, name, description, price, campaign,ingre
                 query = "insert into menu (name, description,price,iscampaign, restaurantid,ingredients) values (%s,%s,%s,%s,%s,%s)"
                 cursor.execute(query, (name, description, price, campaign, restaurantId,ingredients))
                 return True
-    except:
-        return False
+    except dbapi2.IntegrityError as error:
+        return error.diag.message_detail
 
 
 def updateMenuById(menuId, name, description, price, campaign, restaurant,ingredients):
@@ -77,8 +77,8 @@ def updateMenuById(menuId, name, description, price, campaign, restaurant,ingred
                 query = "update menu set name=%s, description=%s,price=%s,iscampaign=%s, restaurantid=%s,ingredients=%s where(id=%s)"
                 cursor.execute(query, (name, description, price, campaign, restaurant,ingredients, menuId))
                 return True
-    except:
-        return False
+    except dbapi2.IntegrityError as error:
+        return error.diag.message_detail
 
 
 def getAllMenus():

@@ -1,3 +1,4 @@
+from services.order import hasActiveOrder
 from services.restaurant import *
 from flask import redirect, session
 from flask import render_template, request
@@ -171,6 +172,16 @@ def editOwnerRestaurant():
             menus = getAllMenusByRestaurantId(restaurantId)
             universities = getAllUniversitiesByRestaurantId(restaurantId)
             comments = getAllCommentsByRestaurantId(restaurantId)
+            success = request.args.get('success')
+            error = request.args.get('error')
+            if success == 'true':
+                return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
+                                       comments=comments,
+                                       universities=universities, menus=menus, success="true")
+            if error == 'true':
+                return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
+                                       comments=comments,
+                                       universities=universities, menus=menus, error="true")
             return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
                                    comments=comments,
                                    universities=universities, menus=menus)
@@ -270,7 +281,8 @@ def saveOwnerRestaurant():
                                            comments=comments,
                                            universities=universities, menus=menus, message="Input format only can "
                                                                                            "be only pdf.")
-            if (editRestaurantById(restaurantId, name, category, phone) == True and (
+            editRestaurant = editRestaurantById(restaurantId, name, category, phone)
+            if (editRestaurant == True and (
                     addService(restaurantId, university) == True)):
                 if pdf:
                     insertPdfToRestaurant(restaurantId, pdf)
@@ -282,24 +294,34 @@ def saveOwnerRestaurant():
                     universities = getAllUniversitiesByRestaurantId(restaurantId)
                     return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
                                            comments=comments,
-                                           universities=universities, menus=menus)
+                                           universities=universities, menus=menus, success='true')
                 else:
                     return render_template("errorViews/404.html")
             else:
-                university = getUniversityById(restaurantId)
                 restaurant = getRestaurantById(restaurantId)
-                if university:
+                if restaurant:
                     form = RestaurantEditForm()
                     menus = getAllMenusByRestaurantId(restaurantId)
                     universities = getAllUniversitiesByRestaurantId(restaurantId)
                     comments = getAllCommentsByRestaurantId(restaurantId)
                     return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
                                            comments=comments,
-                                           universities=universities, menus=menus, message="This name already exists")
+                                           universities=universities, menus=menus, message=editRestaurant)
                 else:
                     return render_template("errorViews/404.html")
         else:
             return render_template("errorViews/403.html")
+    else:
+        restaurant = getRestaurantById(restaurantId)
+        if restaurant:
+            menus = getAllMenusByRestaurantId(restaurantId)
+            comments = getAllCommentsByRestaurantId(restaurantId)
+            universities = getAllUniversitiesByRestaurantId(restaurantId)
+            return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
+                                   comments=comments,
+                                   universities=universities, menus=menus)
+        else:
+            return render_template("errorViews/404.html")
 
 
 @login_required
@@ -317,9 +339,11 @@ def deleteService(serviceId):
 def deleteOwnerService(serviceId):
     if session['role'] == 'owner':
         service = getServiceById(serviceId)
-        if service and service['restaurantid'] == session['id']:
+        if service and service['restaurantid'] == session['id'] and not hasActiveOrder(session['id']):
             deleteServiceById(serviceId)
-            return redirect("/owner/restaurant/")
+            return redirect(url_for("editOwnerRestaurant", success="true"))
+        else:
+            return redirect(url_for("editOwnerRestaurant", error="true"))
     else:
         return render_template("errorViews/403.html")
 

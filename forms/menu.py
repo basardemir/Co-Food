@@ -15,17 +15,19 @@ class MenuEditForm(FlaskForm):
     name = StringField("name",
                        validators=[
                            DataRequired(),
-                           Length(min=1, max=128, message="wrong"),
+                           Length(min=1, max=64, message="The length of the name must be shorter than 65 characters.")
                        ])
     description = TextAreaField("description",
                                 validators=[
                                     DataRequired(),
-                                    Length(min=1, max=256, message="wrong"),
+                                    Length(min=1, max=256,
+                                           message="The length of the description must be shorter than 257 characters.")
                                 ])
     ingredients = TextAreaField("ingredients",
                                 validators=[
                                     DataRequired(),
-                                    Length(min=1, max=256, message="wrong"),
+                                    Length(min=1, max=256,
+                                           message="The length of the ingredients must be shorter than 257 characters.")
                                 ])
     campaign = BooleanField("campaign")
     res_choice = getAllRestaurantsForm()
@@ -37,23 +39,25 @@ class MenuEditOwnerForm(FlaskForm):
         'price',
         validators=[
             DataRequired(),
-            NumberRange(min=0, max=100)
+            NumberRange(min=0, max=100, message="The possible highest price is 100TL")
         ]
     )
     name = StringField("name",
                        validators=[
                            DataRequired(),
-                           Length(min=1, max=128, message="wrong"),
+                           Length(min=1, max=64, message="The length of the name must be shorter than 65 characters.")
                        ])
     description = TextAreaField("description",
                                 validators=[
                                     DataRequired(),
-                                    Length(min=1, max=256, message="wrong"),
+                                    Length(min=1, max=256,
+                                           message="The length of the description must be shorter than 257 characters.")
                                 ])
     ingredients = TextAreaField("ingredients",
                                 validators=[
                                     DataRequired(),
-                                    Length(min=1, max=256, message="wrong"),
+                                    Length(min=1, max=256,
+                                           message="The length of the ingredients must be shorter than 257 characters.")
                                 ])
     campaign = BooleanField("campaign")
     res_choice = getAllRestaurantsForm()
