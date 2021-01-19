@@ -28,6 +28,7 @@ def deleteMenu(menuId):
     else:
         return render_template("errorViews/403.html")
 
+
 @login_required
 def deleteOwnerMenu(menuId):
     if session['role'] == 'owner':
@@ -37,6 +38,7 @@ def deleteOwnerMenu(menuId):
             return redirect("/owner/restaurant/")
     else:
         return render_template("errorViews/403.html")
+
 
 @login_required
 def addMenu():
@@ -89,6 +91,7 @@ def editMenu(menuId):
     else:
         return render_template("errorViews/403.html")
 
+
 @login_required
 def editOwnerMenu(menuId):
     if session['role'] == 'owner':
@@ -102,6 +105,7 @@ def editOwnerMenu(menuId):
     else:
         return render_template("errorViews/403.html")
 
+
 @login_required
 def insertMenu(restaurantId):
     form = MenuEditForm()
@@ -110,9 +114,27 @@ def insertMenu(restaurantId):
             name = request.form['name']
             price = request.form['price']
             description = request.form['description']
+            ingredients = request.form['ingredients']
             campaign = form.campaign.data
-            if (addMenuByRestaurantId(restaurantId, name, description, price, campaign) == True):
+            if (addMenuByRestaurantId(restaurantId, name, description, price, campaign, ingredients) == True):
                 return redirect("/admin/restaurant/edit/" + str(restaurantId))
+        else:
+            return render_template("errorViews/403.html")
+
+
+@login_required
+def createMenu():
+    form = MenuEditForm()
+    if form.validate_on_submit():
+        if session['role'] == 'admin':
+            restaurant = request.form['restaurant']
+            name = request.form['name']
+            price = request.form['price']
+            description = request.form['description']
+            ingredients = request.form['ingredients']
+            campaign = form.campaign.data
+            if (addMenuByRestaurantId(restaurant, name, description, price, campaign, ingredients) == True):
+                return redirect("/admin/restaurant/edit/" + str(restaurant))
         else:
             return render_template("errorViews/403.html")
 
@@ -122,18 +144,18 @@ def insertOwnerMenu():
     form = MenuEditForm()
     if form.validate_on_submit():
         if session['role'] == 'owner':
-            restaurantId=session['id']
+            restaurantId = session['id']
             name = request.form['name']
             price = request.form['price']
             description = request.form['description']
+            ingredients = request.form['ingredients']
             campaign = form.campaign.data
-            if (addMenuByRestaurantId(restaurantId, name, description, price, campaign) == True):
+            if (addMenuByRestaurantId(restaurantId, name, description, price, campaign, ingredients) == True):
                 return redirect("/owner/restaurant/")
             else:
                 return render_template("errorViews/404.html")
         else:
             return render_template("errorViews/403.html")
-
 
 @login_required
 def saveMenu(menuId):
@@ -147,11 +169,13 @@ def saveMenu(menuId):
                 price = request.form['price']
                 restaurant = request.form['restaurant']
                 description = request.form['description']
+                ingredients = request.form['ingredients']
                 campaign = form.campaign.data
-                if (updateMenuById(menuId, name, description, price, campaign, restaurant) == True):
+                if (updateMenuById(menuId, name, description, price, campaign, restaurant, ingredients) == True):
                     return redirect("/admin/restaurant/edit/" + str(restaurant))
         else:
             return render_template("errorViews/403.html")
+
 
 @login_required
 def saveOwnerMenu(menuId):
@@ -160,13 +184,15 @@ def saveOwnerMenu(menuId):
         if session['role'] == 'owner':
             menu = getMenuById(menuId)
             restaurant = getRestaurantById(menu['restaurantid'])
-            if menu and restaurant and menu['restaurantid']==session['id']:
+            if menu and restaurant and menu['restaurantid'] == session['id']:
                 name = request.form['name']
                 price = request.form['price']
                 description = request.form['description']
+                ingredients = request.form['ingredients']
                 campaign = form.campaign.data
-                if (updateMenuById(menuId, name, description, price, campaign, menu['restaurantid'] ) == True):
-                    return redirect("/owner/restaurant/" )
+                if (updateMenuById(menuId, name, description, price, campaign, menu['restaurantid'],
+                                   ingredients) == True):
+                    return redirect("/owner/restaurant/")
         else:
             return render_template("errorViews/403.html")
 
@@ -177,11 +203,12 @@ def downloadMenuPdf(restaurantId):
         restaurant = getRestaurantById(restaurantId)
         if restaurant['menupdf']:
             data = restaurant['menupdf']
-            return send_file(BytesIO(data),attachment_filename=restaurant['name']+'menu.pdf',as_attachment=True)
+            return send_file(BytesIO(data), attachment_filename=restaurant['name'] + 'menu.pdf', as_attachment=True)
         else:
             return render_template("errorViews/404.html")
     else:
         return render_template("errorViews/403.html")
+
 
 @login_required
 def deleteMenuPdf(restaurantId):
@@ -195,29 +222,36 @@ def deleteMenuPdf(restaurantId):
     else:
         return render_template("errorViews/403.html")
 
+
 login_required
+
+
 def downloadOwnerMenuPdf(restaurantId):
     restaurant = getRestaurantById(restaurantId)
     if session['role'] == 'owner' and restaurant and restaurant['restaurantid'] == session['id']:
         if restaurant['menupdf']:
             data = restaurant['menupdf']
-            return send_file(BytesIO(data),attachment_filename=restaurant['name']+'menu.pdf',as_attachment=True)
+            return send_file(BytesIO(data), attachment_filename=restaurant['name'] + 'menu.pdf', as_attachment=True)
         else:
             return render_template("errorViews/404.html")
     else:
         return render_template("errorViews/403.html")
 
+
 login_required
+
+
 def downloadStudentMenuPdf(restaurantId):
     restaurant = getRestaurantById(restaurantId)
     if session['role'] == 'student' and restaurant:
         if restaurant['menupdf']:
             data = restaurant['menupdf']
-            return send_file(BytesIO(data),attachment_filename=restaurant['name']+'menu.pdf',as_attachment=True)
+            return send_file(BytesIO(data), attachment_filename=restaurant['name'] + 'menu.pdf', as_attachment=True)
         else:
             return render_template("errorViews/404.html")
     else:
         return render_template("errorViews/403.html")
+
 
 @login_required
 def deleteOwnerMenuPdf(restaurantId):

@@ -8,7 +8,8 @@
         <p class="panel-heading">
             {{ order['menuname'] }} - {{ order['restaurantname'] }}
         </p>
-        <p class="panel-block">{{ order['description'] }}</p>
+        <p class="panel-block"><span style="font-weight: bold">Description: </span>  {{ order['description'] }}</p>
+        <p class="panel-block"><span style="font-weight: bold">Ingredients: </span>  {{ order['ingredients'] }}</p>
         <p class="panel-block"><span style="font-weight: bold">Address: </span> {{ order['address'] }}</p>
         <p class="panel-block"><span style="font-weight: bold">Price: </span> {{ order['price'] * order['menucount'] }}
         </p>

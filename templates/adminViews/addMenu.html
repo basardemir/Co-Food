@@ -2,11 +2,12 @@
 {% block title %}Home{% endblock %}
 {% block content %}
     {% if restaurant %}
-    <script>
-        document.addEventListener("DOMContentLoaded", function (event) {
-            document.getElementById("restaurant").value = '{{restaurant.id}}';
-        });
-    </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function (event) {
+                document.getElementById("restaurant").required = false;
+                document.getElementById("restaurantField").hidden = true;
+            });
+        </script>
     {% endif %}
 {% endblock %}
 {% block left_area %}
@@ -48,10 +49,16 @@
                         <div class="field">
                             <label class="label">Menu Description</label>
                             <div class="control">
-                                {{ render_field(form.description, class='textarea', rows="3", placeholder="Descriptiom") }}
+                                {{ render_field(form.description, class='textarea', rows="3", placeholder="Description") }}
                             </div>
                         </div>
                         <div class="field">
+                            <label class="label">Menu Ingredients</label>
+                            <div class="control">
+                                {{ render_field(form.ingredients, class='textarea', rows="3", placeholder="Ingredients") }}
+                            </div>
+                        </div>
+                        <div class="field" id="restaurantField">
                             <label class="label">Restaurant</label>
                             <div class="select">
                                 {{ render_field(form.restaurant) }}
@@ -59,7 +66,8 @@
                         </div>
                         <div class="field">
                             <div class="control">
-                                {{ render_field(form.campaign, class="is-large checkbox", placeholder="Descriptiom") }} Has Campaign?
+                                {{ render_field(form.campaign, class="is-large checkbox", placeholder="Description") }}
+                                Has Campaign?
                             </div>
                         </div>
                         {% if message %}

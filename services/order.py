@@ -39,7 +39,7 @@ def getOrderDetails(studentId):
     try:
         with dbapi2.connect(dsn) as connection:
             with connection.cursor() as cursor:
-                query = "select ordercontentid as id,ordertime, m.name as menuname,r.name as restaurantname," \
+                query = "select ordercontentid as id,ordertime, m.name as menuname, m.ingredients as ingredients, r.name as restaurantname," \
                         " m.description as description, menucount, address,price,numberofstudents" \
                         " from orderstudentmatching left join ordercontent o on " \
                         "o.id = orderstudentmatching.ordercontentid left join menu m on m.id = o.menuid " \

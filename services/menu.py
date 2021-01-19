@@ -59,23 +59,23 @@ def deleteMenuById(menuId):
         return False
 
 
-def addMenuByRestaurantId(restaurantId, name, description, price, campaign):
+def addMenuByRestaurantId(restaurantId, name, description, price, campaign,ingredients):
     try:
         with dbapi2.connect(dsn) as connection:
             with connection.cursor() as cursor:
-                query = "insert into menu (name, description,price,iscampaign, restaurantid) values (%s,%s,%s,%s,%s)"
-                cursor.execute(query, (name, description, price, campaign, restaurantId))
+                query = "insert into menu (name, description,price,iscampaign, restaurantid,ingredients) values (%s,%s,%s,%s,%s,%s)"
+                cursor.execute(query, (name, description, price, campaign, restaurantId,ingredients))
                 return True
     except:
         return False
 
 
-def updateMenuById(menuId, name, description, price, campaign, restaurant):
+def updateMenuById(menuId, name, description, price, campaign, restaurant,ingredients):
     try:
         with dbapi2.connect(dsn) as connection:
             with connection.cursor() as cursor:
-                query = "update menu set name=%s, description=%s,price=%s,iscampaign=%s, restaurantid=%s where(id=%s)"
-                cursor.execute(query, (name, description, price, campaign, restaurant, menuId))
+                query = "update menu set name=%s, description=%s,price=%s,iscampaign=%s, restaurantid=%s,ingredients=%s where(id=%s)"
+                cursor.execute(query, (name, description, price, campaign, restaurant,ingredients, menuId))
                 return True
     except:
         return False

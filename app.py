@@ -126,6 +126,7 @@ app.add_url_rule('/admin/service/delete/<int:serviceId>', view_func=deleteServic
 app.add_url_rule('/admin/menu/delete/<int:menuId>', view_func=deleteMenu, methods=['GET'])
 app.add_url_rule('/admin/menu/add/<int:restaurantId>', view_func=addMenuToRestaurant, methods=['GET'])
 app.add_url_rule('/admin/menu/add', view_func=addMenu, methods=['GET'])
+app.add_url_rule('/admin/menu/add', view_func=createMenu, methods=['POST'])
 app.add_url_rule('/admin/menu/add/<int:restaurantId>', view_func=insertMenu, methods=['POST'])
 app.add_url_rule('/admin/menu/edit/<int:menuId>', view_func=editMenu, methods=['GET'])
 app.add_url_rule('/admin/menu/edit/<int:menuId>', view_func=saveMenu, methods=['POST'])

@@ -22,6 +22,11 @@ class MenuEditForm(FlaskForm):
                                     DataRequired(),
                                     Length(min=1, max=256, message="wrong"),
                                 ])
+    ingredients = TextAreaField("ingredients",
+                                validators=[
+                                    DataRequired(),
+                                    Length(min=1, max=256, message="wrong"),
+                                ])
     campaign = BooleanField("campaign")
     res_choice = getAllRestaurantsForm()
     restaurant = SelectField("restaurant", validate_choice=False, choices=res_choice
@@ -41,6 +46,11 @@ class MenuEditOwnerForm(FlaskForm):
                            Length(min=1, max=128, message="wrong"),
                        ])
     description = TextAreaField("description",
+                                validators=[
+                                    DataRequired(),
+                                    Length(min=1, max=256, message="wrong"),
+                                ])
+    ingredients = TextAreaField("ingredients",
                                 validators=[
                                     DataRequired(),
                                     Length(min=1, max=256, message="wrong"),
