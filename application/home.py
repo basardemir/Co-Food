@@ -7,13 +7,15 @@ from flask_login.utils import *
 from forms.filter import RestaurantSearchForm
 from services.order import *
 from services.restaurant import *
-
+from services.students import *
 
 @login_required
 def homepage():
     if session['role'] == 'student':
         form = RestaurantSearchForm()
-        orders = getAllOrders()
+        student = getStudentDetail(session['id'])
+        university = student['universityid']
+        orders = getAllOrdersWithUniversityId(university)
         average_time = getAverageDeliverTime()
         if not average_time:
             average_time = 0
@@ -72,7 +74,10 @@ def filter_homepage():
         form = RestaurantSearchForm()
         mostPopularRestaurants = getMostPopularRestaurants()
         students = getMostOrderingStudents()
-        orders = getAllOrdersWithFilter(request.form['restaurantname'], request.form['categories'])
+        student = getStudentDetail(session['id'])
+        university = student['universityid']
+        orders = getAllOrdersWithUniversityId(university)
+        orders = getAllOrdersWithFilter(request.form['restaurantname'], request.form['categories'],university)
         return render_template("consumerViews/main_page.html", form=form, students=students, orders=orders)
     else:
         return render_template("errorViews/403.html")

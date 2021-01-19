@@ -74,6 +74,12 @@
                     {{ render_field(form.university) }}
                 </div>
             </div>
+            <div class="field" id="phoneArea" hidden="true">
+                <label class="label">Phone Number</label>
+                <div class="control">
+                    {{ render_field(form.phone, class='input',type="text", placeholder="05xx xxx xx xx", pattern="[0-9]{11}") }}
+                </div>
+            </div>
             <div class="field">
                 <div class="control">
                     I agree to the <a href="#">terms and conditions</a>
@@ -104,16 +110,19 @@
     <small>&copy; 2020, Başar Demir</small>
 </footer>
 <script>
+    document.addEventListener("DOMContentLoaded",roleChanged() );
     function roleChanged() {
         var x = document.getElementById("selectRole").value;
         if (x === '0') {
             document.getElementById("userLabel").innerHTML = "Username";
             document.getElementById("universityArea").hidden = false;
-            console.log("e");
+            document.getElementById("phoneArea").hidden = true;
+            document.getElementById("phone").required = false;
         } else {
             document.getElementById("userLabel").innerHTML = "Restaurant Name";
             document.getElementById("universityArea").hidden = true;
-            console.log("b");
+            document.getElementById("phoneArea").hidden = false;
+            document.getElementById("phone").required = true;
         }
     }
 

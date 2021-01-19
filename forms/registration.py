@@ -22,6 +22,9 @@ class RegisterForm(FlaskForm):
         DataRequired(),
         Length(min=1, max=128, message="wrong")
     ])
+    phone = StringField("phone", validators=[
+        Length(min=1, max=16, message="wrong")
+    ])
     uni_choice = university.getAllUniversitiesForm()
     university = SelectField("university", validate_choice=False, choices=uni_choice
                              )

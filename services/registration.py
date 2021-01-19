@@ -89,5 +89,5 @@ def addStudent(user):
 def addRestaurant(user):
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
-            query = "insert into restaurant(name, password, email) VALUES (%s,%s,%s)"
+            query = "insert into restaurant(name, password, email, phonenumber) VALUES (%s,%s,%s,%s)"
             cursor.execute(query, user)

@@ -81,6 +81,12 @@
                                 {{ render_field(form.university) }}
                             </div>
                         </div>
+                        <div class="field" id="phoneArea">
+                            <label class="label">Phone Number</label>
+                            <div class="control">
+                                {{ render_field(form.phone,value=restaurant.phonenumber, required="true",class='input',type="text", placeholder="05xx xxx xx xx", pattern="[0-9]{11}") }}
+                            </div>
+                        </div>
                         <div class="field">
                             <label class="label">Add Menu Pdf</label>
                         </div>
@@ -148,19 +154,19 @@
         </div>
     </section>
     {% if restaurant.menupdf %}
-    <article class="message is-light">
-        <div class="message-body">
-            <div class="panel-block">
-                <div class="control has-text-centered">
-                    <a target="_blank" href="/admin/menu/pdf/download/{{ restaurant.restaurantid }}"
-                       class="button is-link is-medium is-fullwidth is-danger">Download PDF</a>
-                    <a style="margin-top: 10px"
-                       href="/admin/menu/pdf/delete/{{ restaurant.restaurantid }}"
-                       class="button is-link is-medium is-fullwidth is-danger">Delete PDF</a>
+        <article class="message is-light">
+            <div class="message-body">
+                <div class="panel-block">
+                    <div class="control has-text-centered">
+                        <a target="_blank" href="/admin/menu/pdf/download/{{ restaurant.restaurantid }}"
+                           class="button is-link is-medium is-fullwidth is-danger">Download PDF</a>
+                        <a style="margin-top: 10px"
+                           href="/admin/menu/pdf/delete/{{ restaurant.restaurantid }}"
+                           class="button is-link is-medium is-fullwidth is-danger">Delete PDF</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </article>
+        </article>
     {% endif %}
     <article class="message is-light">
         <div class="message-body">

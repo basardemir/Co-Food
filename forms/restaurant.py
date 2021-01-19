@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField,FileField,validators
+from wtforms import StringField, SelectField, FileField, validators
 from wtforms.validators import DataRequired, Length
 
 from services import category, university
@@ -18,3 +18,6 @@ class RestaurantEditForm(FlaskForm):
     university = SelectField("university", validate_choice=False, choices=uni_choice
                              )
     menupdf = FileField("menupdf")
+    phone = StringField("phone", validators=[
+        Length(min=1, max=16, message="wrong")
+    ])

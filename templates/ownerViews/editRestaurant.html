@@ -79,6 +79,12 @@
                                 {{ render_field(form.university) }}
                             </div>
                         </div>
+                        <div class="field" id="phoneArea" >
+                            <label class="label">Phone Number</label>
+                            <div class="control">
+                                {{ render_field(form.phone,value=restaurant.phonenumber, required="true",class='input',type="text", placeholder="05xx xxx xx xx", pattern="[0-9]{11}") }}
+                            </div>
+                        </div>
                         <div class="field">
                             <label class="label">Add Menu Pdf</label>
                         </div>

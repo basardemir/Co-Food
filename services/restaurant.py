@@ -9,9 +9,27 @@ def getAllRestaurants():
     restaurants = []
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
-            query = "select * from restaurant left join category on (restaurant.categoryid = category.id) order by restaurant.name"
+            query = "select restaurant.id as id, restaurant.name as name, category.name as catname" \
+                    " from restaurant left join category on (restaurant.categoryid = category.id) order by restaurant.name"
             cursor.execute(query)
-            for id, name, email, password, catId, menupdf, categoryId, catname in cursor:
+            for id, name, catname in cursor:
+                element = []
+                element.append(id)
+                element.append(name)
+                element.append(catname)
+                restaurants.append(element)
+    return restaurants
+
+def getAllRestaurantsWithUniversity(universityId):
+    restaurants = []
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select restaurant.id as id, restaurant.name as name, category.name as catname," \
+                    " restaurant.menupdf as menupdf from restaurant left join category on (restaurant.categoryid = category.id)" \
+                    " left outer join service s on restaurant.id = s.restaurantid" \
+                    " where(s.universityid=%s) order by restaurant.name"
+            cursor.execute(query,(universityId,))
+            for id, name, catname, menupdf in cursor:
                 element = []
                 element.append(id)
                 element.append(name)
@@ -20,21 +38,15 @@ def getAllRestaurants():
                 restaurants.append(element)
     return restaurants
 
-
 def getRestaurant(restaurantId):
-    restaurant = []
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
-            query = "select * from restaurant left join category on (restaurant.categoryid = category.id) where(restaurant.id = %s) "
+            query = "select *, restaurant.name as restaurantname from restaurant left join category on (restaurant.categoryid = category.id) where(restaurant.id = %s) "
             cursor.execute(query, (restaurantId,))
-            for id, name, email, password, catId, menupdf, categoryId, catname in cursor:
-                element = []
-                element.append(id)
-                element.append(name)
-                element.append(catname)
-                element.append(menupdf)
-                restaurant.append(element)
-    return restaurant
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            if cursor.rowcount>0:
+                restaurant = dict(zip(columns, cursor.fetchone()))
+            return restaurant
 
 
 def getMostPopularRestaurants():
@@ -158,28 +170,31 @@ def getAverageDeliverTime():
             time = dict(zip(columns, cursor.fetchone()))
             return time
 
-def filterRestaurant(name, categoryId):
+def filterRestaurant(name, categoryId, universityId):
     restaurant = []
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
             if name != "" and categoryId != '0':
                 name = '%' + name + '%'
-                query = "select * from restaurant join category on (restaurant.categoryid = category.id) where " \
-                        "(restaurant.categoryid = %s AND LOWER(restaurant.name ) like LOWER(%s)) order by restaurant.name "
-                cursor.execute(query, (categoryId, name))
+                query = "select * from restaurant left join category on (restaurant.categoryid = category.id) " \
+                        "left  join service s on restaurant.id = s.restaurantid where(s.universityid=%s AND restaurant.categoryid = %s AND LOWER(restaurant.name ) like LOWER(%s)) order by restaurant.name "
+                cursor.execute(query, (universityId,categoryId, name))
             elif name != "":
                 name = '%' + name + '%'
-                query = "select * from restaurant join category on (restaurant.categoryid = category.id) where " \
-                        " (LOWER(restaurant.name ) like LOWER(%s)) order by restaurant.name "
-                cursor.execute(query, (name,))
+                query = "select * from restaurant join category on (restaurant.categoryid = category.id) " \
+                        "left  join service s on restaurant.id = s.restaurantid where(s.universityid=%s AND " \
+                        "LOWER(restaurant.name ) like LOWER(%s)) order by restaurant.name "
+                cursor.execute(query, (universityId,name))
             elif categoryId != '0':
-                query = "select * from restaurant join category on (restaurant.categoryid = category.id) where " \
-                        "(restaurant.categoryid = %s) order by restaurant.name "
-                cursor.execute(query, (categoryId,))
+                query = "select * from restaurant join category on (restaurant.categoryid = category.id) " \
+                        "left  join service s on restaurant.id = s.restaurantid where(s.universityid=%s AND " \
+                        "restaurant.categoryid = %s) order by restaurant.name "
+                cursor.execute(query, (universityId,categoryId))
             else:
-                query = "select * from restaurant join category on (restaurant.categoryid = category.id) order by restaurant.name"
-                cursor.execute(query)
-            for id, name, email, password, catId, menupdf, categoryId, catname in cursor:
+                query = "select * from restaurant join category on (restaurant.categoryid = category.id) " \
+                        "left  join service s on restaurant.id = s.restaurantid where(s.universityid=%s) order by restaurant.name"
+                cursor.execute(query, (universityId))
+            for id, name, email, password, catId, menupdf, categoryId, catname, idservice,universityId,restId in cursor:
                 element = []
                 element.append(id)
                 element.append(name)
@@ -227,16 +242,16 @@ def getRestaurantById(restaurantId):
                 return None
 
 
-def editRestaurantById(restaurantId, name, categoryid):
+def editRestaurantById(restaurantId, name, categoryid,phone):
     try:
         with dbapi2.connect(dsn) as connection:
             with connection.cursor() as cursor:
                 if categoryid != '0':
-                    query = "update restaurant set name=%s, categoryid=%s where (id=%s)"
-                    cursor.execute(query, (name, categoryid, restaurantId))
+                    query = "update restaurant set name=%s, categoryid=%s, phonenumber=%s where (id=%s)"
+                    cursor.execute(query, (name, categoryid,phone,restaurantId))
                 else:
-                    query = "update restaurant set name=%s, categoryid=NULL where (id=%s)"
-                    cursor.execute(query, (name, restaurantId))
+                    query = "update restaurant set name=%s, phonenumber=%s, categoryid=NULL where (id=%s)"
+                    cursor.execute(query, (name,phone, restaurantId))
                 return True
     except:
         return False
@@ -267,3 +282,16 @@ def deletePdfFromRestaurant(restaurantId):
             query = "update restaurant set menupdf=%s where (id=%s)"
             cursor.execute(query, ('', restaurantId))
             return True
+
+def isServesToStudent(studentId,restaurantId):
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select u.id as id from student left join university " \
+                    "u on u.id = student.universityid where (student.id=%s) " \
+                    "INTERSECT " \
+                    "select  universityid as id from service left join restaurant r on r.id = restaurantid " \
+                    "where (r.id=%s)"
+            cursor.execute(query, (studentId,restaurantId))
+            if cursor.rowcount>0:
+                return True
+            return False

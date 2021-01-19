@@ -197,8 +197,31 @@ def getAllOrders():
     except:
         return False
 
+def getAllOrdersWithUniversityId(universityId):
+    try:
+        with dbapi2.connect(dsn) as connection:
+            with connection.cursor() as cursor:
+                query = " select ordercontent.id as id, ordertime, m.name as menuname,r.name as restaurantname," \
+                        " m.description as description, menucount,price,numberofstudents" \
+                        " from ordercontent  " \
+                        " left join menu m on m.id = ordercontent.menuid  " \
+                        " left join restaurant r on r.id = m.restaurantid " \
+                        " left join service s on r.id = s.restaurantid " \
+                        " where ( s.universityid=%s AND ordercontent.isDelivered = FALSE)"
+                cursor.execute(query,(universityId,))
+                columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+                if cursor.rowcount > 0:
+                    orders = []
+                    for i in cursor:
+                        orders.append(dict(zip(columns, i)))
+                    return orders
+                else:
+                    return None
+    except:
+        return False
 
-def getAllOrdersWithFilter(restaurantName, categoryId):
+
+def getAllOrdersWithFilter(restaurantName, categoryId,universityId):
     try:
         with dbapi2.connect(dsn) as connection:
             with connection.cursor() as cursor:
@@ -207,33 +230,34 @@ def getAllOrdersWithFilter(restaurantName, categoryId):
                             " m.description as description, menucount,price,numberofstudents" \
                             " from orderstudentmatching left join ordercontent o on " \
                             "o.id = orderstudentmatching.ordercontentid left join menu m on m.id = o.menuid " \
-                            "left join restaurant r on r.id = m.restaurantid where (o.isDelivered = FALSE AND r.categoryid = %s " \
+                            "left join restaurant r on r.id = m.restaurantid " \
+                            "left join service s on r.id = s.restaurantid where (s.universityid=%s AND o.isDelivered = FALSE AND r.categoryid = %s " \
                             "AND LOWER(r.name ) like LOWER(%s))"
-                    cursor.execute(query, (restaurantName, categoryId))
+                    cursor.execute(query, (universityId,restaurantName, categoryId))
                 elif restaurantName != "":
                     name = '%' + restaurantName + '%'
                     query = "select ordercontentid as id, ordertime, m.name as menuname,r.name as restaurantname," \
                             " m.description as description, menucount,price,numberofstudents" \
                             " from orderstudentmatching left join ordercontent o on " \
                             "o.id = orderstudentmatching.ordercontentid left join menu m on m.id = o.menuid " \
-                            "left join restaurant r on r.id = m.restaurantid where (o.isDelivered = FALSE " \
+                            "left join restaurant r on r.id = m.restaurantid left join service s on r.id = s.restaurantid where (s.universityid=%s ANDo.isDelivered = FALSE " \
                             "AND LOWER(r.name ) like LOWER(%s))"
-                    cursor.execute(query, (name,))
+                    cursor.execute(query, (universityId,name))
                 elif categoryId != '0':
                     query = "select ordercontentid as id, ordertime, m.name as menuname,r.name as restaurantname," \
                             " m.description as description, menucount,price,numberofstudents" \
                             " from orderstudentmatching left join ordercontent o on " \
                             "o.id = orderstudentmatching.ordercontentid left join menu m on m.id = o.menuid " \
-                            "left join restaurant r on r.id = m.restaurantid where (o.isDelivered = FALSE AND r.categoryid = %s " \
+                            "left join restaurant r on r.id = m.restaurantid left join service s on r.id = s.restaurantid where (s.universityid=%s ANDo.isDelivered = FALSE AND r.categoryid = %s " \
                             ")"
-                    cursor.execute(query, (categoryId,))
+                    cursor.execute(query, (universityId,categoryId))
                 else:
                     query = "select ordercontentid as id, ordertime, m.name as menuname,r.name as restaurantname," \
                             " m.description as description, menucount,price,numberofstudents" \
                             " from orderstudentmatching left join ordercontent o on " \
                             "o.id = orderstudentmatching.ordercontentid left join menu m on m.id = o.menuid " \
-                            "left join restaurant r on r.id = m.restaurantid where (o.isDelivered = FALSE)"
-                    cursor.execute(query)
+                            "left join restaurant r on r.id = m.restaurantid left join service s on r.id = s.restaurantid where (s.universityid=%s ANDo.isDelivered = FALSE)"
+                    cursor.execute(query,(universityId,))
                 columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
                 if cursor.rowcount > 0:
                     orders = []

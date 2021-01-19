@@ -41,7 +41,7 @@ def get_user(user_id):
 
 def register():
     form = RegisterForm()
-    universities = getAllUniversities();
+    universities = getAllUniversities()
     return render_template("consumerViews/register.html", universities=universities, form=form)
 
 
@@ -120,7 +120,8 @@ def addClient():
             university = request.form['university']
             return addNewStudent(username, password, email, university)
         elif request.form['role'] == "1":
-            return addNewRestaurant(username, password, email)
+            phone = request.form['phone']
+            return addNewRestaurant(username, password, email, phone)
         else:
             return render_template("consumerViews/register.html", form=form)
 
@@ -141,7 +142,7 @@ def addNewStudent(username, password, email, university):
     return redirect(url_for("login"))
 
 
-def addNewRestaurant(name, password, email):
+def addNewRestaurant(name, password, email, phone):
     form = RegisterForm()
     formLogin = LoginForm()
     error = []
@@ -149,6 +150,7 @@ def addNewRestaurant(name, password, email):
     restaurant.append(name)
     restaurant.append(hasher.hash(password))
     restaurant.append(email)
+    restaurant.append(phone)
     try:
         addRestaurant(restaurant)
     except:
