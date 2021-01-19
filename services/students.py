@@ -89,8 +89,8 @@ def updateUserWithPassword(userId, username, email, password, universityid):
                 query = "update student set username=%s, email=%s,password=%s,universityid=%s where(id=%s)"
                 cursor.execute(query, (username, email, password, universityid, userId))
                 return True
-    except:
-        return False
+    except dbapi2.IntegrityError as error:
+        return error.diag.message_detail
 
 def updateUserWithoutPassword(userId, username, email, universityid):
     try:
@@ -99,5 +99,5 @@ def updateUserWithoutPassword(userId, username, email, universityid):
                 query = "update student set username=%s, email=%s, universityid=%s where(id=%s)"
                 cursor.execute(query, (username, email, universityid, userId))
                 return True
-    except:
-        return False
+    except dbapi2.IntegrityError as error:
+        return error.diag.message_detail

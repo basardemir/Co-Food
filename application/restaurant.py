@@ -35,7 +35,7 @@ def filterRestaurants():
         student = getStudentDetail(session['id'])
         university = student['universityid']
         popularRestaurant = getMostPopularRestaurants()
-        restaurants = filterRestaurant(request.form['restaurantname'], request.form['categories'],university)
+        restaurants = filterRestaurant(request.form['restaurantname'], request.form['categories'], university)
         return render_template("consumerViews/restaurants.html", popularRestaurants=popularRestaurant, form=form,
                                restaurants=restaurants)
     else:
@@ -44,7 +44,7 @@ def filterRestaurants():
 
 @login_required
 def restaurant_details(restaurantId):
-    if session['role'] == 'student' and isServesToStudent(session['id'],restaurantId):
+    if session['role'] == 'student' and isServesToStudent(session['id'], restaurantId):
         menus = getMenu(restaurantId)
         comments = getAllCommentsByRestaurantIdwithStudents(restaurantId)
         restaurant = getRestaurant(restaurantId)
@@ -69,7 +69,7 @@ def restaurant_details(restaurantId):
 
 @login_required
 def add_comment(restaurantId):
-    if session['role'] == 'student' and isServesToStudent(session['id'],restaurantId):
+    if session['role'] == 'student' and isServesToStudent(session['id'], restaurantId):
         form = CommentAddForm()
         if form.validate_on_submit():
             description = request.form['comment']
@@ -87,8 +87,21 @@ def add_comment(restaurantId):
                 return render_template("consumerViews/restaurant.html", popularmenus=popularMenus, comments=comments,
                                        restaurant_info=information,
                                        commentform=commentForm)
+        else:
+            menus = getMenu(restaurantId)
+            restaurant = getRestaurant(restaurantId)
+            comments = getAllCommentsByRestaurantIdwithStudents(restaurantId)
+            popularMenus = getMostPopularMenusByRestaurantId(restaurantId)
+            information = {
+                'restaurant': restaurant,
+                'menus': menus
+            }
+            return render_template("consumerViews/restaurant.html", popularmenus=popularMenus, comments=comments,
+                                   restaurant_info=information,
+                                   commentform=form)
     else:
         return render_template("errorViews/403.html")
+
 
 @login_required
 def adminRestaurants():
@@ -189,7 +202,7 @@ def saveRestaurant(restaurantId):
                                            comments=comments,
                                            universities=universities, menus=menus, message="Input format only can "
                                                                                            "be only pdf.")
-            if (editRestaurantById(restaurantId, name, category,phone) == True and (
+            if (editRestaurantById(restaurantId, name, category, phone) == True and (
                     addService(restaurantId, university) == True)):
                 if pdf:
                     insertPdfToRestaurant(restaurantId, pdf)
@@ -257,7 +270,7 @@ def saveOwnerRestaurant():
                                            comments=comments,
                                            universities=universities, menus=menus, message="Input format only can "
                                                                                            "be only pdf.")
-            if (editRestaurantById(restaurantId, name, category,phone) == True and (
+            if (editRestaurantById(restaurantId, name, category, phone) == True and (
                     addService(restaurantId, university) == True)):
                 if pdf:
                     insertPdfToRestaurant(restaurantId, pdf)

@@ -23,12 +23,20 @@ def getCampaigns():
 
 @login_required
 def filterCampaigns():
+    form = CampaignSearchForm()
     if session['role'] == 'student':
-        form = CampaignSearchForm()
-        student = getStudentDetail(session['id'])
-        university = student['universityid']
-        popularCampaigns = getMostPopularCampaigns()
-        campaigns = filterCampaign(request.form['menuname'], request.form['categories'],university)
-        return render_template("consumerViews/campaigns.html",popularcampaigns=popularCampaigns, form=form, campaigns=campaigns)
+        if form.validate_on_submit():
+            student = getStudentDetail(session['id'])
+            university = student['universityid']
+            popularCampaigns = getMostPopularCampaigns()
+            campaigns = filterCampaign(request.form['menuname'], request.form['categories'],university)
+            return render_template("consumerViews/campaigns.html",popularcampaigns=popularCampaigns, form=form, campaigns=campaigns)
+        else:
+            student = getStudentDetail(session['id'])
+            university = student['universityid']
+            campaigns = getAllCampaignsWithUniversity(university)
+            popularCampaigns = getMostPopularCampaigns()
+            return render_template("consumerViews/campaigns.html", popularcampaigns=popularCampaigns, form=form,
+                                   campaigns=campaigns)
     else:
         return render_template("errorViews/403.html")

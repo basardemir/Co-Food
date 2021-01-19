@@ -32,24 +32,38 @@ def updateUser():
             username = request.form['username']
             password = request.form['password']
             university = request.form['university']
-            if(hasActiveOrder(session['id'])):
+            if (hasActiveOrder(session['id'])):
                 user = getStudentDetail(userId)
                 form = SettingsForm()
-                return render_template("consumerViews/settings.html", user=user, form=form, messages=["You have active order, you cannot change your information."])
+                return render_template("consumerViews/settings.html", user=user, form=form,
+                                       messages=["You have active order, you cannot change your information."])
             email = request.form['email']
             if form['passwordchange'].data == 'True':
-                if updateUserWithPassword(userId, username, hasher.hash(password), email, university):
+                userUpdate = updateUserWithPassword(userId, username, hasher.hash(password), email, university)
+                if userUpdate != True:
                     user = getStudentDetail(userId)
                     form = SettingsForm()
-                    return render_template("consumerViews/settings.html", user=user, form=form)
+                    return render_template("consumerViews/settings.html", user=user, form=form, messages=[userUpdate])
+                else:
+                    user = getStudentDetail(userId)
+                    form = SettingsForm()
+                    return render_template("consumerViews/settings.html", user=user, form=form, success='true')
             else:
-                if updateUserWithoutPassword(userId, username, email, university):
+                userUpdate = updateUserWithoutPassword(userId, username, email, university)
+                if userUpdate != True:
                     user = getStudentDetail(userId)
                     form = SettingsForm()
-                    return render_template("consumerViews/settings.html", user=user, form=form)
+                    return render_template("consumerViews/settings.html", user=user, form=form, messages=[userUpdate])
+                else:
+                    user = getStudentDetail(userId)
+                    form = SettingsForm()
+                    return render_template("consumerViews/settings.html", user=user, form=form, success='true')
+        else:
+            userId = session['id']
+            user = getStudentDetail(userId)
+            return render_template("consumerViews/settings.html", user=user, form=form)
     else:
         return render_template("errorViews/403.html")
-    return render_template("errorViews/404.html")
 
 
 def userHistory():

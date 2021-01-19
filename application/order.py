@@ -32,8 +32,13 @@ def activeOrder():
             friends = getOrderFriends(order['id'])
             if friends:
                 friendsize = len(friends)
+                success = request.args.get('success')
+                if success == 'true':
+                    return render_template("consumerViews/wait_room.html", success=True,order=order, friends=friends,
+                                       friendsize=friendsize)
                 return render_template("consumerViews/wait_room.html", order=order, friends=friends,
                                        friendsize=friendsize)
+
         return redirect(url_for('homepage', noactiveorder='true', **request.args))
     else:
         return render_template("errorViews/403.html")
@@ -53,19 +58,25 @@ def insertNewOrder(menuId):
                 else:
                     return render_template("errorViews/404.html")
             else:
-
-                if (
-                        insertOrderSQL(menuId, session['id'], int(request.form['friendnumber']) + 1,
+                insertion = insertOrderSQL(menuId, session['id'], int(request.form['friendnumber']) + 1,
                                        request.form['ordercount'],
-                                       request.form['address'])):
-                    return redirect("/activeorder")
-                else:
+                                       request.form['address'])
+                if (insertion != True):
                     form = orderForm()
                     menu = getMenuById(menuId)
                     restaurant = getRestaurantById(menu['restaurantid'])
                     return render_template("consumerViews/order.html", menu=menu, restaurant=restaurant,
-                                           form=form, message="An error occurred, try again!")
-
+                                           form=form, message= insertion+" An error occurred, try again!")
+                else:
+                    return redirect(url_for("activeOrder", success='true'))
+        else:
+            menu = getMenuById(menuId)
+            restaurant = getRestaurantById(menu['restaurantid'])
+            if menu and restaurant and (isServesToStudent(session['id'], restaurant['restaurantid'])):
+                return render_template("consumerViews/order.html", menu=menu, restaurant=restaurant,
+                                       form=form)
+            else:
+                return render_template("errorViews/404.html")
     else:
         return render_template("errorViews/403.html")
 
@@ -88,7 +99,7 @@ def deleteParticipation(orderId):
         studentId = session['id']
         order = getActiveOrder(orderId)
         if order and deleteParticipant(studentId, orderId):
-            return redirect("/homepage")
+            return redirect(url_for('homepage', cancel='true', **request.args))
         else:
             return render_template("errorViews/404.html")
     else:

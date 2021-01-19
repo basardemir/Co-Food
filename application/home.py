@@ -9,6 +9,7 @@ from services.order import *
 from services.restaurant import *
 from services.students import *
 
+
 @login_required
 def homepage():
     if session['role'] == 'student':
@@ -29,6 +30,7 @@ def homepage():
         notactive = request.args.get('noactiveorder')
         ordered = request.args.get('ordered')
         error = request.args.get('error')
+        cancel = request.args.get('cancel')
         students = getMostOrderingStudents()
         if orders:
             for i in orders:
@@ -45,6 +47,10 @@ def homepage():
             return render_template("consumerViews/main_page.html", ordercount=ordercount, averagetime=average_time,
                                    form=form, students=students, orders=orders,
                                    error='true')
+        if cancel == 'true':
+            return render_template("consumerViews/main_page.html", ordercount=ordercount, averagetime=average_time,
+                                   form=form, students=students, orders=orders,
+                                   cancel='true')
         return render_template("consumerViews/main_page.html", ordercount=ordercount, averagetime=average_time,
                                form=form, students=students, orders=orders)
     else:
@@ -71,13 +77,21 @@ def adminhomepage():
 def filter_homepage():
     form = RestaurantSearchForm()
     if session['role'] == 'student':
-        form = RestaurantSearchForm()
-        mostPopularRestaurants = getMostPopularRestaurants()
-        students = getMostOrderingStudents()
-        student = getStudentDetail(session['id'])
-        university = student['universityid']
-        orders = getAllOrdersWithUniversityId(university)
-        orders = getAllOrdersWithFilter(request.form['restaurantname'], request.form['categories'],university)
-        return render_template("consumerViews/main_page.html", form=form, students=students, orders=orders)
+        if form.validate_on_submit():
+            form = RestaurantSearchForm()
+            students = getMostOrderingStudents()
+            student = getStudentDetail(session['id'])
+            university = student['universityid']
+            orders = getAllOrdersWithFilter(request.form['restaurantname'], request.form['categories'], university)
+            return render_template("consumerViews/main_page.html", form=form, students=students, orders=orders)
+        else:
+            student = getStudentDetail(session['id'])
+            students = getMostOrderingStudents()
+            university = student['universityid']
+            ordercount = getNumberofDeliveredOrders()
+            orders = getAllOrdersWithUniversityId(university)
+            average_time = getAverageDeliverTime()
+            return render_template("consumerViews/main_page.html", ordercount=ordercount, averagetime=average_time,
+                                   form=form, students=students, orders=orders)
     else:
         return render_template("errorViews/403.html")

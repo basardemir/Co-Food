@@ -18,6 +18,15 @@
     </style>
 {% endblock %}
 {% block left_area %}
+    <article class="message is-light">
+        <div class="message-header">
+            <p>Popular Menus</p>
+        </div>
+        <div class="message-body">
+            You can see most popular menus and their order counts of
+            <b>{{ restaurant_info['restaurant']['restaurantname'] }}</b>
+        </div>
+    </article>
     <article class="panel is-light">
         <p class="panel-heading">
             Most Popular Menus - Order Counts

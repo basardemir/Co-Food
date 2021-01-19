@@ -2,7 +2,7 @@
 {% block title %}Home{% endblock %}
 {% block content %}
     <script>
-        {% if ordered or noactiveorder or error %}
+        {% if ordered or noactiveorder or error or cancel %}
             document.addEventListener("DOMContentLoaded", function (event) {
                 document.getElementById("modal").classList.add("is-active");
             });
@@ -13,6 +13,15 @@
     </script>
 {% endblock %}
 {% block left_area %}
+    <article class="message is-light">
+        <div class="message-header">
+            <p>Top Students</p>
+        </div>
+        <div class="message-body">
+            You can see top students and their order counts of
+            <b>all Co-Food users!</b>
+        </div>
+    </article>
     <article class="panel is-light">
         <p class="panel-heading">
             Top Students - Order Counts
@@ -44,7 +53,9 @@
                 {% if error %}
                     <p class="modal-card-title">Error</p>
                 {% endif %}
-
+                {% if cancel %}
+                    <p class="modal-card-title">Cancelled</p>
+                {% endif %}
             </header>
             <section class="modal-card-body">
                 {% if ordered %}
@@ -55,6 +66,9 @@
                 {% endif %}
                 {% if error %}
                     You cannot participate!
+                {% endif %}
+                {% if cancel %}
+                    You have successfully cancelled your order.
                 {% endif %}
             </section>
             <footer class="modal-card-foot">
@@ -77,26 +91,28 @@
     </section>
     {% if orders %}
         {% for order in orders %}
-            <div class="card">
-                <header class="card-header is-primary">
-                    <p class="card-header-title">
-                        Menu Name: {{ order['menuname'] }} <br>
-                        Restaurant Name: {{ order['restaurantname'] }} <br>
-                    </p>
-                </header>
-                <div class="card-content">
-                    <div class="content">
-                        <b>Menu Description: </b> {{ order['description'] }} <br>
-                        <b>People: </b> {{ order['friendnumber'] }}/{{ order['numberofstudents'] }}<br>
-                        <b>Price: </b> {{ order['price']* order['menucount'] }} TL<br>
-                        <b>Order Time: </b>
-                        <time datetime="2016-1-1">{{ order['ordertime'].strftime("%d/%m/%Y, %H:%M:%S") }}</time>
+            {% if order['friendnumber']!=order['numberofstudents'] %}
+                <div class="card">
+                    <header class="card-header is-primary">
+                        <p class="card-header-title">
+                            Menu Name: {{ order['menuname'] }} <br>
+                            Restaurant Name: {{ order['restaurantname'] }} <br>
+                        </p>
+                    </header>
+                    <div class="card-content">
+                        <div class="content">
+                            <b>Menu Description: </b> {{ order['description'] }} <br>
+                            <b>People: </b> {{ order['friendnumber'] }}/{{ order['numberofstudents'] }}<br>
+                            <b>Price: </b> {{ order['price']* order['menucount'] }} TL<br>
+                            <b>Order Time: </b>
+                            <time datetime="2016-1-1">{{ order['ordertime'].strftime("%d/%m/%Y, %H:%M:%S") }}</time>
+                        </div>
                     </div>
+                    <footer class="card-footer">
+                        <a href="/participate/{{ order['id'] }}" class="card-footer-item">Participate</a>
+                    </footer>
                 </div>
-                <footer class="card-footer">
-                    <a href="/participate/{{ order['id'] }}" class="card-footer-item">Participate</a>
-                </footer>
-            </div>
+            {% endif %}
         {% endfor %}
     {% endif %}
 

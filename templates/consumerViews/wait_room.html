@@ -1,6 +1,14 @@
 {% extends "consumerViews/layout.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
+    <script>    {% if success %}
+        document.addEventListener("DOMContentLoaded", function (event) {
+            document.getElementById("modal").classList.add("is-active");
+        });
+        function closeModal() {
+            document.getElementById("modal").classList.remove("is-active");
+        }
+    {% endif %}</script>
 
 {% endblock %}
 {% block left_area %}
@@ -8,8 +16,8 @@
         <p class="panel-heading">
             {{ order['menuname'] }} - {{ order['restaurantname'] }}
         </p>
-        <p class="panel-block"><span style="font-weight: bold">Description: </span>  {{ order['description'] }}</p>
-        <p class="panel-block"><span style="font-weight: bold">Ingredients: </span>  {{ order['ingredients'] }}</p>
+        <p class="panel-block"><span style="font-weight: bold">Description: </span> {{ order['description'] }}</p>
+        <p class="panel-block"><span style="font-weight: bold">Ingredients: </span> {{ order['ingredients'] }}</p>
         <p class="panel-block"><span style="font-weight: bold">Address: </span> {{ order['address'] }}</p>
         <p class="panel-block"><span style="font-weight: bold">Price: </span> {{ order['price'] * order['menucount'] }}
         </p>
@@ -17,6 +25,24 @@
     </article>
 {% endblock %}
 {% block middle %}
+    <div id="modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                {% if success %}
+                    <p class="modal-card-title">Success</p>
+                {% endif %}
+            </header>
+            <section class="modal-card-body">
+                {% if success %}
+                    You have successfully created your order!
+                {% endif %}
+            </section>
+            <footer class="modal-card-foot">
+                <button id="close" onclick="closeModal()" class="button">Close</button>
+            </footer>
+        </div>
+    </div>
     <section class="hero is-primary">
         <div class="hero-body">
             <div class="container">

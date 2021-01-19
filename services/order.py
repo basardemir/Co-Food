@@ -21,18 +21,15 @@ def insertOrderSQL(menuId, studentId, numberofstudents, menucount, address):
     try:
         with dbapi2.connect(dsn) as connection:
             with connection.cursor() as cursor:
-                # query = """BEGIN; SET TRANSACTION ISOLATION LEVEL READ COMMITTED;insert into ordercontent
-                # (ordertime, menuid,numberofstudents,menucount,address) values (CURRENT_DATE,%s,%s,%s,%s)
-                # RETURNING id as ID;insert into orderstudentmatching (studentid,ordercontentid) values (%s,ID);
-                # COMMIT;"""
-                query = "insert into ordercontent (ordertime, menuid,numberofstudents,menucount,address) values (CURRENT_TIMESTAMP,%s,%s,%s,%s) RETURNING id"
+                query = "insert into ordercontent (ordertime, menuid,numberofstudents,menucount,address) values " \
+                        "(CURRENT_TIMESTAMP,%s,%s,%s,%s) RETURNING id"
                 cursor.execute(query, (menuId, numberofstudents, menucount, address))
                 id = cursor.fetchone()
                 query = "insert into orderstudentmatching (studentid,ordercontentid) values (%s,%s)"
                 cursor.execute(query, (studentId, id))
                 return True
-    except:
-        return False
+    except dbapi2.IntegrityError as error:
+        return error.diag.message_detail
 
 
 def getOrderDetails(studentId):
@@ -233,14 +230,14 @@ def getAllOrdersWithFilter(restaurantName, categoryId,universityId):
                             "left join restaurant r on r.id = m.restaurantid " \
                             "left join service s on r.id = s.restaurantid where (s.universityid=%s AND o.isDelivered = FALSE AND r.categoryid = %s " \
                             "AND LOWER(r.name ) like LOWER(%s))"
-                    cursor.execute(query, (universityId,restaurantName, categoryId))
+                    cursor.execute(query, (universityId, categoryId,restaurantName))
                 elif restaurantName != "":
                     name = '%' + restaurantName + '%'
                     query = "select ordercontentid as id, ordertime, m.name as menuname,r.name as restaurantname," \
                             " m.description as description, menucount,price,numberofstudents" \
                             " from orderstudentmatching left join ordercontent o on " \
                             "o.id = orderstudentmatching.ordercontentid left join menu m on m.id = o.menuid " \
-                            "left join restaurant r on r.id = m.restaurantid left join service s on r.id = s.restaurantid where (s.universityid=%s ANDo.isDelivered = FALSE " \
+                            "left join restaurant r on r.id = m.restaurantid left join service s on r.id = s.restaurantid where (s.universityid=%s AND o.isDelivered = FALSE " \
                             "AND LOWER(r.name ) like LOWER(%s))"
                     cursor.execute(query, (universityId,name))
                 elif categoryId != '0':
@@ -248,7 +245,7 @@ def getAllOrdersWithFilter(restaurantName, categoryId,universityId):
                             " m.description as description, menucount,price,numberofstudents" \
                             " from orderstudentmatching left join ordercontent o on " \
                             "o.id = orderstudentmatching.ordercontentid left join menu m on m.id = o.menuid " \
-                            "left join restaurant r on r.id = m.restaurantid left join service s on r.id = s.restaurantid where (s.universityid=%s ANDo.isDelivered = FALSE AND r.categoryid = %s " \
+                            "left join restaurant r on r.id = m.restaurantid left join service s on r.id = s.restaurantid where (s.universityid=%s AND o.isDelivered = FALSE AND r.categoryid = %s " \
                             ")"
                     cursor.execute(query, (universityId,categoryId))
                 else:
@@ -256,7 +253,7 @@ def getAllOrdersWithFilter(restaurantName, categoryId,universityId):
                             " m.description as description, menucount,price,numberofstudents" \
                             " from orderstudentmatching left join ordercontent o on " \
                             "o.id = orderstudentmatching.ordercontentid left join menu m on m.id = o.menuid " \
-                            "left join restaurant r on r.id = m.restaurantid left join service s on r.id = s.restaurantid where (s.universityid=%s ANDo.isDelivered = FALSE)"
+                            "left join restaurant r on r.id = m.restaurantid left join service s on r.id = s.restaurantid where (s.universityid=%s AND o.isDelivered = FALSE)"
                     cursor.execute(query,(universityId,))
                 columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
                 if cursor.rowcount > 0:

@@ -176,25 +176,29 @@ def filterRestaurant(name, categoryId, universityId):
         with connection.cursor() as cursor:
             if name != "" and categoryId != '0':
                 name = '%' + name + '%'
-                query = "select * from restaurant left join category on (restaurant.categoryid = category.id) " \
+                query = "select restaurant.id as id, restaurant.name as name, category.name as catname " \
+                        "from restaurant left join category on (restaurant.categoryid = category.id) " \
                         "left  join service s on restaurant.id = s.restaurantid where(s.universityid=%s AND restaurant.categoryid = %s AND LOWER(restaurant.name ) like LOWER(%s)) order by restaurant.name "
                 cursor.execute(query, (universityId,categoryId, name))
             elif name != "":
                 name = '%' + name + '%'
-                query = "select * from restaurant join category on (restaurant.categoryid = category.id) " \
+                query = "select restaurant.id as id, restaurant.name as name, category.name as catname " \
+                        " from restaurant join category on (restaurant.categoryid = category.id) " \
                         "left  join service s on restaurant.id = s.restaurantid where(s.universityid=%s AND " \
                         "LOWER(restaurant.name ) like LOWER(%s)) order by restaurant.name "
                 cursor.execute(query, (universityId,name))
             elif categoryId != '0':
-                query = "select * from restaurant join category on (restaurant.categoryid = category.id) " \
+                query = "select restaurant.id as id, restaurant.name as name, category.name as catname " \
+                        "from restaurant join category on (restaurant.categoryid = category.id) " \
                         "left  join service s on restaurant.id = s.restaurantid where(s.universityid=%s AND " \
                         "restaurant.categoryid = %s) order by restaurant.name "
                 cursor.execute(query, (universityId,categoryId))
             else:
-                query = "select * from restaurant join category on (restaurant.categoryid = category.id) " \
+                query = "select restaurant.id as id, restaurant.name as name, category.name as catname" \
+                        " from restaurant join category on (restaurant.categoryid = category.id) " \
                         "left  join service s on restaurant.id = s.restaurantid where(s.universityid=%s) order by restaurant.name"
                 cursor.execute(query, (universityId))
-            for id, name, email, password, catId, menupdf, categoryId, catname, idservice,universityId,restId in cursor:
+            for id, name, catname in cursor:
                 element = []
                 element.append(id)
                 element.append(name)

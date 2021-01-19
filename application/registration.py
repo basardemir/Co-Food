@@ -47,6 +47,9 @@ def register():
 
 def login():
     form = LoginForm()
+    success = request.args.get('success')
+    if success == 'true':
+        return render_template("consumerViews/login.html", form=form,success='true')
     return render_template("consumerViews/login.html", form=form)
 
 
@@ -124,38 +127,41 @@ def addClient():
             return addNewRestaurant(username, password, email, phone)
         else:
             return render_template("consumerViews/register.html", form=form)
+    else:
+        return render_template("consumerViews/register.html", form=form)
 
 
 def addNewStudent(username, password, email, university):
     form = RegisterForm()
-    formLogin = LoginForm()
-    error = []
     user = []
     user.append(username)
     user.append(hasher.hash(password))
     user.append(email)
     user.append(university)
     try:
-        addStudent(user)
+        add = addStudent(user)
+        if add != True:
+            return render_template("consumerViews/register.html", form=form, messages=["Error: " + add])
     except:
         return render_template("consumerViews/register.html", form=form, messages=["Check your information."])
-    return redirect(url_for("login"))
+
+    return redirect(url_for("login", success='true'))
 
 
 def addNewRestaurant(name, password, email, phone):
     form = RegisterForm()
-    formLogin = LoginForm()
-    error = []
     restaurant = []
     restaurant.append(name)
     restaurant.append(hasher.hash(password))
     restaurant.append(email)
     restaurant.append(phone)
     try:
-        addRestaurant(restaurant)
+        add = addRestaurant(restaurant)
+        if add != True:
+            return render_template("consumerViews/register.html", form=form, messages=["Error: " + add])
     except:
         return render_template("consumerViews/register.html", form=form, messages=["Check your information."])
-    return redirect(url_for("login"))
+    return redirect(url_for("login", success='true'))
 
 
 def logout_page():

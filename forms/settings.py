@@ -9,18 +9,18 @@ from services import university
 class SettingsForm(FlaskForm):
     username = StringField("username", validators=[
         DataRequired(),
-        Length(min=1, max=128, message="wrong")
+        Length(min=1, max=64, message="The length of the name must be shorter than 65 characters.")
     ])
     email = EmailField("email", validators=[
         DataRequired(),
-        Length(min=1, max=128, message="wrong")
+        Length(min=1, max=64, message="The length of the email must be shorter than 65 characters.")
     ])
     password = PasswordField("password", validators=[
-        Length(min=1, max=128, message="wrong"),
-         Optional()
+        Length(min=1, max=256, message="The length of the comment must be shorter than 257 characters."),
+        Optional()
     ])
     uni_choice = university.getAllUniversitiesForm()
     university = SelectField("university", validate_choice=False, choices=uni_choice)
-    passwordchange = BooleanField("passwordchange",validators=[
+    passwordchange = BooleanField("passwordchange", validators=[
         Optional()
     ])

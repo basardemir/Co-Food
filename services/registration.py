@@ -80,14 +80,23 @@ def getRestaurantById(id):
 
 
 def addStudent(user):
-    with dbapi2.connect(dsn) as connection:
-        with connection.cursor() as cursor:
-            query = "insert into student(username, password, email, universityid) VALUES (%s,%s,%s,%s)"
-            cursor.execute(query, user)
+    try:
+        with dbapi2.connect(dsn) as connection:
+            with connection.cursor() as cursor:
+                query = "insert into student(username, password, email, universityid) VALUES (%s,%s,%s,%s)"
+                cursor.execute(query, user)
+                return True
+    except dbapi2.IntegrityError as error:
+        return error.diag.message_detail
+
 
 
 def addRestaurant(user):
-    with dbapi2.connect(dsn) as connection:
-        with connection.cursor() as cursor:
-            query = "insert into restaurant(name, password, email, phonenumber) VALUES (%s,%s,%s,%s)"
-            cursor.execute(query, user)
+    try:
+        with dbapi2.connect(dsn) as connection:
+            with connection.cursor() as cursor:
+                query = "insert into restaurant(name, password, email, phonenumber) VALUES (%s,%s,%s,%s)"
+                cursor.execute(query, user)
+                return True
+    except dbapi2.IntegrityError as error:
+        return error.diag.message_detail
