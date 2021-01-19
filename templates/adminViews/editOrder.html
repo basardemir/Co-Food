@@ -20,6 +20,14 @@
             document.getElementById("menuprice").innerHTML = '<b>Price: </b>' + array[id]['price'];
             document.getElementById("restaurantname").innerHTML = array[id]['restaurantname'];
         }
+        {% if  error or success %}
+            document.addEventListener("DOMContentLoaded", function (event) {
+                document.getElementById("modal").classList.add("is-active");
+            });
+            function closeModal() {
+                document.getElementById("modal").classList.remove("is-active");
+            }
+        {% endif %}
 
     </script>
 {% endblock %}
@@ -34,6 +42,30 @@
 
 {% endblock %}
 {% block middle %}
+    <div id="modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                {% if success %}
+                    <p class="modal-card-title">Success</p>
+                {% endif %}
+                {% if error %}
+                    <p class="modal-card-title">Error</p>
+                {% endif %}
+            </header>
+            <section class="modal-card-body">
+                {% if error %}
+                    Some error occured.
+                {% endif %}
+                {% if success %}
+                    You have successfully made change.
+                {% endif %}
+            </section>
+            <footer class="modal-card-foot">
+                <button id="close" onclick="closeModal()" class="button">Close</button>
+            </footer>
+        </div>
+    </div>
     <section class="hero is-primary">
         <div class="hero-body">
             <div class="container">
@@ -50,7 +82,7 @@
         <form action="" method="post" name="save">
             {% from "_formhelper.html" import render_field %}
             {{ form.csrf_token }}
-            <div class="field">
+            <div class="field" hidden>
                 <label class="label">Menu</label>
                 <div class="select">
                     {{ render_field(form.menu) }}
@@ -63,7 +95,7 @@
                 </div>
             </div>
             <div class="field">
-                <label class="label">Mutual Friend Number</label>
+                <label class="label">How many friends are you looking for?</label>
                 <div class="select">
                     {{ render_field(form.friendnumber) }}
                 </div>

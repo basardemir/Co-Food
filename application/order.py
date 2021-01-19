@@ -154,11 +154,19 @@ def deleteOrder(orderId):
 def editOrder(orderId):
     if session['role'] == 'admin':
         order = getOrdersByOrderId(orderId)
+        success = request.args.get('success')
+        error = request.args.get('error')
         if (order):
             form = orderEditForm()
             menus = getAllMenusDictionary()
             friends = getOrderFriends(orderId)
             friendsize = len(friends)
+            if success:
+                return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus, friends=friends,
+                                   friendsize=friendsize, success='true')
+            if error:
+                return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus, friends=friends,
+                                   friendsize=friendsize, error='true')
             return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus, friends=friends,
                                    friendsize=friendsize)
         else:
@@ -181,7 +189,9 @@ def saveOrder(orderId):
             ordercount = request.form['ordercount']
             friends = getOrderFriends(orderId)
             friendsize = len(friends)
-            if int(friendsize) >= int(friendnumber) + 1:
+            if student is not '0':
+                friendsize+=1
+            if int(friendsize) > int(friendnumber) + 1:
                 form = orderEditForm()
                 order = getOrdersByOrderId(orderId)
                 menus = getAllMenusDictionary()
@@ -190,8 +200,9 @@ def saveOrder(orderId):
                 return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus,
                                        friends=friends, friendsize=friendsize,
                                        message="There are enough available students!")
-            menuId = getMenuById(menu)
-            if not menuId or not isServesToStudent(student, menuId['restaurantid']):
+
+            menu = getMenuById(menu)
+            if not menu or (student is not '0' and not isServesToStudent(student, menu['restaurantid'])):
                 form = orderEditForm()
                 order = getOrdersByOrderId(orderId)
                 menus = getAllMenusDictionary()
@@ -200,7 +211,7 @@ def saveOrder(orderId):
                 return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus,
                                        friends=friends, friendsize=friendsize,
                                        message="This student cannot takes service from menu's restaurant.")
-            if hasActiveOrder(student):
+            if student is not '0' and hasActiveOrder(student):
                 form = orderEditForm()
                 order = getOrdersByOrderId(orderId)
                 menus = getAllMenusDictionary()
@@ -210,10 +221,10 @@ def saveOrder(orderId):
                                        friends=friends, friendsize=friendsize,
                                        message="This student has active order!")
 
-            if (editOrderById(orderId, address, ordercount, int(friendnumber) + 1, menu) == True):
+            if (editOrderById(orderId, address, ordercount, int(friendnumber) + 1, menu['id']) == True):
                 if student is not '0':
                     if addMatchingByStudentOrder(student, orderId) == True:
-                        return redirect('/admin/order/edit/' + str(orderId))
+                        return redirect('/admin/order/edit/' + str(orderId) +'?success=true')
                     else:
                         form = orderEditForm()
                         order = getOrdersByOrderId(orderId)
@@ -223,7 +234,7 @@ def saveOrder(orderId):
                         return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus,
                                                friends=friends, friendsize=friendsize, message="Error occured!")
                 else:
-                    return redirect('/admin/order/edit/' + str(orderId))
+                    return redirect('/admin/order/edit/' + str(orderId) +'?success=true')
             else:
                 form = orderEditForm()
                 order = getOrdersByOrderId(orderId)
@@ -232,8 +243,15 @@ def saveOrder(orderId):
                 friendsize = len(friends)
                 return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus,
                                        friends=friends, friendsize=friendsize, message="Error occured!")
+        else:
+            return render_template("errorViews/403.html")
     else:
-        return render_template("errorViews/403.html")
+        order = getOrdersByOrderId(orderId)
+        menus = getAllMenusDictionary()
+        friends = getOrderFriends(orderId)
+        friendsize = len(friends)
+        return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus,
+                               friends=friends, friendsize=friendsize)
 
 
 @login_required
@@ -241,8 +259,13 @@ def deleteMatching(matchId):
     if session['role'] == 'admin':
         match = getMatchById(matchId)
         if match:
-            deleteMatchById(matchId)
-            return redirect("/admin/order/edit/" + str(match["ordercontentid"]))
+            try:
+                deleteMatchById(matchId)
+            except:
+                return redirect("/admin/order/edit/" + str(match["ordercontentid"]) + '?error=true')
+            return redirect("/admin/order/edit/" + str(match["ordercontentid"])+'?success=true')
+        else:
+            return redirect("/admin/order/edit/" + str(match["ordercontentid"]) + '?error=true')
     else:
         return render_template("errorViews/403.html")
 
@@ -295,20 +318,34 @@ def insertOrder():
                 menus = getAllMenusDictionary()
                 return render_template("adminViews/addOrder.html", form=form, menus=menus,
                                        message="This order cannot be inserted!")
-
+        else:
+            return render_template("errorViews/403.html")
     else:
-        return render_template("errorViews/403.html")
+        menus = getAllMenusDictionary()
+        return render_template("adminViews/addOrder.html", form=form, menus=menus)
 
 
 def ownerOrderDetails(orderId):
     if session['role'] == 'owner':
-        restaurantId = session['id']
         order = getOrderDetailsByOrderId(orderId)
         if order and order['restaurantid'] == session['id']:
             friends = getOrderFriends(order['id'])
             if friends:
                 friendsize = len(friends)
                 return render_template("ownerViews/orderDetails.html", order=order, friends=friends,
+                                       friendsize=friendsize)
+        return render_template("errorViews/404.html")
+    else:
+        return render_template("errorViews/403.html")
+
+def viewOrder(orderId):
+    if session['role'] == 'admin':
+        order = getOrderDetailsByOrderId(orderId)
+        if order:
+            friends = getOrderFriends(order['id'])
+            if friends:
+                friendsize = len(friends)
+                return render_template("adminViews/orderDetails.html", order=order, friends=friends,
                                        friendsize=friendsize)
         return render_template("errorViews/404.html")
     else:

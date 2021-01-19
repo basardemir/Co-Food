@@ -8,3 +8,6 @@ PASSWORDS = {
 }
 
 ADMIN_USERS = ["admin"]
+
+DATABASE="postgres://ypktmwhlgmijvt:e9d6168a00144a774b298b917a30f946d706365a0379c54da413f6f469b99674@ec2-34-248-148-63.eu-west-1.compute.amazonaws.com:5432/d27qbfil3ivm83"
+

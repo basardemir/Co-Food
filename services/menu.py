@@ -47,6 +47,17 @@ def getMenuById(menuId):
             else:
                 return None
 
+def isMenuActive(menuId):
+    with dbapi2.connect(dsn) as connection:
+        with connection.cursor() as cursor:
+            query = "select count(*) from ordercontent where (menuid=%s AND isdelivered=False) "
+            cursor.execute(query, (menuId,))
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            if cursor.rowcount > 0:
+                menu = dict(zip(columns, cursor.fetchone()))
+                return int(menu['count'])
+            else:
+                return None
 
 def deleteMenuById(menuId):
     try:
@@ -99,7 +110,7 @@ def getAllMenusDictionary():
     menus = {}
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
-            query = "select menu.name as name, price,description,restaurant.name as restaurantname, menu.id as id from menu left join restaurant on (restaurant.id = menu.restaurantid) order by menu.name asc"
+            query = "select menu.name as name,ingredients, price,description,restaurant.name as restaurantname, menu.id as id from menu left join restaurant on (restaurant.id = menu.restaurantid) order by menu.name asc"
             cursor.execute(query)
             columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
             if cursor.rowcount > 0:

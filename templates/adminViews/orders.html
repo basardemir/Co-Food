@@ -18,26 +18,67 @@
     {% if message %}
         <h2 style="color:red">{{ message }}</h2>
     {% endif %}
-    {% if orders %}
-    {% for order in  orders %}
-        <div class="card">
-            <div class="card-content">
-                <div class="media">
-                    <div class="media-content">
-                        <b>Menu Name: </b>{{ order['menuname'] }}<br>
-                        <b>Participant Number: </b>{{ order['numberofstudents'] }}<br>
-                        <b>Order Time: </b>
-                        <time>{{ order['ordertime'].strftime("%d/%m/%Y, %H:%M:%S") }}</time>
-                    </div>
-                </div>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Active Orders
+                </h1>
             </div>
-            <footer class="card-footer">
-                <a href="/admin/order/delete/{{ order['id'] }}" class="card-footer-item">Delete</a>
-                <a href="/admin/order/edit/{{ order['id'] }}" class="card-footer-item">Edit</a>
-            </footer>
         </div>
-
-    {% endfor %}
+    </section>
+    {% if orders %}
+        {% for order in  orders %}
+            {% if order['isdelivered'] == false %}
+                <div class="card">
+                    <div class="card-content">
+                        <div class="media">
+                            <div class="media-content">
+                                <b>Menu Name: </b>{{ order['menuname'] }}<br>
+                                <b>Participant Number: </b>{{ order['numberofstudents'] }}<br>
+                                <b>Order Time: </b>
+                                <time>{{ order['ordertime'].strftime("%d/%m/%Y, %H:%M:%S") }}</time>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="card-footer">
+                        <a href="/admin/order/delete/{{ order['id'] }}" class="card-footer-item">Delete</a>
+                        <a href="/admin/order/edit/{{ order['id'] }}" class="card-footer-item">Edit</a>
+                    </footer>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Past Orders
+                </h1>
+            </div>
+        </div>
+    </section>
+    {% if orders %}
+        {% for order in  orders %}
+            {% if order['isdelivered'] == true %}
+                <div class="card">
+                    <div class="card-content">
+                        <div class="media">
+                            <div class="media-content">
+                                <b>Menu Name: </b>{{ order['menuname'] }}<br>
+                                <b>Participant Number: </b>{{ order['numberofstudents'] }}<br>
+                                <b>Order Time: </b>
+                                <time>{{ order['ordertime'].strftime("%d/%m/%Y, %H:%M:%S") }}</time>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="card-footer">
+                        <a href="/admin/order/delete/{{ order['id'] }}" class="card-footer-item">Delete</a>
+                        <a href="/admin/order/view/{{ order['id'] }}" class="card-footer-item">View</a>
+                    </footer>
+                </div>
+            {% endif %}
+        {% endfor %}
     {% endif %}
 
 {% endblock %}

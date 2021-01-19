@@ -116,7 +116,7 @@ def adminRestaurants():
 @login_required
 def deleteRestaurant(restaurantId):
     if session['role'] == 'admin':
-        if (deleteRestaurantById(restaurantId)):
+        if (not hasActiveOrder(restaurantId) and deleteRestaurantById(restaurantId)):
             restaurants = getAllRestaurants()
             return render_template("adminViews/restaurants.html", restaurants=restaurants)
         else:
@@ -136,6 +136,16 @@ def editRestaurant(restaurantId=0):
             menus = getAllMenusByRestaurantId(restaurantId)
             universities = getAllUniversitiesByRestaurantId(restaurantId)
             comments = getAllCommentsByRestaurantId(restaurantId)
+            success = request.args.get('success')
+            error = request.args.get('error')
+            if success == 'true':
+                return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
+                                       comments=comments,
+                                       universities=universities, menus=menus, success='true')
+            if error == 'true':
+                return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
+                                       comments=comments,
+                                       universities=universities, menus=menus, error='true')
             return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
                                    comments=comments,
                                    universities=universities, menus=menus)
@@ -213,7 +223,8 @@ def saveRestaurant(restaurantId):
                                            comments=comments,
                                            universities=universities, menus=menus, message="Input format only can "
                                                                                            "be only pdf.")
-            if (editRestaurantById(restaurantId, name, category, phone) == True and (
+            editRestaurant = editRestaurantById(restaurantId, name, category, phone)
+            if (editRestaurant == True and (
                     addService(restaurantId, university) == True)):
                 if pdf:
                     insertPdfToRestaurant(restaurantId, pdf)
@@ -225,7 +236,7 @@ def saveRestaurant(restaurantId):
                     universities = getAllUniversitiesByRestaurantId(restaurantId)
                     return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
                                            comments=comments,
-                                           universities=universities, menus=menus)
+                                           universities=universities, menus=menus, success='true')
                 else:
                     restaurants = getAllRestaurants()
                     return render_template("adminViews/restaurants.html", restaurants=restaurants,
@@ -247,6 +258,7 @@ def saveRestaurant(restaurantId):
                                            , message="This restaurant does not exists")
         else:
             return render_template("errorViews/403.html")
+
     restaurant = getRestaurantById(restaurantId)
     menus = getAllMenusByRestaurantId(restaurantId)
     universities = getAllUniversitiesByRestaurantId(restaurantId)
@@ -328,9 +340,13 @@ def saveOwnerRestaurant():
 def deleteService(serviceId):
     if session['role'] == 'admin':
         service = getServiceById(serviceId)
-        if service:
+        if service and not hasActiveOrder(session['id']):
             deleteServiceById(serviceId)
-            return redirect("/admin/restaurant/edit/" + str(service["restaurantid"]))
+            return redirect("/admin/restaurant/edit/" + str(service["restaurantid"])+"?success=true")
+        if not service:
+            return render_template("errorViews/404.html")
+        else:
+            return redirect("/admin/restaurant/edit/" + str(service["restaurantid"]) + "?error=true")
     else:
         return render_template("errorViews/403.html")
 
@@ -367,7 +383,12 @@ def deleteComment(commentId):
     if session['role'] == 'admin':
         comment = getCommentById(commentId)
         if comment:
-            deleteCommentById(commentId)
-            return redirect("/admin/restaurant/edit/" + str(comment["restaurantid"]))
+            try:
+                deleteCommentById(commentId)
+            except:
+                return redirect("/admin/restaurant/edit/" + str(comment["restaurantid"]) + '?error=true')
+            return redirect("/admin/restaurant/edit/" + str(comment["restaurantid"])+'?success=true')
+        else:
+            return redirect("/admin/restaurant/edit/" + str(comment["restaurantid"]) + '?error=true')
     else:
         return render_template("errorViews/403.html")

@@ -23,7 +23,6 @@ lm = LoginManager()
 lm.init_app(app)
 lm.login_view = "/"
 
-
 @lm.user_loader
 def load_user(user_id):
     return get_user(user_id)
@@ -101,6 +100,7 @@ app.add_url_rule('/admin/orders', view_func=adminOrders, methods=['GET'])
 app.add_url_rule('/admin/order/delete/<int:orderId>', view_func=deleteOrder, methods=['GET'])
 app.add_url_rule('/admin/order/edit/<int:orderId>', view_func=editOrder, methods=['GET'])
 app.add_url_rule('/admin/order/edit/<int:orderId>', view_func=saveOrder, methods=['POST'])
+app.add_url_rule('/admin/order/view/<int:orderId>', view_func=viewOrder, methods=['GET'])
 app.add_url_rule('/admin/order/add/', view_func=addOrder, methods=['GET'])
 app.add_url_rule('/admin/order/add/', view_func=insertOrder, methods=['POST'])
 

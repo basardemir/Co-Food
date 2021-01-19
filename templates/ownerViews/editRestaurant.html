@@ -14,14 +14,6 @@
                     fileName.textContent = fileInput.files[0].name;
                 }
             }
-            {% if success %}
-                document.addEventListener("DOMContentLoaded", function (event) {
-                    document.getElementById("modal").classList.add("is-active");
-                });
-                function closeModal() {
-                    document.getElementById("modal").classList.remove("is-active");
-                }
-            {% endif %}
 
         {% endif %}
         {% if  error or success %}

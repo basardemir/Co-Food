@@ -15,7 +15,7 @@
             document.getElementById("menudescription").innerHTML = '<b>Description: </b>' +
                 array[id]['description'];
             document.getElementById("menuprice").innerHTML = '<b>Price: </b>' + array[id]['price'];
-            document.getElementById("restaurantname").innerHTML = array[id]['restaurantname'];
+            document.getElementById("ingredients").innerHTML = '<b>Ingredients: </b>' + array[id]['ingredients'];
         }
 
     </script>
@@ -24,8 +24,9 @@
     <article class="panel is-light">
         <p id="menuname" class="panel-heading">
         </p>
-        <p id="menudescription" class="panel-block"><b>Description: </b> </p>
-        <p id="menuprice" class="panel-block"><b>Price: </b> </p>
+        <p id="menudescription" class="panel-block"><b>Description: </b></p>
+        <p id="ingredients" class="panel-block"><b>Ingredients: </b></p>
+        <p id="menuprice" class="panel-block"><b>Price: </b></p>
     </article>
 
 {% endblock %}

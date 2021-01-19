@@ -23,14 +23,15 @@ def adminMenus():
 def deleteMenu(menuId):
     if session['role'] == 'admin':
         menu = getMenuById(menuId)
-        if menu:
+        count = isMenuActive(menuId)
+        if menu and count==0:
             try:
                 deleteMenuById(menuId)
             except:
-                return redirect(url_for("editOwnerRestaurant", error="true"))
-            return redirect("/admin/restaurant/edit/" + str(menu["restaurantid"]))
+                return redirect("/admin/restaurant/edit/" + str(menu["restaurantid"]) + '?error=true')
+            return redirect("/admin/restaurant/edit/" + str(menu["restaurantid"]) + '?success=true')
         else:
-            return redirect(url_for("editOwnerRestaurant", error="true"))
+            return redirect("/admin/restaurant/edit/" + str(menu["restaurantid"]) + '?error=true')
     else:
         return render_template("errorViews/403.html")
 
@@ -39,7 +40,8 @@ def deleteMenu(menuId):
 def deleteOwnerMenu(menuId):
     if session['role'] == 'owner':
         menu = getMenuById(menuId)
-        if menu and menu['restaurantid'] == session['id']:
+        count = isMenuActive(menuId)
+        if menu and menu['restaurantid'] == session['id'] and count and count==0:
             try:
                 deleteMenuById(menuId)
             except:
@@ -128,9 +130,22 @@ def insertMenu(restaurantId):
             ingredients = request.form['ingredients']
             campaign = form.campaign.data
             if (addMenuByRestaurantId(restaurantId, name, description, price, campaign, ingredients) == True):
-                return redirect("/admin/restaurant/edit/" + str(restaurantId))
+                return redirect("/admin/restaurant/edit/" + str(restaurantId) + "?success=true")
+            else:
+                restaurant = getRestaurantById(restaurantId)
+                if restaurant:
+                    return render_template("adminViews/addMenu.html", form=form, restaurant=restaurant,
+                                           message="An error occured")
+                else:
+                    return render_template("errorViews/404.html")
         else:
             return render_template("errorViews/403.html")
+    else:
+        restaurant = getRestaurantById(restaurantId)
+        if restaurant:
+            return render_template("adminViews/addMenu.html", form=form, restaurant=restaurant)
+        else:
+            return render_template("errorViews/404.html")
 
 
 @login_required
@@ -192,9 +207,27 @@ def saveMenu(menuId):
                 ingredients = request.form['ingredients']
                 campaign = form.campaign.data
                 if (updateMenuById(menuId, name, description, price, campaign, restaurant, ingredients) == True):
-                    return redirect("/admin/restaurant/edit/" + str(restaurant))
+                    return redirect("/admin/restaurant/edit/" + str(restaurant) + '?success=true')
+                else:
+                    menu = getMenuById(menuId)
+                    restaurant = getRestaurantById(menu['restaurantid'])
+                    if menu and restaurant:
+                        form = MenuEditForm()
+                        return render_template("adminViews/editMenu.html", form=form, restaurant=restaurant, menu=menu
+                                               ,message="An error occured")
+                    else:
+                        return render_template("adminViews/menus.html",
+                                               message="This menu or restaurant does not exists")
         else:
             return render_template("errorViews/403.html")
+    else:
+        menu = getMenuById(menuId)
+        restaurant = getRestaurantById(menu['restaurantid'])
+        if menu and restaurant:
+            form = MenuEditForm()
+            return render_template("adminViews/editMenu.html", form=form, restaurant=restaurant, menu=menu)
+        else:
+            return render_template("adminViews/menus.html", message="This menu or restaurant does not exists")
 
 
 @login_required

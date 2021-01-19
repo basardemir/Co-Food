@@ -3,20 +3,28 @@
 {% block content %}
     {% if restaurant.categoryid %}
         <script>
-            document.addEventListener("DOMContentLoaded", function (event) {
-                document.getElementById("category").value = {{restaurant.categoryid}};
-            });
+        document.addEventListener("DOMContentLoaded", function (event) {
+            document.getElementById("category").value = {{restaurant.categoryid}};
+        });
 
-            const fileInput = document.querySelector('#file-js-example input[type=file]');
-            fileInput.onchange = () => {
-                if (fileInput.files.length > 0) {
-                    const fileName = document.querySelector('#file-js-example .file-name');
-                    fileName.textContent = fileInput.files[0].name;
-                }
+        const fileInput = document.querySelector('#file-js-example input[type=file]');
+        fileInput.onchange = () => {
+            if (fileInput.files.length > 0) {
+                const fileName = document.querySelector('#file-js-example .file-name');
+                fileName.textContent = fileInput.files[0].name;
             }
+        }
 
-        </script>
     {% endif %}
+    {% if  error or success %}
+        document.addEventListener("DOMContentLoaded", function (event) {
+            document.getElementById("modal").classList.add("is-active");
+        });
+        function closeModal() {
+            document.getElementById("modal").classList.remove("is-active");
+        }
+    {% endif %}
+</script>
 {% endblock %}
 {% block left_area %}
     <section class="hero is-primary" style="margin-left: 5px;">
@@ -47,6 +55,30 @@
     {% endif %}
 {% endblock %}
 {% block middle %}
+    <div id="modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                {% if success %}
+                    <p class="modal-card-title">Success</p>
+                {% endif %}
+                {% if error %}
+                    <p class="modal-card-title">Error</p>
+                {% endif %}
+            </header>
+            <section class="modal-card-body">
+                {% if error %}
+                    Some error occured.
+                {% endif %}
+                {% if success %}
+                    You have successfully made change.
+                {% endif %}
+            </section>
+            <footer class="modal-card-foot">
+                <button id="close" onclick="closeModal()" class="button">Close</button>
+            </footer>
+        </div>
+    </div>
     <section class="hero is-primary">
         <div class="hero-body">
             <div class="container">
@@ -101,7 +133,7 @@
                             </label>
                         </div>
                         {% if message %}
-                            <h2 style="color:red">{{ message }}</h2>
+                            <h2 style="color:red; margin-bottom: 10px;">{{ message }}</h2>
                         {% endif %}
                         <div class="field is-grouped">
                             <div class="control">

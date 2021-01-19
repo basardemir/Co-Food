@@ -22,7 +22,7 @@ class orderEditForm(FlaskForm):
     address = TextAreaField("Address",
                             validators=[
                                 DataRequired(),
-                                Length(min=1, max=256, message="wrong")
+                                Length(min=1, max=256, message="The length of the name must be shorter than 257 characters.")
                             ])
     friendnumber = SelectField("Number of Friends", validate_choice=False, choices=[
         ("0", "0"), ("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")])
@@ -39,7 +39,7 @@ class orderAddForm(FlaskForm):
     address = TextAreaField("Address",
                             validators=[
                                 DataRequired(),
-                                Length(min=1, max=256, message="wrong")
+                                Length(min=1, max=256, message="The length of the name must be shorter than 257 characters.")
                             ])
     friendnumber = SelectField("Number of Friends", validate_choice=False, choices=[
         ("0", "0"), ("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")])
