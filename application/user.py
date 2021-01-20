@@ -41,7 +41,7 @@ def updateUser():
                 return render_template("consumerViews/settings.html", user=user, form=form,
                                        messages=["You have active order, you cannot change your information."])
             email = request.form['email']
-            if form['passwordchange'].data == 'True':
+            if form['passwordchange'].data == True:
                 userUpdate = updateUserWithPassword(userId, username, hasher.hash(password), email, university)
                 if userUpdate != True:
                     user = getStudentDetail(userId)
