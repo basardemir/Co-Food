@@ -16,6 +16,7 @@ def hasActiveOrder(studentId):
                 return False
 
 
+
 def insertOrderSQL(menuId, studentId, numberofstudents, menucount, address):
     try:
         with dbapi2.connect(dsn) as connection:
@@ -135,6 +136,26 @@ def getAllPastOrdersWithRestaurantId(restaurantId):
     except:
         return False
 
+def hasActiveOrderRestaurant(restaurantId):
+    orders = []
+    try:
+        with dbapi2.connect(dsn) as connection:
+            with connection.cursor() as cursor:
+                query = "select ordercontent.id as id,ordertime, ordercontent.isdelivered, " \
+                        "m.name as menuname,  r.name as restaurantname, r.id as restaurantid, m.description as description," \
+                        " menucount, address,price,numberofstudents FROM ordercontent left join menu" \
+                        " m on m.id = ordercontent.menuid left join restaurant r on r.id = m.restaurantid" \
+                        " where (restaurantid =%s AND ordercontent.isdelivered = FALSE) order by ordercontent.ordertime desc "
+                cursor.execute(query, (restaurantId,))
+                columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+                if cursor.rowcount > 0:
+                    for i in cursor:
+                        orders.append(dict(zip(columns, i)))
+                    return orders
+                else:
+                    return None
+    except:
+        return False
 
 def getOrdersByOrderId(orderId):
     try:

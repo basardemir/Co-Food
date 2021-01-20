@@ -1,5 +1,5 @@
 from services.category import getAllCategoriesForm
-from services.order import hasActiveOrder
+from services.order import hasActiveOrder, hasActiveOrderRestaurant
 from services.restaurant import *
 from flask import redirect, session
 from flask import render_template, request
@@ -374,7 +374,7 @@ def saveOwnerRestaurant():
 def deleteService(serviceId):
     if session['role'] == 'admin':
         service = getServiceById(serviceId)
-        if service and not hasActiveOrder(service['restaurantid']):
+        if service and not hasActiveOrderRestaurant(service['restaurantid']):
             deleteServiceById(serviceId)
             return redirect("/admin/restaurant/edit/" + str(service["restaurantid"])+"?success=true")
         if not service:
@@ -389,7 +389,7 @@ def deleteService(serviceId):
 def deleteOwnerService(serviceId):
     if session['role'] == 'owner':
         service = getServiceById(serviceId)
-        if service and service['restaurantid'] == session['id'] and not hasActiveOrder(session['id']):
+        if service and service['restaurantid'] == session['id'] and not hasActiveOrderRestaurant(session['id']):
             deleteServiceById(serviceId)
             return redirect(url_for("editOwnerRestaurant", success="true"))
         else:
