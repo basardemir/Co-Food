@@ -42,7 +42,7 @@ def updateUser():
                                        messages=["You have active order, you cannot change your information."])
             email = request.form['email']
             if form['passwordchange'].data == True:
-                userUpdate = updateUserWithPassword(userId, username, hasher.hash(password), email, university)
+                userUpdate = updateUserWithPassword(userId, username,email, hasher.hash(password), university)
                 if userUpdate != True:
                     user = getStudentDetail(userId)
                     form = SettingsForm()
