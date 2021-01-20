@@ -41,7 +41,7 @@ def getAllRestaurantsWithUniversity(universityId):
 def getRestaurant(restaurantId):
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
-            query = "select *, restaurant.name as restaurantname from restaurant left join category on (restaurant.categoryid = category.id) where(restaurant.id = %s) "
+            query = "select *, restaurant.name as restaurantname, restaurant.id as id from restaurant left join category on (restaurant.categoryid = category.id) where(restaurant.id = %s) "
             cursor.execute(query, (restaurantId,))
             columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
             if cursor.rowcount > 0:

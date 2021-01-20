@@ -281,7 +281,7 @@ def downloadMenuPdf(restaurantId):
         restaurant = getRestaurantById(restaurantId)
         if restaurant['menupdf']:
             data = restaurant['menupdf']
-            return send_file(BytesIO(data), attachment_filename=restaurant['name'] + 'menu.pdf', as_attachment=True)
+            return send_file(BytesIO(data), attachment_filename=restaurant['restaurantname'] + 'menu.pdf', as_attachment=True)
         else:
             return render_template("errorViews/404.html")
     else:
@@ -304,10 +304,10 @@ def deleteMenuPdf(restaurantId):
 @login_required
 def downloadOwnerMenuPdf(restaurantId):
     restaurant = getRestaurantById(restaurantId)
-    if session['role'] == 'owner' and restaurant and restaurant['restaurantid'] == session['id']:
+    if session['role'] == 'owner' and restaurant and restaurant['id'] == session['id']:
         if restaurant['menupdf']:
             data = restaurant['menupdf']
-            return send_file(BytesIO(data), attachment_filename=restaurant['name'] + 'menu.pdf', as_attachment=True)
+            return send_file(BytesIO(data), attachment_filename=restaurant['restaurantname'] + 'menu.pdf', as_attachment=True)
         else:
             return render_template("errorViews/404.html")
     else:
@@ -320,7 +320,7 @@ def downloadStudentMenuPdf(restaurantId):
     if session['role'] == 'student' and restaurant:
         if restaurant['menupdf']:
             data = restaurant['menupdf']
-            return send_file(BytesIO(data), attachment_filename=restaurant['name'] + 'menu.pdf', as_attachment=True)
+            return send_file(BytesIO(data), attachment_filename=restaurant['restaurantname'] + 'menu.pdf', as_attachment=True)
         else:
             return render_template("errorViews/404.html")
     else:
@@ -330,7 +330,7 @@ def downloadStudentMenuPdf(restaurantId):
 @login_required
 def deleteOwnerMenuPdf(restaurantId):
     restaurant = getRestaurantById(restaurantId)
-    if session['role'] == 'owner' and restaurant and restaurant['restaurantid'] == session['id']:
+    if session['role'] == 'owner' and restaurant and restaurant['id'] == session['id']:
         if restaurant and restaurant['menupdf']:
             deletePdfFromRestaurant(restaurantId)
             return redirect("/owner/restaurant/")
