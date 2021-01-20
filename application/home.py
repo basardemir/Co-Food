@@ -80,11 +80,13 @@ def filter_homepage():
     form = RestaurantSearchForm()
     if session['role'] == 'student':
         if form.validate_on_submit():
-            form = RestaurantSearchForm()
             students = getMostOrderingStudents()
             student = getStudentDetail(session['id'])
             university = student['universityid']
             orders = getAllOrdersWithFilter(request.form['restaurantname'], request.form['categories'], university)
+            if orders:
+                for i in orders:
+                    i['friendnumber'] = len(getOrderFriends(i['id']))
             form.categories.choices = getAllCategoriesForm()
             return render_template("consumerViews/main_page.html", form=form, students=students, orders=orders)
         else:
@@ -95,6 +97,9 @@ def filter_homepage():
             orders = getAllOrdersWithUniversityId(university)
             average_time = getAverageDeliverTime()
             form.categories.choices = getAllCategoriesForm()
+            if orders:
+                for i in orders:
+                    i['friendnumber'] = len(getOrderFriends(i['id']))
             return render_template("consumerViews/main_page.html", ordercount=ordercount, averagetime=average_time,
                                    form=form, students=students, orders=orders)
     else:
