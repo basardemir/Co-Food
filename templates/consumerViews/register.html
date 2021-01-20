@@ -41,6 +41,15 @@
 
     </div>
     <div class="column">
+        <section class="hero">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title">
+                        Register to CO-FOOD!
+                    </h1>
+                </div>
+            </div>
+        </section>
         <form action="" method="post" name="register">
             {% from "_formhelper.html" import render_field %}
             {{ form.csrf_token }}
@@ -110,7 +119,8 @@
     <small>&copy; 2020, Başar Demir</small>
 </footer>
 <script>
-    document.addEventListener("DOMContentLoaded",roleChanged() );
+    document.addEventListener("DOMContentLoaded", roleChanged());
+
     function roleChanged() {
         var x = document.getElementById("selectRole").value;
         if (x === '0') {

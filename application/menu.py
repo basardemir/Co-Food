@@ -41,7 +41,7 @@ def deleteOwnerMenu(menuId):
     if session['role'] == 'owner':
         menu = getMenuById(menuId)
         count = isMenuActive(menuId)
-        if menu and menu['restaurantid'] == session['id'] and count and count==0:
+        if menu and menu['restaurantid'] == session['id'] and count==0:
             try:
                 deleteMenuById(menuId)
             except:
