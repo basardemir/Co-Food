@@ -9,7 +9,6 @@ from application.registration import *
 from application.restaurant import *
 from application.universities import *
 from application.user import *
-from application.wait_room import *
 
 app = Flask(__name__)
 app.config.from_object("settings")
