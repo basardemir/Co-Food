@@ -84,7 +84,6 @@ def addOwnerMenu():
         restaurant = getRestaurantById(restaurantId)
         if restaurant:
             form = MenuEditOwnerForm()
-            form.restaurant.choices = getAllRestaurantsForm()
             return render_template("ownerViews/addMenu.html", form=form, restaurant=restaurant)
         else:
             return render_template("errorViews/404.html")
