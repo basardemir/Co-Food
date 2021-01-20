@@ -31,8 +31,8 @@ class MenuEditForm(FlaskForm):
                                 ])
     campaign = BooleanField("campaign")
     res_choice = getAllRestaurantsForm()
-    restaurant = SelectField("restaurant", validate_choice=False, choices=res_choice
-                             )
+    restaurant = SelectField("restaurant", validate_choice=False, choices=res_choice)
+
 
 class MenuEditOwnerForm(FlaskForm):
     price = FloatField(
@@ -60,4 +60,3 @@ class MenuEditOwnerForm(FlaskForm):
                                            message="The length of the ingredients must be shorter than 257 characters.")
                                 ])
     campaign = BooleanField("campaign")
-    res_choice = getAllRestaurantsForm()

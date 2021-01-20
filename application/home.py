@@ -5,6 +5,7 @@ from flask import render_template
 from flask_login.utils import *
 
 from forms.filter import RestaurantSearchForm
+from services.category import getAllCategoriesForm
 from services.order import *
 from services.restaurant import *
 from services.students import *
@@ -14,6 +15,7 @@ from services.students import *
 def homepage():
     if session['role'] == 'student':
         form = RestaurantSearchForm()
+        form.categories.choices=getAllCategoriesForm()
         student = getStudentDetail(session['id'])
         university = student['universityid']
         orders = getAllOrdersWithUniversityId(university)
@@ -83,6 +85,7 @@ def filter_homepage():
             student = getStudentDetail(session['id'])
             university = student['universityid']
             orders = getAllOrdersWithFilter(request.form['restaurantname'], request.form['categories'], university)
+            form.categories.choices = getAllCategoriesForm()
             return render_template("consumerViews/main_page.html", form=form, students=students, orders=orders)
         else:
             student = getStudentDetail(session['id'])
@@ -91,6 +94,7 @@ def filter_homepage():
             ordercount = getNumberofDeliveredOrders()
             orders = getAllOrdersWithUniversityId(university)
             average_time = getAverageDeliverTime()
+            form.categories.choices = getAllCategoriesForm()
             return render_template("consumerViews/main_page.html", ordercount=ordercount, averagetime=average_time,
                                    form=form, students=students, orders=orders)
     else:

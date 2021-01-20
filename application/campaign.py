@@ -4,6 +4,7 @@ from flask_login.utils import *
 
 from forms.filter import CampaignSearchForm
 from services.campaign import *
+from services.category import getAllCategoriesForm
 from services.restaurant import *
 from services.students import getStudentDetail
 
@@ -12,6 +13,7 @@ from services.students import getStudentDetail
 def getCampaigns():
     if session['role'] == 'student':
         form = CampaignSearchForm()
+        form.categories.choices=getAllCategoriesForm()
         student = getStudentDetail(session['id'])
         university = student['universityid']
         campaigns = getAllCampaignsWithUniversity(university)
@@ -30,12 +32,14 @@ def filterCampaigns():
             university = student['universityid']
             popularCampaigns = getMostPopularCampaigns()
             campaigns = filterCampaign(request.form['menuname'], request.form['categories'],university)
+            form.categories.choices = getAllCategoriesForm()
             return render_template("consumerViews/campaigns.html",popularcampaigns=popularCampaigns, form=form, campaigns=campaigns)
         else:
             student = getStudentDetail(session['id'])
             university = student['universityid']
             campaigns = getAllCampaignsWithUniversity(university)
             popularCampaigns = getMostPopularCampaigns()
+            form.categories.choices = getAllCategoriesForm()
             return render_template("consumerViews/campaigns.html", popularcampaigns=popularCampaigns, form=form,
                                    campaigns=campaigns)
     else:

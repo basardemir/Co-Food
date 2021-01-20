@@ -57,6 +57,7 @@ def deleteOwnerMenu(menuId):
 def addMenu():
     if session['role'] == 'admin':
         form = MenuEditForm()
+        form.restaurant.choices=getAllRestaurantsForm()
         return render_template("adminViews/addMenu.html", form=form)
     else:
         return render_template("errorViews/403.html")
@@ -68,6 +69,7 @@ def addMenuToRestaurant(restaurantId):
         restaurant = getRestaurantById(restaurantId)
         if restaurant:
             form = MenuEditForm()
+            form.restaurant.choices = getAllRestaurantsForm()
             return render_template("adminViews/addMenu.html", form=form, restaurant=restaurant)
         else:
             return redirect("adminViews/restaurants")
@@ -82,6 +84,7 @@ def addOwnerMenu():
         restaurant = getRestaurantById(restaurantId)
         if restaurant:
             form = MenuEditOwnerForm()
+            form.restaurant.choices = getAllRestaurantsForm()
             return render_template("ownerViews/addMenu.html", form=form, restaurant=restaurant)
         else:
             return render_template("errorViews/404.html")
@@ -96,10 +99,10 @@ def editMenu(menuId):
         restaurant = getRestaurantById(menu['restaurantid'])
         if menu and restaurant:
             form = MenuEditForm()
+            form.restaurant.choices = getAllRestaurantsForm()
             return render_template("adminViews/editMenu.html", form=form, restaurant=restaurant, menu=menu)
         else:
-            # to be completed
-            return render_template("adminViews/menus.html", message="This menu or restaurant does not exists")
+            return redirect("adminViews/menus.html")
     else:
         return render_template("errorViews/403.html")
 
@@ -133,6 +136,7 @@ def insertMenu(restaurantId):
             else:
                 restaurant = getRestaurantById(restaurantId)
                 if restaurant:
+                    form.restaurant.choices = getAllRestaurantsForm()
                     return render_template("adminViews/addMenu.html", form=form, restaurant=restaurant,
                                            message="An error occured")
                 else:
@@ -142,6 +146,7 @@ def insertMenu(restaurantId):
     else:
         restaurant = getRestaurantById(restaurantId)
         if restaurant:
+            form.restaurant.choices = getAllRestaurantsForm()
             return render_template("adminViews/addMenu.html", form=form, restaurant=restaurant)
         else:
             return render_template("errorViews/404.html")
@@ -165,6 +170,7 @@ def createMenu():
         else:
             return render_template("errorViews/403.html")
     else:
+        form.restaurant.choices=getAllRestaurantsForm()
         return render_template("adminViews/addMenu.html", form=form)
 
 
@@ -190,6 +196,7 @@ def insertOwnerMenu():
         restaurantId = session['id']
         restaurant = getRestaurantById(restaurantId)
         if restaurant:
+            form.restaurant.choices = getAllRestaurantsForm()
             return render_template("ownerViews/addMenu.html", form=form, restaurant=restaurant)
         else:
             return render_template("errorViews/404.html")
@@ -216,6 +223,7 @@ def saveMenu(menuId):
                     restaurant = getRestaurantById(menu['restaurantid'])
                     if menu and restaurant:
                         form = MenuEditForm()
+                        form.restaurant.choices = getAllRestaurantsForm()
                         return render_template("adminViews/editMenu.html", form=form, restaurant=restaurant, menu=menu
                                                ,message="An error occured")
                     else:
@@ -228,6 +236,7 @@ def saveMenu(menuId):
         restaurant = getRestaurantById(menu['restaurantid'])
         if menu and restaurant:
             form = MenuEditForm()
+            form.restaurant.choices = getAllRestaurantsForm()
             return render_template("adminViews/editMenu.html", form=form, restaurant=restaurant, menu=menu)
         else:
             return render_template("adminViews/menus.html", message="This menu or restaurant does not exists")
@@ -261,6 +270,7 @@ def saveOwnerMenu(menuId):
         menu = getMenuById(menuId)
         restaurant = getRestaurantById(menu['restaurantid'])
         if menu and restaurant and session['role'] == 'owner' and menu['restaurantid'] == session['id']:
+            form.restaurant.choices = getAllRestaurantsForm()
             return render_template("ownerViews/editMenu.html", form=form, restaurant=restaurant, menu=menu)
         else:
             return render_template("errorViews/403.html")

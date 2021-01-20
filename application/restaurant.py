@@ -1,3 +1,4 @@
+from services.category import getAllCategoriesForm
 from services.order import hasActiveOrder
 from services.restaurant import *
 from flask import redirect, session
@@ -23,6 +24,7 @@ def getRestaurants():
         restaurants = getAllRestaurantsWithUniversity(university)
         popularRestaurant = getMostPopularRestaurants()
         form = RestaurantSearchForm()
+        form.category = getAllCategoriesForm()
         return render_template("consumerViews/restaurants.html", popularRestaurants=popularRestaurant, form=form,
                                restaurants=restaurants)
     else:
@@ -37,6 +39,7 @@ def filterRestaurants():
         university = student['universityid']
         popularRestaurant = getMostPopularRestaurants()
         restaurants = filterRestaurant(request.form['restaurantname'], request.form['categories'], university)
+        form.category = getAllCategoriesForm()
         return render_template("consumerViews/restaurants.html", popularRestaurants=popularRestaurant, form=form,
                                restaurants=restaurants)
     else:
@@ -133,6 +136,8 @@ def editRestaurant(restaurantId=0):
         restaurant = getRestaurantById(restaurantId)
         if restaurant:
             form = RestaurantEditForm()
+            uni_choice = getAllUniversitiesAdminForm()
+            form.university.choices=uni_choice
             menus = getAllMenusByRestaurantId(restaurantId)
             universities = getAllUniversitiesByRestaurantId(restaurantId)
             comments = getAllCommentsByRestaurantId(restaurantId)
@@ -163,6 +168,8 @@ def editRestaurant(restaurantId=0):
         restaurant = getRestaurantById(restaurantId)
         if restaurant:
             form = RestaurantEditForm()
+            uni_choice = getAllUniversitiesAdminForm()
+            form.university.choices=uni_choice
             menus = getAllMenusByRestaurantId(restaurantId)
             universities = getAllUniversitiesByRestaurantId(restaurantId)
             comments = getAllCommentsByRestaurantId(restaurantId)
@@ -184,6 +191,8 @@ def editOwnerRestaurant():
         restaurant = getRestaurantById(restaurantId)
         if restaurant:
             form = RestaurantEditForm()
+            uni_choice = getAllUniversitiesAdminForm()
+            form.university.choices=uni_choice
             menus = getAllMenusByRestaurantId(restaurantId)
             universities = getAllUniversitiesByRestaurantId(restaurantId)
             comments = getAllCommentsByRestaurantId(restaurantId)
@@ -227,6 +236,8 @@ def saveRestaurant(restaurantId):
                 else:
                     restaurant = getRestaurantById(restaurantId)
                     menus = getAllMenusByRestaurantId(restaurantId)
+                    uni_choice = getAllUniversitiesAdminForm()
+                    form.university.choices = uni_choice
                     universities = getAllUniversitiesByRestaurantId(restaurantId)
                     comments = getAllCommentsByRestaurantId(restaurantId)
                     return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
@@ -241,6 +252,8 @@ def saveRestaurant(restaurantId):
                 restaurant = getRestaurantById(restaurantId)
                 if restaurant:
                     form = RestaurantEditForm()
+                    uni_choice = getAllUniversitiesAdminForm()
+                    form.university.choices = uni_choice
                     menus = getAllMenusByRestaurantId(restaurantId)
                     comments = getAllCommentsByRestaurantId(restaurantId)
                     universities = getAllUniversitiesByRestaurantId(restaurantId)
@@ -256,6 +269,8 @@ def saveRestaurant(restaurantId):
                 restaurant = getRestaurantById(restaurantId)
                 if university:
                     form = RestaurantEditForm()
+                    uni_choice = getAllUniversitiesAdminForm()
+                    form.university.choices = uni_choice
                     menus = getAllMenusByRestaurantId(restaurantId)
                     universities = getAllUniversitiesByRestaurantId(restaurantId)
                     comments = getAllCommentsByRestaurantId(restaurantId)
@@ -272,6 +287,8 @@ def saveRestaurant(restaurantId):
     menus = getAllMenusByRestaurantId(restaurantId)
     universities = getAllUniversitiesByRestaurantId(restaurantId)
     comments = getAllCommentsByRestaurantId(restaurantId)
+    uni_choice = getAllUniversitiesAdminForm()
+    form.university.choices = uni_choice
     return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
                            comments=comments,
                            universities=universities, menus=menus)
@@ -294,6 +311,8 @@ def saveOwnerRestaurant():
                     pdf = pdf.read()
                 else:
                     form = RestaurantEditForm()
+                    uni_choice = getAllUniversitiesAdminForm()
+                    form.university.choices = uni_choice
                     restaurant = getRestaurantById(restaurantId)
                     menus = getAllMenusByRestaurantId(restaurantId)
                     comments = getAllCommentsByRestaurantId(restaurantId)
@@ -310,6 +329,8 @@ def saveOwnerRestaurant():
                 restaurant = getRestaurantById(restaurantId)
                 if restaurant:
                     form = RestaurantEditForm()
+                    uni_choice = getAllUniversitiesAdminForm()
+                    form.university.choices = uni_choice
                     menus = getAllMenusByRestaurantId(restaurantId)
                     comments = getAllCommentsByRestaurantId(restaurantId)
                     universities = getAllUniversitiesByRestaurantId(restaurantId)
@@ -322,6 +343,8 @@ def saveOwnerRestaurant():
                 restaurant = getRestaurantById(restaurantId)
                 if restaurant:
                     form = RestaurantEditForm()
+                    uni_choice = getAllUniversitiesAdminForm()
+                    form.university.choices = uni_choice
                     menus = getAllMenusByRestaurantId(restaurantId)
                     universities = getAllUniversitiesByRestaurantId(restaurantId)
                     comments = getAllCommentsByRestaurantId(restaurantId)
@@ -338,6 +361,8 @@ def saveOwnerRestaurant():
             menus = getAllMenusByRestaurantId(restaurantId)
             comments = getAllCommentsByRestaurantId(restaurantId)
             universities = getAllUniversitiesByRestaurantId(restaurantId)
+            uni_choice = getAllUniversitiesAdminForm()
+            form.university.choices=uni_choice
             return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
                                    comments=comments,
                                    universities=universities, menus=menus)

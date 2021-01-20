@@ -10,6 +10,7 @@ from forms.settings import *
 from services.order import *
 from services.students import *
 from services.restaurant import *
+from services.university import getAllUniversitiesForm
 
 
 @login_required
@@ -18,6 +19,7 @@ def userSettings():
         userId = session['id']
         user = getStudentDetail(userId)
         form = SettingsForm()
+        form.university.choices = getAllUniversitiesForm()
         return render_template("consumerViews/settings.html", user=user, form=form)
     else:
         return render_template("errorViews/403.html")
@@ -35,6 +37,7 @@ def updateUser():
             if (hasActiveOrder(session['id'])):
                 user = getStudentDetail(userId)
                 form = SettingsForm()
+                form.university.choices = getAllUniversitiesForm()
                 return render_template("consumerViews/settings.html", user=user, form=form,
                                        messages=["You have active order, you cannot change your information."])
             email = request.form['email']
@@ -43,24 +46,29 @@ def updateUser():
                 if userUpdate != True:
                     user = getStudentDetail(userId)
                     form = SettingsForm()
+                    form.university.choices = getAllUniversitiesForm()
                     return render_template("consumerViews/settings.html", user=user, form=form, messages=[userUpdate])
                 else:
                     user = getStudentDetail(userId)
                     form = SettingsForm()
+                    form.university.choices = getAllUniversitiesForm()
                     return render_template("consumerViews/settings.html", user=user, form=form, success='true')
             else:
                 userUpdate = updateUserWithoutPassword(userId, username, email, university)
                 if userUpdate != True:
                     user = getStudentDetail(userId)
                     form = SettingsForm()
+                    form.university.choices = getAllUniversitiesForm()
                     return render_template("consumerViews/settings.html", user=user, form=form, messages=[userUpdate])
                 else:
                     user = getStudentDetail(userId)
                     form = SettingsForm()
+                    form.university.choices = getAllUniversitiesForm()
                     return render_template("consumerViews/settings.html", user=user, form=form, success='true')
         else:
             userId = session['id']
             user = getStudentDetail(userId)
+            form.university.choices = getAllUniversitiesForm()
             return render_template("consumerViews/settings.html", user=user, form=form)
     else:
         return render_template("errorViews/403.html")

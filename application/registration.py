@@ -4,7 +4,7 @@ from flask_login import UserMixin, login_user, logout_user
 
 from forms.registration import *
 from services.registration import *
-from services.university import getAllUniversities
+from services.university import getAllUniversities, getAllUniversitiesForm
 
 
 class User(UserMixin):
@@ -41,6 +41,7 @@ def get_user(user_id):
 
 def register():
     form = RegisterForm()
+    form.university.choices=getAllUniversitiesForm()
     universities = getAllUniversities()
     return render_template("consumerViews/register.html", universities=universities, form=form)
 
@@ -126,8 +127,10 @@ def addClient():
             phone = request.form['phone']
             return addNewRestaurant(username, password, email, phone)
         else:
+            form.university.choices = getAllUniversitiesForm()
             return render_template("consumerViews/register.html", form=form)
     else:
+        form.university.choices = getAllUniversitiesForm()
         return render_template("consumerViews/register.html", form=form)
 
 
@@ -141,8 +144,10 @@ def addNewStudent(username, password, email, university):
     try:
         add = addStudent(user)
         if add != True:
+            form.university.choices = getAllUniversitiesForm()
             return render_template("consumerViews/register.html", form=form, messages=["Error: " + add])
     except:
+        form.university.choices = getAllUniversitiesForm()
         return render_template("consumerViews/register.html", form=form, messages=["Check your information."])
     return redirect(url_for("login", success='true'))
 
@@ -157,8 +162,10 @@ def addNewRestaurant(name, password, email, phone):
     try:
         add = addRestaurant(restaurant)
         if add != True:
+            form.university.choices = getAllUniversitiesForm()
             return render_template("consumerViews/register.html", form=form, messages=["Error: " + add])
     except:
+        form.university.choices = getAllUniversitiesForm()
         return render_template("consumerViews/register.html", form=form, messages=["Check your information."])
     return redirect(url_for("login", success='true'))
 
