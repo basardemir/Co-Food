@@ -16,14 +16,14 @@
         }
 
     {% endif %}
-    {% if  error or success %}
-        document.addEventListener("DOMContentLoaded", function (event) {
-            document.getElementById("modal").classList.add("is-active");
-        });
-        function closeModal() {
-            document.getElementById("modal").classList.remove("is-active");
-        }
-    {% endif %}
+{% if  error or success or menuerror %}
+    document.addEventListener("DOMContentLoaded", function (event) {
+        document.getElementById("modal").classList.add("is-active");
+    });
+    function closeModal() {
+        document.getElementById("modal").classList.remove("is-active");
+    }
+{% endif %}
 </script>
 {% endblock %}
 {% block left_area %}
@@ -65,6 +65,9 @@
                 {% if error %}
                     <p class="modal-card-title">Error</p>
                 {% endif %}
+                {% if menuerror %}
+                    <p class="modal-card-title">Menu Error</p>
+                {% endif %}
             </header>
             <section class="modal-card-body">
                 {% if error %}
@@ -72,6 +75,9 @@
                 {% endif %}
                 {% if success %}
                     You have successfully made change.
+                {% endif %}
+                {% if menuerror %}
+                    Menu should not have active orders.
                 {% endif %}
             </section>
             <footer class="modal-card-foot">

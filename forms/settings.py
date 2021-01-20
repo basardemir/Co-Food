@@ -16,7 +16,7 @@ class SettingsForm(FlaskForm):
         Length(min=1, max=64, message="The length of the email must be shorter than 65 characters.")
     ])
     password = PasswordField("password", validators=[
-        Length(min=1, max=256, message="The length of the comment must be shorter than 257 characters."),
+        Length(min=1, max=256, message="The length of the password must be shorter than 257 characters."),
         Optional()
     ])
     uni_choice = university.getAllUniversitiesForm()

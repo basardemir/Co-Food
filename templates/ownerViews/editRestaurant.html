@@ -16,7 +16,7 @@
             }
 
         {% endif %}
-        {% if  error or success %}
+        {% if  error or success or menuerror %}
             document.addEventListener("DOMContentLoaded", function (event) {
                 document.getElementById("modal").classList.add("is-active");
             });
@@ -65,6 +65,9 @@
                 {% if error %}
                     <p class="modal-card-title">Error</p>
                 {% endif %}
+                {% if menuerror %}
+                    <p class="modal-card-title">Menu Error</p>
+                {% endif %}
             </header>
             <section class="modal-card-body">
                 {% if error %}
@@ -72,6 +75,9 @@
                 {% endif %}
                 {% if success %}
                     You have successfully made change.
+                {% endif %}
+                {% if menuerror %}
+                    Menu should not have active orders.
                 {% endif %}
             </section>
             <footer class="modal-card-foot">

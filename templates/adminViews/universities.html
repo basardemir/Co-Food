@@ -1,11 +1,44 @@
 {% extends "adminViews/adminlayout.html" %}
 {% block title %}Universities{% endblock %}
 {% block content %}
-
+    <script>
+        {% if  error or success %}
+            document.addEventListener("DOMContentLoaded", function (event) {
+                document.getElementById("modal").classList.add("is-active");
+            });
+            function closeModal() {
+                document.getElementById("modal").classList.remove("is-active");
+            }
+        {% endif %}
+    </script>
 {% endblock %}
 {% block left_area %}
 {% endblock %}
 {% block middle %}
+    <div id="modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                {% if success %}
+                    <p class="modal-card-title">Success</p>
+                {% endif %}
+                {% if error %}
+                    <p class="modal-card-title">Error</p>
+                {% endif %}
+            </header>
+            <section class="modal-card-body">
+                {% if error %}
+                    Some error occured.
+                {% endif %}
+                {% if success %}
+                    You have successfully made change.
+                {% endif %}
+            </section>
+            <footer class="modal-card-foot">
+                <button id="close" onclick="closeModal()" class="button">Close</button>
+            </footer>
+        </div>
+    </div>
     <section class="hero is-primary">
         <div class="hero-body">
             <div class="container">

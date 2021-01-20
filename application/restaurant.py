@@ -118,7 +118,7 @@ def deleteRestaurant(restaurantId):
     if session['role'] == 'admin':
         if (not hasActiveOrder(restaurantId) and deleteRestaurantById(restaurantId)):
             restaurants = getAllRestaurants()
-            return render_template("adminViews/restaurants.html", restaurants=restaurants)
+            return render_template("adminViews/restaurants.html", restaurants=restaurants,success="true")
         else:
             restaurants = getAllRestaurants()
             return render_template("adminViews/restaurants.html", restaurants=restaurants,
@@ -138,6 +138,7 @@ def editRestaurant(restaurantId=0):
             comments = getAllCommentsByRestaurantId(restaurantId)
             success = request.args.get('success')
             error = request.args.get('error')
+            menuerror = request.args.get('menuerror')
             if success == 'true':
                 return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
                                        comments=comments,
@@ -146,6 +147,10 @@ def editRestaurant(restaurantId=0):
                 return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
                                        comments=comments,
                                        universities=universities, menus=menus, error='true')
+            if menuerror == 'true':
+                return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
+                                       comments=comments,
+                                       universities=universities, menus=menus, menuerror='true')
             return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
                                    comments=comments,
                                    universities=universities, menus=menus)
@@ -184,6 +189,7 @@ def editOwnerRestaurant():
             comments = getAllCommentsByRestaurantId(restaurantId)
             success = request.args.get('success')
             error = request.args.get('error')
+            menuerror = request.args.get('menuerror')
             if success == 'true':
                 return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
                                        comments=comments,
@@ -192,6 +198,10 @@ def editOwnerRestaurant():
                 return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
                                        comments=comments,
                                        universities=universities, menus=menus, error="true")
+            if menuerror == 'true':
+                return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
+                                       comments=comments,
+                                       universities=universities, menus=menus, menuerror="true")
             return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
                                    comments=comments,
                                    universities=universities, menus=menus)

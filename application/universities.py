@@ -21,7 +21,7 @@ def deleteUniversity(uniId):
     if session['role'] == 'admin':
         if (deleteUniversityById(uniId)):
             universities = getAllUniversities()
-            return render_template("adminViews/universities.html", universities=universities)
+            return render_template("adminViews/universities.html", universities=universities,success="true")
         else:
             universities = getAllUniversities()
             return render_template("adminViews/universities.html", universities=universities,

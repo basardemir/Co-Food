@@ -110,6 +110,7 @@ app.add_url_rule('/admin/category/add', view_func=addCategory, methods=['GET'])
 app.add_url_rule('/admin/category/add', view_func=insertCategory, methods=['POST'])
 app.add_url_rule('/admin/category/delete/<int:catId>', view_func=deleteCategory, methods=['GET'])
 app.add_url_rule('/admin/category/edit/<int:catId>', view_func=editCategory, methods=['GET'])
+app.add_url_rule('/admin/category/edit/<int:catId>', view_func=saveCategory, methods=['POST'])
 app.add_url_rule('/admin/orderstudentmatching/delete/<int:matchId>', view_func=deleteMatching, methods=['GET'])
 
 # menu management

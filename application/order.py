@@ -13,13 +13,13 @@ from services.restaurant import *
 def orderPage(menuId):
     if session['role'] == 'student':
         menu = getMenuById(menuId)
-        ordercount = studentOrderCountFromMenu(session['id'],menuId)
+        ordercount = studentOrderCountFromMenu(session['id'], menuId)
         restaurant = getRestaurantById(menu['restaurantid'])
         if menu and restaurant and (isServesToStudent(session['id'], restaurant['restaurantid'])):
             form = orderForm()
             ordercount = studentOrderCountFromMenu(session['id'], menuId)
             return render_template("consumerViews/order.html", menu=menu, restaurant=restaurant,
-                                   form=form,ordercount=ordercount)
+                                   form=form, ordercount=ordercount)
         else:
             return render_template("errorViews/404.html")
     else:
@@ -36,8 +36,8 @@ def activeOrder():
                 friendsize = len(friends)
                 success = request.args.get('success')
                 if success == 'true':
-                    return render_template("consumerViews/wait_room.html", success=True,order=order, friends=friends,
-                                       friendsize=friendsize)
+                    return render_template("consumerViews/wait_room.html", success=True, order=order, friends=friends,
+                                           friendsize=friendsize)
                 return render_template("consumerViews/wait_room.html", order=order, friends=friends,
                                        friendsize=friendsize)
 
@@ -61,14 +61,14 @@ def insertNewOrder(menuId):
                     return render_template("errorViews/404.html")
             else:
                 insertion = insertOrderSQL(menuId, session['id'], int(request.form['friendnumber']) + 1,
-                                       request.form['ordercount'],
-                                       request.form['address'])
+                                           request.form['ordercount'],
+                                           request.form['address'])
                 if (insertion != True):
                     form = orderForm()
                     menu = getMenuById(menuId)
                     restaurant = getRestaurantById(menu['restaurantid'])
                     return render_template("consumerViews/order.html", menu=menu, restaurant=restaurant,
-                                           form=form, message= insertion+" An error occurred, try again!")
+                                           form=form, message=insertion + " An error occurred, try again!")
                 else:
                     return redirect(url_for("activeOrder", success='true'))
         else:
@@ -77,7 +77,7 @@ def insertNewOrder(menuId):
             ordercount = studentOrderCountFromMenu(session['id'], menuId)
             if menu and restaurant and (isServesToStudent(session['id'], restaurant['restaurantid'])):
                 return render_template("consumerViews/order.html", menu=menu, restaurant=restaurant,
-                                       form=form,ordercount=ordercount)
+                                       form=form, ordercount=ordercount)
             else:
                 return render_template("errorViews/404.html")
     else:
@@ -165,11 +165,13 @@ def editOrder(orderId):
             friends = getOrderFriends(orderId)
             friendsize = len(friends)
             if success:
-                return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus, friends=friends,
-                                   friendsize=friendsize, success='true')
+                return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus,
+                                       friends=friends,
+                                       friendsize=friendsize, success='true')
             if error:
-                return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus, friends=friends,
-                                   friendsize=friendsize, error='true')
+                return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus,
+                                       friends=friends,
+                                       friendsize=friendsize, error='true')
             return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus, friends=friends,
                                    friendsize=friendsize)
         else:
@@ -193,7 +195,7 @@ def saveOrder(orderId):
             friends = getOrderFriends(orderId)
             friendsize = len(friends)
             if student is not '0':
-                friendsize+=1
+                friendsize += 1
             if int(friendsize) > int(friendnumber) + 1:
                 form = orderEditForm()
                 order = getOrdersByOrderId(orderId)
@@ -203,7 +205,6 @@ def saveOrder(orderId):
                 return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus,
                                        friends=friends, friendsize=friendsize,
                                        message="There are enough available students!")
-
             menu = getMenuById(menu)
             if not menu or (student is not '0' and not isServesToStudent(student, menu['restaurantid'])):
                 form = orderEditForm()
@@ -227,7 +228,7 @@ def saveOrder(orderId):
             if (editOrderById(orderId, address, ordercount, int(friendnumber) + 1, menu['id']) == True):
                 if student is not '0':
                     if addMatchingByStudentOrder(student, orderId) == True:
-                        return redirect('/admin/order/edit/' + str(orderId) +'?success=true')
+                        return redirect('/admin/order/edit/' + str(orderId) + '?success=true')
                     else:
                         form = orderEditForm()
                         order = getOrdersByOrderId(orderId)
@@ -237,7 +238,7 @@ def saveOrder(orderId):
                         return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus,
                                                friends=friends, friendsize=friendsize, message="Error occured!")
                 else:
-                    return redirect('/admin/order/edit/' + str(orderId) +'?success=true')
+                    return redirect('/admin/order/edit/' + str(orderId) + '?success=true')
             else:
                 form = orderEditForm()
                 order = getOrdersByOrderId(orderId)
@@ -266,7 +267,7 @@ def deleteMatching(matchId):
                 deleteMatchById(matchId)
             except:
                 return redirect("/admin/order/edit/" + str(match["ordercontentid"]) + '?error=true')
-            return redirect("/admin/order/edit/" + str(match["ordercontentid"])+'?success=true')
+            return redirect("/admin/order/edit/" + str(match["ordercontentid"]) + '?success=true')
         else:
             return redirect("/admin/order/edit/" + str(match["ordercontentid"]) + '?error=true')
     else:
@@ -340,6 +341,7 @@ def ownerOrderDetails(orderId):
         return render_template("errorViews/404.html")
     else:
         return render_template("errorViews/403.html")
+
 
 def viewOrder(orderId):
     if session['role'] == 'admin':

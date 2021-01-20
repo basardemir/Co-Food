@@ -31,7 +31,7 @@ def deleteMenu(menuId):
                 return redirect("/admin/restaurant/edit/" + str(menu["restaurantid"]) + '?error=true')
             return redirect("/admin/restaurant/edit/" + str(menu["restaurantid"]) + '?success=true')
         else:
-            return redirect("/admin/restaurant/edit/" + str(menu["restaurantid"]) + '?error=true')
+            return redirect("/admin/restaurant/edit/" + str(menu["restaurantid"]) + '?menuerror="true"')
     else:
         return render_template("errorViews/403.html")
 
@@ -48,7 +48,7 @@ def deleteOwnerMenu(menuId):
                 return redirect(url_for("editOwnerRestaurant", error="true"))
             return redirect(url_for("editOwnerRestaurant", success="true"))
         else:
-            return redirect(url_for("editOwnerRestaurant", error="true"))
+            return redirect(url_for("editOwnerRestaurant", menuerror="true"))
     else:
         return render_template("errorViews/403.html")
 

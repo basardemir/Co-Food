@@ -21,7 +21,7 @@ def deleteCategory(catId):
     if session['role'] == 'admin':
         if (deleteCategoryById(catId)):
             categories = getAllCategories()
-            return render_template("adminViews/categories.html", categories=categories)
+            return render_template("adminViews/categories.html", categories=categories, success="true")
         else:
             categories = getAllCategories()
             return render_template("adminViews/categories.html", categories=categories,
@@ -53,6 +53,8 @@ def insertCategory():
                 return render_template("adminViews/addCategory.html", form=form, message="This name is already exist")
         else:
             return render_template("errorViews/403.html")
+    else:
+        return render_template("adminViews/addCategory.html", form=form)
 
 
 @login_required
@@ -102,3 +104,11 @@ def saveCategory(catId):
                                            message="This category does not exists")
         else:
             return render_template("errorViews/403.html")
+    else:
+        category = getCategoryById(catId)
+        if category:
+            restaurants = getAllRestaurantsByCategoryId(catId)
+            return render_template("adminViews/editCategory.html", form=form, category=category,
+                                   restaurants=restaurants)
+        else:
+            return render_template("errorViews/404.html")
