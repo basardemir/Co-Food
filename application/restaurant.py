@@ -139,15 +139,15 @@ def editRestaurant(restaurantId=0):
             success = request.args.get('success')
             error = request.args.get('error')
             menuerror = request.args.get('menuerror')
-            if success == 'true':
+            if success:
                 return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
                                        comments=comments,
                                        universities=universities, menus=menus, success='true')
-            if error == 'true':
+            if error:
                 return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
                                        comments=comments,
                                        universities=universities, menus=menus, error='true')
-            if menuerror == 'true':
+            if menuerror:
                 return render_template("adminViews/editRestaurant.html", form=form, restaurant=restaurant,
                                        comments=comments,
                                        universities=universities, menus=menus, menuerror='true')
@@ -198,7 +198,7 @@ def editOwnerRestaurant():
                 return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
                                        comments=comments,
                                        universities=universities, menus=menus, error="true")
-            if menuerror == 'true':
+            if menuerror:
                 return render_template("ownerViews/editRestaurant.html", form=form, restaurant=restaurant,
                                        comments=comments,
                                        universities=universities, menus=menus, menuerror="true")
@@ -268,7 +268,6 @@ def saveRestaurant(restaurantId):
                                            , message="This restaurant does not exists")
         else:
             return render_template("errorViews/403.html")
-
     restaurant = getRestaurantById(restaurantId)
     menus = getAllMenusByRestaurantId(restaurantId)
     universities = getAllUniversitiesByRestaurantId(restaurantId)

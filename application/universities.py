@@ -53,6 +53,8 @@ def insertUniversity():
                 return render_template("adminViews/addUniversity.html", form=form, message="This name is already exist")
         else:
             return render_template("errorViews/403.html")
+    else:
+        return render_template("adminViews/addUniversity.html", form=form)
 
 
 @login_required
@@ -102,7 +104,6 @@ def saveUniversity(uniId):
                                            message="This university does not exists")
         else:
             return render_template("errorViews/403.html")
-
     else:
         university = getUniversityById(uniId)
         if university:

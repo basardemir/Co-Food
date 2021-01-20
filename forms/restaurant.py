@@ -22,5 +22,5 @@ class RestaurantEditForm(FlaskForm):
     ])
 
     phone = StringField("phone", validators=[
-        Length(min=1, max=11, message="The length of the name must be shorter than 11 characters.")
+        Length(min=1, max=11, message="The length of the phone number must be shorter than 11 characters.")
     ])

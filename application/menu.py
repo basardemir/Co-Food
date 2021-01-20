@@ -70,8 +70,7 @@ def addMenuToRestaurant(restaurantId):
             form = MenuEditForm()
             return render_template("adminViews/addMenu.html", form=form, restaurant=restaurant)
         else:
-            # to be completed
-            return render_template("adminViews/universities.html", message="This university does not exists")
+            return redirect("adminViews/restaurants")
     else:
         return render_template("errorViews/403.html")
 
@@ -161,8 +160,12 @@ def createMenu():
             campaign = form.campaign.data
             if (addMenuByRestaurantId(restaurant, name, description, price, campaign, ingredients) == True):
                 return redirect("/admin/restaurant/edit/" + str(restaurant))
+            else:
+                return redirect("/admin/restaurant/edit/" + str(restaurant)+'?error=true')
         else:
             return render_template("errorViews/403.html")
+    else:
+        return render_template("adminViews/addMenu.html", form=form)
 
 
 @login_required
@@ -289,9 +292,7 @@ def deleteMenuPdf(restaurantId):
         return render_template("errorViews/403.html")
 
 
-login_required
-
-
+@login_required
 def downloadOwnerMenuPdf(restaurantId):
     restaurant = getRestaurantById(restaurantId)
     if session['role'] == 'owner' and restaurant and restaurant['restaurantid'] == session['id']:
@@ -304,9 +305,7 @@ def downloadOwnerMenuPdf(restaurantId):
         return render_template("errorViews/403.html")
 
 
-login_required
-
-
+@login_required
 def downloadStudentMenuPdf(restaurantId):
     restaurant = getRestaurantById(restaurantId)
     if session['role'] == 'student' and restaurant:

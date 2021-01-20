@@ -144,7 +144,6 @@ def addNewStudent(username, password, email, university):
             return render_template("consumerViews/register.html", form=form, messages=["Error: " + add])
     except:
         return render_template("consumerViews/register.html", form=form, messages=["Check your information."])
-
     return redirect(url_for("login", success='true'))
 
 

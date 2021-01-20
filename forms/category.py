@@ -8,5 +8,5 @@ class CategoryEditForm(FlaskForm):
                        validators=[
                            DataRequired(),
                            Length(min=1, max=64,
-                                  message="The length of the comment must be shorter than 65 characters."),
+                                  message="The length of the name must be shorter than 65 characters."),
                        ])

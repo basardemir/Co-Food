@@ -40,7 +40,6 @@ def activeOrder():
                                            friendsize=friendsize)
                 return render_template("consumerViews/wait_room.html", order=order, friends=friends,
                                        friendsize=friendsize)
-
         return redirect(url_for('homepage', noactiveorder='true', **request.args))
     else:
         return render_template("errorViews/403.html")
