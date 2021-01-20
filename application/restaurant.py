@@ -374,7 +374,7 @@ def saveOwnerRestaurant():
 def deleteService(serviceId):
     if session['role'] == 'admin':
         service = getServiceById(serviceId)
-        if service and not hasActiveOrder(session['id']):
+        if service and not hasActiveOrder(service['restaurantid']):
             deleteServiceById(serviceId)
             return redirect("/admin/restaurant/edit/" + str(service["restaurantid"])+"?success=true")
         if not service:
