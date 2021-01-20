@@ -330,7 +330,7 @@ def downloadStudentMenuPdf(restaurantId):
 @login_required
 def deleteOwnerMenuPdf(restaurantId):
     restaurant = getRestaurantById(restaurantId)
-    if session['role'] == 'owner' and restaurant and restaurant['id'] == session['id']:
+    if session['role'] == 'owner' and restaurant and restaurant['restaurantid'] == session['id']:
         if restaurant and restaurant['menupdf']:
             deletePdfFromRestaurant(restaurantId)
             return redirect("/owner/restaurant/")
