@@ -23,7 +23,7 @@ def insertOrderSQL(menuId, studentId, numberofstudents, menucount, address):
                 query = "insert into ordercontent (ordertime, menuid,numberofstudents,menucount,address) values " \
                         "(CURRENT_TIMESTAMP,%s,%s,%s,%s) RETURNING id"
                 cursor.execute(query, (menuId, numberofstudents, menucount, address))
-                id = cursor.fetchone()
+                id = cursor.fetchone()[0]
                 query = "insert into orderstudentmatching (studentid,ordercontentid) values (%s,%s)"
                 cursor.execute(query, (studentId, id))
                 return True

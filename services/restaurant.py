@@ -1,7 +1,6 @@
 import psycopg2 as dbapi2
 
-
-dsn="postgres://ypktmwhlgmijvt:e9d6168a00144a774b298b917a30f946d706365a0379c54da413f6f469b99674@ec2-34-248-148-63.eu-west-1.compute.amazonaws.com:5432/d27qbfil3ivm83"
+dsn = "postgres://ypktmwhlgmijvt:e9d6168a00144a774b298b917a30f946d706365a0379c54da413f6f469b99674@ec2-34-248-148-63.eu-west-1.compute.amazonaws.com:5432/d27qbfil3ivm83"
 
 
 def getAllRestaurants():
@@ -19,6 +18,7 @@ def getAllRestaurants():
                 restaurants.append(element)
     return restaurants
 
+
 def getAllRestaurantsWithUniversity(universityId):
     restaurants = []
     with dbapi2.connect(dsn) as connection:
@@ -27,7 +27,7 @@ def getAllRestaurantsWithUniversity(universityId):
                     " restaurant.menupdf as menupdf from restaurant left join category on (restaurant.categoryid = category.id)" \
                     " left outer join service s on restaurant.id = s.restaurantid" \
                     " where(s.universityid=%s) order by restaurant.name"
-            cursor.execute(query,(universityId,))
+            cursor.execute(query, (universityId,))
             for id, name, catname, menupdf in cursor:
                 element = []
                 element.append(id)
@@ -37,13 +37,14 @@ def getAllRestaurantsWithUniversity(universityId):
                 restaurants.append(element)
     return restaurants
 
+
 def getRestaurant(restaurantId):
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
             query = "select *, restaurant.name as restaurantname from restaurant left join category on (restaurant.categoryid = category.id) where(restaurant.id = %s) "
             cursor.execute(query, (restaurantId,))
             columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
-            if cursor.rowcount>0:
+            if cursor.rowcount > 0:
                 restaurant = dict(zip(columns, cursor.fetchone()))
             return restaurant
 
@@ -149,6 +150,7 @@ def getMostOrderingStudents():
                 return students
     return students
 
+
 def getNumberofDeliveredOrders():
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
@@ -158,6 +160,7 @@ def getNumberofDeliveredOrders():
             columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
             ordercount = dict(zip(columns, cursor.fetchone()))
             return ordercount
+
 
 def getAverageDeliverTime():
     with dbapi2.connect(dsn) as connection:
@@ -169,6 +172,7 @@ def getAverageDeliverTime():
             time = dict(zip(columns, cursor.fetchone()))
             return time
 
+
 def filterRestaurant(name, categoryId, universityId):
     restaurant = []
     with dbapi2.connect(dsn) as connection:
@@ -178,20 +182,20 @@ def filterRestaurant(name, categoryId, universityId):
                 query = "select restaurant.id as id, restaurant.name as name, category.name as catname " \
                         "from restaurant left join category on (restaurant.categoryid = category.id) " \
                         "left  join service s on restaurant.id = s.restaurantid where(s.universityid=%s AND restaurant.categoryid = %s AND LOWER(restaurant.name ) like LOWER(%s)) order by restaurant.name "
-                cursor.execute(query, (universityId,categoryId, name))
+                cursor.execute(query, (universityId, categoryId, name))
             elif name != "":
                 name = '%' + name + '%'
                 query = "select restaurant.id as id, restaurant.name as name, category.name as catname " \
                         " from restaurant join category on (restaurant.categoryid = category.id) " \
                         "left  join service s on restaurant.id = s.restaurantid where(s.universityid=%s AND " \
                         "LOWER(restaurant.name ) like LOWER(%s)) order by restaurant.name "
-                cursor.execute(query, (universityId,name))
+                cursor.execute(query, (universityId, name))
             elif categoryId != '0':
                 query = "select restaurant.id as id, restaurant.name as name, category.name as catname " \
                         "from restaurant join category on (restaurant.categoryid = category.id) " \
                         "left  join service s on restaurant.id = s.restaurantid where(s.universityid=%s AND " \
                         "restaurant.categoryid = %s) order by restaurant.name "
-                cursor.execute(query, (universityId,categoryId))
+                cursor.execute(query, (universityId, categoryId))
             else:
                 query = "select restaurant.id as id, restaurant.name as name, category.name as catname" \
                         " from restaurant join category on (restaurant.categoryid = category.id) " \
@@ -245,16 +249,16 @@ def getRestaurantById(restaurantId):
                 return None
 
 
-def editRestaurantById(restaurantId, name, categoryid,phone):
+def editRestaurantById(restaurantId, name, categoryid, phone):
     try:
         with dbapi2.connect(dsn) as connection:
             with connection.cursor() as cursor:
                 if categoryid != '0':
                     query = "update restaurant set name=%s, categoryid=%s, phonenumber=%s where (id=%s)"
-                    cursor.execute(query, (name, categoryid,phone,restaurantId))
+                    cursor.execute(query, (name, categoryid, phone, restaurantId))
                 else:
                     query = "update restaurant set name=%s, phonenumber=%s, categoryid=NULL where (id=%s)"
-                    cursor.execute(query, (name,phone, restaurantId))
+                    cursor.execute(query, (name, phone, restaurantId))
                 return True
     except dbapi2.IntegrityError as error:
         return error.diag.message_detail
@@ -286,13 +290,32 @@ def deletePdfFromRestaurant(restaurantId):
             cursor.execute(query, ('', restaurantId))
             return True
 
-def isServesToStudent(studentId,restaurantId):
+
+def isServesToStudent(studentId, restaurantId):
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
             query = "select universityid as id from student where (student.id=%s)" \
                     " INTERSECT " \
                     "select  universityid as id from service where (service.restaurantid=%s)"
-            cursor.execute(query, (studentId,restaurantId))
-            if cursor.rowcount>0:
+            cursor.execute(query, (studentId, restaurantId))
+            if cursor.rowcount > 0:
                 return True
             return False
+
+
+def studentOrderCountFromMenu(studentId, menuId):
+    try:
+        with dbapi2.connect(dsn) as connection:
+            with connection.cursor() as cursor:
+                query = "select count(*) from (select orderstudentmatching.id as id" \
+                        "  from student left join orderstudentmatching on (orderstudentmatching.studentid = student.id) " \
+                        " where (student.id=%s) INTERSECT select orderstudentmatching.id as id  from ordercontent left join" \
+                        " orderstudentmatching on (orderstudentmatching.ordercontentid = ordercontent.id)  where" \
+                        " (ordercontent.menuid=%s) )I"
+                cursor.execute(query, (studentId, menuId))
+                columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+                if cursor.rowcount > 0:
+                    return dict(zip(columns, cursor.fetchone()))['count']
+                return False
+    except:
+        return False

@@ -49,9 +49,9 @@
                 <div class="media">
                     <div class="media-content">
                         <p class="title is-4"><a
-                                href="{{ url_for('restaurant_details', restaurantId = i['restaurantId']) }}">
+                                href="{{ url_for('restaurant_details', restaurantId = i['restaurantid']) }}">
                             {{ i['name'] }}</a></p>
-                        <b>Restaurant Name:</b> {{ i['restaurantName'] }}<br>
+                        <b>Restaurant Name:</b> {{ i['restaurantname'] }}<br>
                         <b>Price:</b> {{ i['price'] }} TL<br>
                         <b>Menu Description:</b> {{ i['content'] }}
                     </div>

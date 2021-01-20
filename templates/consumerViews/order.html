@@ -14,6 +14,12 @@
     </script>
 {% endblock %}
 {% block left_area %}
+
+    <article class="message is-light">
+        <div class="message-body">
+            You have ordered <b>{{ ordercount }}</b> times this menu!
+        </div>
+    </article>
     <article class="panel is-light">
         <p class="panel-heading">
             {{ menu['name'] }}

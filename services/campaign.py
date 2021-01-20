@@ -7,40 +7,35 @@ def getAllCampaigns():
     campaigns = []
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
-            query = "select * from menu join restaurant on (restaurant.id = menu.restaurantid) where(menu.iscampaign = true)" \
+            query = "select price, menu.name as name, menu.description as content, s.restaurantid as restaurantId," \
+                    " restaurant.name as restaurantName from menu join restaurant on (restaurant.id = menu.restaurantid) where(menu.iscampaign = true)" \
                     "order by menu.name"
             cursor.execute(query)
-            for i in cursor:
-                element_dic = {
-                    "price": i[1],
-                    "name": i[2],
-                    "content": i[3],
-                    "restaurantId": i[5],
-                    "restaurantName": i[7],
-                }
-                campaigns.append(element_dic)
-    return campaigns
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            if cursor.rowcount > 0:
+                for i in cursor:
+                    campaigns.append(dict(zip(columns, i)))
+                return campaigns
+            else:
+                return None
 
 def getAllCampaignsWithUniversity(restaurantId):
     campaigns = []
     with dbapi2.connect(dsn) as connection:
         with connection.cursor() as cursor:
-            query = "select * from menu inner join restaurant on (restaurant.id = menu.restaurantid) " \
+            query = "select price, menu.name as name, menu.description as content, s.restaurantid as restaurantId," \
+                    " restaurant.name as restaurantName from menu inner join restaurant on (restaurant.id = menu.restaurantid) " \
                     " inner join service s on restaurant.id = s.restaurantid" \
                     " where(menu.iscampaign = true AND s.universityid=%s )" \
                     "order by menu.name"
             cursor.execute(query,(restaurantId,))
-            for i in cursor:
-                element_dic = {
-                    "price": i[1],
-                    "name": i[2],
-                    "content": i[3],
-                    "restaurantId": i[5],
-                    "restaurantName": i[7],
-                }
-                campaigns.append(element_dic)
-    return campaigns
-
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            if cursor.rowcount > 0:
+                for i in cursor:
+                    campaigns.append(dict(zip(columns, i)))
+                return campaigns
+            else:
+                return None
 
 def filterCampaign(name, categoryId,universityId):
     campaigns = []
@@ -48,34 +43,37 @@ def filterCampaign(name, categoryId,universityId):
         with connection.cursor() as cursor:
             if name != "" and categoryId != '0':
                 name = '%' + name + '%'
-                query = "select * from menu left join restaurant on (restaurant.id = menu.restaurantid) " \
+                query = "select price, menu.name as name, menu.description as content, s.restaurantid as restaurantId," \
+                        " restaurant.name as restaurantName from menu left join restaurant on (restaurant.id = menu.restaurantid) " \
                         " left outer join service s on restaurant.id = s.restaurantid " \
                         "where(s.universityid=%s AND menu.iscampaign = true AND restaurant.categoryid = %s AND LOWER(menu.name ) like LOWER(%s)) " \
                         "order by menu.name"
                 cursor.execute(query, (universityId,categoryId, name))
             elif name != "":
                 name = '%' + name + '%'
-                query = "select * from menu left join restaurant on (menu.restaurantid = restaurant.id ) " \
+                query = "select price, menu.name as name, menu.description as content, s.restaurantid as restaurantId," \
+                        " restaurant.name as restaurantName from menu left join restaurant on (menu.restaurantid = restaurant.id ) " \
                         "left outer join service s on restaurant.id = s.restaurantid where(s.universityid=%s AND  " \
                         "menu.iscampaign = true AND LOWER(menu.name ) like LOWER(%s)) order by menu.name "
                 cursor.execute(query, (universityId,name))
             elif categoryId != '0':
-                query = "select * from menu left join restaurant on (restaurant.categoryid = restaurant.id ) " \
+                query = "select price, menu.name as name, menu.description as content, s.restaurantid as restaurantId," \
+                        " restaurant.name as restaurantName from menu left join restaurant on (restaurant.categoryid = restaurant.id ) " \
                         "left outer join service s on restaurant.id = s.restaurantid where(s.universityid=%s AND  " \
                         "menu.iscampaign = true AND restaurant.categoryid = %s)  order by menu.name"
                 cursor.execute(query, (universityId,categoryId))
             else:
-                query = "select * from menu left join restaurant on (restaurant.id = menu.restaurantid) " \
+                query = "select price, menu.name as name, menu.description as content, s.restaurantid as restaurantId, " \
+                        "restaurant.name as restaurantName" \
+                        " from menu left join restaurant on (restaurant.id = menu.restaurantid) " \
                         "left outer join service s on restaurant.id = s.restaurantid where(s.universityid=%s AND menu.iscampaign = true)" \
                         " order by menu.name"
                 cursor.execute(query,(universityId,))
-            for i in cursor:
-                element_dic = {
-                    "price": i[1],
-                    "name": i[2],
-                    "content": i[3],
-                    "restaurantId": i[5],
-                    "restaurantName": i[7],
-                }
-                campaigns.append(element_dic)
-    return campaigns
+            columns = list(cursor.description[i][0] for i in range(0, len(cursor.description)))
+            if cursor.rowcount > 0:
+                for i in cursor:
+                    campaigns.append(dict(zip(columns, i)))
+                return campaigns
+            else:
+                return None
+

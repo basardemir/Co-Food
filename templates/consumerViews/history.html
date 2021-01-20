@@ -66,7 +66,12 @@
                     <time datetime="2016-1-1">{{ item['ordertime'].strftime("%d/%m/%Y, %H:%M:%S") }}</time>
                 </div>
                 <footer class="card-footer">
-                    <a href="/order/{{ item['menuid'] }}" class="card-footer-item">Order Again</a>
+                    {% if serve.get(item['ordercontentid']|string) %}
+                        <a href="/order/{{ item['menuid'] }}" class="card-footer-item">Order Again</a>
+                    {% endif %}
+                    {% if not serve.get(item['ordercontentid']|string) %}
+                        <a class="card-footer-item"> This restaurant is not available for your university</a>
+                    {% endif %}
                 </footer>
             </div>
 
@@ -75,7 +80,7 @@
 
 {% endblock %}
 {% block right_area %}
-        <article class="message is-light">
+    <article class="message is-light">
         <div class="message-header">
             <p>Top Restaurants</p>
         </div>

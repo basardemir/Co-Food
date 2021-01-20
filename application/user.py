@@ -73,11 +73,13 @@ def userHistory():
         favoriteMenus = getMostPopularMenusByStudentId(userId)
         favoriteRestaurants = getMostPopularRestaurantsByStudentId(userId)
         orderfriends = {}
+        serve = {}
         if history:
             for i in range(len(history)):
                 orderfriends[str(history[i]['ordercontentid'])] = getOrderFriends(history[i]['ordercontentid'])
+                serve[str(history[i]['ordercontentid'])] = isServesToStudent(session['id'], history[i]['restaurantid'])
             return render_template("consumerViews/history.html", restaurants=favoriteRestaurants, menus=favoriteMenus,
-                                   history=history, friends=orderfriends)
+                                   history=history, friends=orderfriends, serve=serve)
         return render_template("consumerViews/history.html")
     else:
         return render_template("errorViews/403.html")

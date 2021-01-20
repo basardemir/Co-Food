@@ -13,11 +13,13 @@ from services.restaurant import *
 def orderPage(menuId):
     if session['role'] == 'student':
         menu = getMenuById(menuId)
+        ordercount = studentOrderCountFromMenu(session['id'],menuId)
         restaurant = getRestaurantById(menu['restaurantid'])
         if menu and restaurant and (isServesToStudent(session['id'], restaurant['restaurantid'])):
             form = orderForm()
+            ordercount = studentOrderCountFromMenu(session['id'], menuId)
             return render_template("consumerViews/order.html", menu=menu, restaurant=restaurant,
-                                   form=form)
+                                   form=form,ordercount=ordercount)
         else:
             return render_template("errorViews/404.html")
     else:
@@ -72,9 +74,10 @@ def insertNewOrder(menuId):
         else:
             menu = getMenuById(menuId)
             restaurant = getRestaurantById(menu['restaurantid'])
+            ordercount = studentOrderCountFromMenu(session['id'], menuId)
             if menu and restaurant and (isServesToStudent(session['id'], restaurant['restaurantid'])):
                 return render_template("consumerViews/order.html", menu=menu, restaurant=restaurant,
-                                       form=form)
+                                       form=form,ordercount=ordercount)
             else:
                 return render_template("errorViews/404.html")
     else:
