@@ -304,7 +304,7 @@ def deleteMenuPdf(restaurantId):
 @login_required
 def downloadOwnerMenuPdf(restaurantId):
     restaurant = getRestaurantById(restaurantId)
-    if session['role'] == 'owner' and restaurant and restaurant['id'] == session['id']:
+    if session['role'] == 'owner' and restaurant and restaurant['restaurantid'] == session['id']:
         if restaurant['menupdf']:
             data = restaurant['menupdf']
             return send_file(BytesIO(data), attachment_filename=restaurant['restaurantname'] + 'menu.pdf', as_attachment=True)

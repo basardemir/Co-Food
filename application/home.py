@@ -88,6 +88,10 @@ def filter_homepage():
             else:
                 average_time = str(datetime.timedelta(seconds=average_time['averagetime'].seconds))
             ordercount = getNumberofDeliveredOrders()
+            if ordercount:
+                ordercount = ordercount['ordercount']
+            else:
+                ordercount = 0
             orders = getAllOrdersWithFilter(request.form['restaurantname'], request.form['categories'], university)
             if orders:
                 for i in orders:
