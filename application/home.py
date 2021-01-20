@@ -14,7 +14,7 @@ from services.students import *
 def homepage():
     if session['role'] == 'student':
         form = RestaurantSearchForm()
-        form.categories.choices=getAllCategoriesForm()
+        form.categories.choices = getAllCategoriesForm()
         student = getStudentDetail(session['id'])
         university = student['universityid']
         orders = getAllOrdersWithUniversityId(university)
@@ -82,12 +82,20 @@ def filter_homepage():
             students = getMostOrderingStudents()
             student = getStudentDetail(session['id'])
             university = student['universityid']
+            average_time = getAverageDeliverTime()
+            if not average_time:
+                average_time = 0
+            else:
+                average_time = str(datetime.timedelta(seconds=average_time['averagetime'].seconds))
+            ordercount = getNumberofDeliveredOrders()
             orders = getAllOrdersWithFilter(request.form['restaurantname'], request.form['categories'], university)
             if orders:
                 for i in orders:
                     i['friendnumber'] = len(getOrderFriends(i['id']))
             form.categories.choices = getAllCategoriesForm()
-            return render_template("consumerViews/main_page.html", form=form, students=students, orders=orders)
+            return render_template("consumerViews/main_page.html", form=form, ordercount=ordercount,
+                                   averagetime=average_time,
+                                   students=students, orders=orders)
         else:
             student = getStudentDetail(session['id'])
             students = getMostOrderingStudents()
