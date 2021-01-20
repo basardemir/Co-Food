@@ -134,9 +134,6 @@ app.add_url_rule('/owner/menu/pdf/download/<int:restaurantId>', view_func=downlo
 app.add_url_rule('/student/menu/pdf/download/<int:restaurantId>', view_func=downloadStudentMenuPdf, methods=['GET'])
 app.add_url_rule('/owner/menu/pdf/delete/<int:restaurantId>', view_func=deleteOwnerMenuPdf, methods=['GET'])
 
-# wait room
-app.add_url_rule('/wait-room', view_func=wait_room, methods=['GET'])
-
 # errors
 app.register_error_handler(404, page_not_found)
 app.register_error_handler(403, page_no_authorization)
