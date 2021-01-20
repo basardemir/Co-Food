@@ -139,22 +139,23 @@
             </div>
         </div>
     </section>
-
-    {% for i in range(friendsize) %}
-        <div class="card">
-            <div class="card-content">
-                <div class="media">
-                    <div class="media-content">
-                        <p class="title is-4">{{ friends[i]['username'] }}</p>
+    {% if friendsize %}
+        {% for i in range(friendsize) %}
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                            <p class="title is-4">{{ friends[i]['username'] }}</p>
+                        </div>
                     </div>
                 </div>
+                {% if i != 0 %}
+                    <footer class="card-footer">
+                        <a href="/admin/orderstudentmatching/delete/{{ friends[i]['id'] }}"
+                           class="card-footer-item">Delete</a>
+                    </footer>
+                {% endif %}
             </div>
-            {% if i != 0 %}
-                <footer class="card-footer">
-                    <a href="/admin/orderstudentmatching/delete/{{ friends[i]['id'] }}"
-                       class="card-footer-item">Delete</a>
-                </footer>
-            {% endif %}
-        </div>
-    {% endfor %}
+        {% endfor %}
+    {% endif %}
 {% endblock %}

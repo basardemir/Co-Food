@@ -43,20 +43,24 @@
             </div>
         </div>
     </section>
-    {% for res in restaurants %}
-        <div class="card">
-            <div class="card-content">
-                <div class="media">
-                    <div class="media-content">
-                        <p class="title is-4"><a
-                                href="{{ url_for('restaurant_details', restaurantId = res[0]) }}">{{ res[1] }}</a></p>
-                        <p class="subtitle is-6">{{ res[2] }}</p>
+    {% if restaurants %}
+        {% for res in restaurants %}
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                            <p class="title is-4"><a
+                                    href="{{ url_for('restaurant_details', restaurantId = res[0]) }}">{{ res[1] }}</a>
+                            </p>
+                            {% if res[2] %}
+                                <p class="subtitle is-6">{{ res[2] }}</p>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-    {% endfor %}
+        {% endfor %}
+    {% endif %}
 
 {% endblock %}
 {% block right_area %}

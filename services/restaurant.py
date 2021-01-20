@@ -200,7 +200,7 @@ def filterRestaurant(name, categoryId, universityId):
                 query = "select restaurant.id as id, restaurant.name as name, category.name as catname" \
                         " from restaurant join category on (restaurant.categoryid = category.id) " \
                         "left  join service s on restaurant.id = s.restaurantid where(s.universityid=%s) order by restaurant.name"
-                cursor.execute(query, (universityId))
+                cursor.execute(query, (universityId,))
             for id, name, catname in cursor:
                 element = []
                 element.append(id)

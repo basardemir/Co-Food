@@ -18,23 +18,24 @@
     {% if message %}
         <h2 style="color:red">{{ message }}</h2>
     {% endif %}
-    {% for i in restaurants %}
-        <div class="card">
-            <div class="card-content">
-                <div class="media">
-                    <div class="media-content">
-                        <b>Name: </b>{{ i[1] }}<br>
-                        <b>Category Name: </b>{{ i[2] }}
+    {% if restaurants %}
+        {% for i in restaurants %}
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                            <b>Name: </b>{{ i[1] }}<br>
+                            <b>Category Name: </b>{{ i[2] }}
+                        </div>
                     </div>
                 </div>
+                <footer class="card-footer">
+                    <a href="/admin/restaurant/delete/{{ i[0] }}" class="card-footer-item">Delete</a>
+                    <a href="/admin/restaurant/edit/{{ i[0] }}" class="card-footer-item">Edit</a>
+                </footer>
             </div>
-            <footer class="card-footer">
-                <a href="/admin/restaurant/delete/{{ i[0] }}" class="card-footer-item">Delete</a>
-                <a href="/admin/restaurant/edit/{{ i[0] }}" class="card-footer-item">Edit</a>
-            </footer>
-        </div>
-
-    {% endfor %}
+        {% endfor %}
+    {% endif %}
 
 {% endblock %}
 {% block right_area %}
