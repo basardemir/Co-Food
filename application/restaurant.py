@@ -119,7 +119,7 @@ def adminRestaurants():
 @login_required
 def deleteRestaurant(restaurantId):
     if session['role'] == 'admin':
-        if (not hasActiveOrder(restaurantId) and deleteRestaurantById(restaurantId)):
+        if (not hasActiveOrderRestaurant(restaurantId) and deleteRestaurantById(restaurantId)):
             restaurants = getAllRestaurants()
             return render_template("adminViews/restaurants.html", restaurants=restaurants,success="true")
         else:
