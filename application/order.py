@@ -206,7 +206,7 @@ def saveOrder(orderId):
                 friendsize = len(friends)
                 return render_template("adminViews/editOrder.html", order=order, form=form, menus=menus,
                                        friends=friends, friendsize=friendsize,
-                                       message="There are enough available students!")
+                                       message="Check given student numbers!")
             menu = getMenuById(menu)
             if not menu or (student is not '0' and not isServesToStudent(student, menu['restaurantid'])):
                 form = orderEditForm()
